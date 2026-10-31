@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html data-page-node-id="lxph2pcY7p9a0RNtvM5O4L" lang="zh-CN">
+<head data-page-node-id="9rIa4k3CXYU0xAsKhfp9aQ">
+<script data-page-node-id="VF9DKNIk5Po2MrVAxBtCoI" defer src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="ZzwvAAKu409hRBs6xWLyuL" charset="UTF-8">
+<meta data-page-node-id="Ugbc4Z1mEAglgyGcV8gnvB" content="width=device-width" name="viewport">
+<title data-page-node-id="Fa2X7uUqM2qWhbZTGmUY0l">W1-Day1 · 让异常留下证据</title>
+<style data-page-node-id="YqU6hBacicE4brA1lg0pqC">
+:root{
+  --bg:#f4f6f9;--card:#fff;--ink:#1a1f2b;--ink2:#464e5e;--ink3:#7a8496;--line:#e2e6ed;
+  --blue:#2563eb;--blue-l:#eaf0ff;--green:#0f9d58;--green-l:#e6f6ee;
+  --amber:#b87200;--amber-l:#fff3e0;--red:#d32f2f;--red-l:#fdeceb;--purple:#7c3aed;--purple-l:#f1ebfe;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.75;padding:24px 15px 70px}
+.wrap{max-width:880px;margin:0 auto}
+.hero{background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;border-radius:16px;padding:28px 24px;margin-bottom:18px}
+.hero .k{font-size:12.5px;opacity:.88;letter-spacing:.8px}
+.hero h1{font-size:25px;font-weight:700;margin-top:5px}
+.hero p{opacity:.94;font-size:14.5px;margin-top:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:22px 24px;margin-bottom:17px}
+h2{font-size:19px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:9px}
+h2 .n{background:var(--blue);color:#fff;width:26px;height:26px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:13.5px;flex:0 0 auto}
+h3{font-size:15.5px;font-weight:700;margin:16px 0 7px;color:var(--ink)}
+h4{font-size:14.5px;font-weight:700;margin:13px 0 6px}
+p{color:var(--ink2);font-size:14.5px}
+ol,ul{padding-left:22px;color:var(--ink2);font-size:14.5px}
+li{margin:5px 0}
+code{background:#f0f2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;font-family:Consolas,monospace;color:#b3241f}
+pre{background:#1c222d;color:#dde5f2;border-radius:10px;padding:15px 17px;overflow-x:auto;font-size:13px;line-height:1.6;font-family:Consolas,monospace;margin:10px 0}
+pre .c{color:#8593a8}pre .k{color:#7dd3fc}pre .s{color:#86efac}pre .n{color:#fbbf24}pre .d{color:#f0876a}
+.box{border-radius:11px;padding:14px 17px;margin:12px 0;font-size:14px;border:1px solid}
+.box .t{font-weight:700;margin-bottom:5px}
+.warn{background:var(--amber-l);border-color:#ffd08a;color:#7a4a00}.warn .t{color:var(--amber)}
+.danger{background:var(--red-l);border-color:#f8b4ad;color:#8c1d13}.danger .t{color:var(--red)}
+.ok{background:var(--green-l);border-color:#a8dfc0;color:#0b5c33}.ok .t{color:var(--green)}
+.info{background:var(--blue-l);border-color:#b9cdfb;color:#16346e}.info .t{color:var(--blue)}
+.purple{background:var(--purple-l);border-color:#d3bdf8;color:#4c1d95}.purple .t{color:var(--purple)}
+.gray{background:#f2f4f7;border-color:#dde1e8;color:#3d4553}.gray .t{color:#5a6474}
+.chk{list-style:none;padding-left:0}
+.chk li{padding-left:26px;position:relative;margin:8px 0}
+.chk li:before{content:"□";position:absolute;left:0;font-size:17px;color:var(--blue);line-height:1.3}
+.unit{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:12px;padding:17px 19px;margin-bottom:15px;background:var(--card)}
+.unit .uh{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.unit .uh .id{background:var(--blue);color:#fff;font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:6px}
+.unit .uh .ti{font-size:16px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13.8px;margin-top:10px}
+th{background:#eff2f7;text-align:left;padding:9px 10px;font-weight:600;border-bottom:2px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+.mini{font-size:13px;color:var(--ink3)}
+footer{text-align:center;color:var(--ink3);font-size:13px;margin-top:22px}
+
+/* ---- 可勾选打卡系统 ---- */
+.cbx{display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.cbx input{width:19px;height:19px;cursor:pointer;accent-color:#2563eb;margin:0}
+tr.done td{background:#eefaf3}
+tr.done td b{color:#6b7686}
+.li-cb{list-style:none;padding-left:0}
+.li-cb li{padding-left:31px;position:relative;cursor:pointer;margin:9px 0;user-select:none;transition:color .15s}
+.li-cb li:before{content:"";position:absolute;left:0;top:3px;width:19px;height:19px;border:2px solid #b7c0ce;border-radius:5px;background:#fff;transition:.15s}
+.li-cb li:hover:before{border-color:#2563eb}
+.li-cb li.checked:before{background:#2563eb;border-color:#2563eb}
+.li-cb li.checked:after{content:"";position:absolute;left:5px;top:8px;width:9px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
+.li-cb li.checked{color:#8b94a3;text-decoration:line-through}
+#pbar{height:9px;background:#e4e9f1;border-radius:99px;overflow:hidden}
+#pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2563eb,#0e7490);transition:width .3s}
+.pstat{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;color:#7a8496;margin-bottom:8px}
+.pstat b{color:#1a1f2b;font-weight:600}
+.pbtn{border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:8px;padding:4px 11px;font-size:12.5px;cursor:pointer;font-family:inherit}
+.pbtn:hover{border-color:var(--blue);color:var(--blue)}
+.stagehd{display:flex;justify-content:space-between;align-items:center;gap:10px}
+#bta{width:100%;margin-top:8px;padding:8px 10px;font-size:12px;line-height:1.6;border:1px solid #d8d4c8;border-radius:8px;background:#fffdf7;font-family:var(--font-mono,Consolas,monospace);resize:vertical}
+#bta:focus{outline:none;border-color:var(--blue,#2563eb);background:#fff}
+</style>
+</head>
+<body data-page-node-id="VOYhSBVNrhZRcfvs4rgyhe">
+<div class="wrap">
+
+<div class="hero">
+  <div class="k">W1 · 单元 1 · 今天开始 · 难度 ★★☆☆☆</div>
+  <h1>让异常留下证据</h1>
+  <p>你现在的 <code>button1_Click</code> 弹的是 <code>ex.Message</code>——一句话,没有堆栈。今天的任务是:<b>让它能告诉你崩在哪一行</b>。就这一件事,做到能亲眼验证为止。</p>
+</div>
+
+<div class="card" id="pcard">
+<h2><span class="n">✓</span>我的打卡进度</h2>
+<div class="pstat"><span>已完成 <b id="pdone">0</b> / <b id="ptotal">0</b> 项</span><span><span id="ppct">0%</span> <button class="pbtn" id="preset" type="button">重置</button></span></div>
+<div id="pbar"><i></i></div>
+<div class="bkwrap" style="margin-top:10px;border-top:1px dashed var(--line, #d8d4c8);padding-top:9px">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <span style="font-size:12.5px;color:var(--ink3,#8a8984)">进度备份（换浏览器 / 换电脑 / 预览面板不同步时用）</span>
+    <button class="pbtn" id="bexp" type="button">生成备份文本</button>
+    <button class="pbtn" id="bimp" type="button">从文本恢复</button>
+  </div>
+  <textarea id="bta" rows="3" spellcheck="false" placeholder="点「生成备份文本」会在这里生成一段文本，复制它存到任意 .txt 文件；换环境后粘回来再点「从文本恢复」即可。"></textarea>
+</div>
+
+<p class="mini" style="margin-top:10px">点表格里的方框、或点清单条目标题左侧即可打卡；进度保存在本机浏览器，刷新和关掉页面都不会丢。<b>打勾 = 真的做完了，不是"看过了"。</b></p>
+<p class="mini" style="margin-top:6px;color:#b45309"><b>注意：</b>在 WorkBuddy 预览面板里点的勾，<b>不会</b>同步到你双击打开的同一个文件（两者来源地址不同，浏览器分开存）。统一用「双击文件」的方式打开，或用下面的备份/恢复搬家。</p>
+</div>
+<div class="card">
+  <h2><span class="n">0</span>为什么第一个任务是这个</h2>
+  <p>你机构老师说过"报错要会自我根据系统提示判断原因"——这个能力是对的,但现在有一个缺口:<b>系统提示本身没告诉你足够的信息。</b></p>
+  <p>你现在的代码是这样:</p>
+  <pre><span class="k">catch</span>(NullReferenceException ex) { MessageBox.Show(ex.Message); }
+<span class="k">catch</span>(Exception ex)              { MessageBox.Show(ex.Message); }</pre>
+  <p>语法完全正确,catch 顺序也对(具体在前、父类在后)。<b>问题在 <code>ex.Message</code>。</b></p>
+  <div class="box danger">
+    <div class="t">🔍 关键事实：Message 和 StackTrace 是两样东西</div>
+    <table style="margin-top:4px">
+      <thead><tr><th>属性</th><th>内容</th><th>对你的价值</th></tr></thead>
+      <tbody>
+        <tr><td><code>ex.Message</code></td><td>"未将对象引用设置到对象的实例"</td><td>只知道<b>类型</b>,不知道<b>位置</b>。所有空引用都是这句话,毫无区分度</td></tr>
+        <tr><td><code>ex.StackTrace</code></td><td>方法名 + 文件名 + <b>行号</b> + 调用链</td><td><b>这就是现场证据</b>。有它你 10 秒定位;没它你只能到处加断点猜</td></tr>
+        <tr><td><code>ex.InnerException</code></td><td>内层异常</td><td>异常套异常时（比如包装成业务异常），内层才是根因</td></tr>
+      </tbody>
+    </table>
+    <p style="margin:8px 0 0">现代码运行时你会看到:<b>弹出来的那句话,和你要排查的那一行没有任何关系。</b></p>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="n">1</span>单元 1 的三个步骤</h2>
+  <p class="mini">今晚 21:30 后开始,约 2 小时。卡住了就来问我,别硬扛。</p>
+
+  <div class="unit">
+    <div class="uh"><label class="cbx"><input type="checkbox" data-id="day1-step1"></label><span class="id">步骤 1</span><span class="ti">先让现在的代码崩一次,亲眼看到"没证据"长什么样</span></div>
+    <p>你现在的代码已经能触发 <code>NullReferenceException</code>(<code>string str = null; int len = str.Length;</code>)。<b>先跑一次,把弹窗内容抄下来。</b></p>
+    <p>然后临时改一处,让堆栈露出来,对比一下:</p>
+    <pre>MessageBox.Show(<span class="s">"出错了:"</span> + ex.Message + <span class="n">Environment.NewLine</span> + ex.StackTrace);</pre>
+    <p><b>验收：</b>你能指着屏幕上的一行字说出"哦,原来是我这行 <code>str.Length</code> 出的问题",而不是"我不知道哪错了"。</p>
+    <p class="mini">⚠️ 关键观察点:<b>StackTrace 里会有"行号"和"文件名"</b>。这是整个单元的核心,盯住它。</p>
+  </div>
+
+  <div class="unit">
+    <div class="uh"><label class="cbx"><input type="checkbox" data-id="day1-step2"></label><span class="id">步骤 2</span><span class="ti">把证据写进文件,而不是只在屏幕上飘一下</span></div>
+    <p>MessageBox 会被人点掉,StackTrace 也会滚出屏幕看不见。所以证据必须<b>落到磁盘</b>。</p>
+    <p>今天先不引日志框架（机构那份 Log4Net 教程有坑,单元 5 才碰）。<b>今天只用 <code>System.IO</code> 写一行:</b></p>
+    <pre><span class="k">private static void</span> WriteError(<span class="k">string</span> whereText, Exception ex)
+{
+    <span class="k">string</span> dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, <span class="s">"logs"</span>);
+    <span class="k">if</span> (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+    <span class="k">string</span> file = Path.Combine(dir, <span class="s">"error"</span> + DateTime.Now.ToString(<span class="s">"yyyyMMdd"</span>) + <span class="s">".txt"</span>);
+    <span class="k">string</span> text = <span class="s">"[{0}] {1}{2}堆栈:{3}{2}"</span>
+        + <span class="d">string.Format("{0:yyyy-MM-dd HH:mm:ss}", DateTime.Now), whereText,
+           Environment.NewLine, ex.ToString();
+
+    File.AppendAllText(file, text + Environment.NewLine, Encoding.UTF8);
+}</pre>
+    <p><b>为什么是 <code>ex.ToString()</code> 而不是 <code>ex.Message + ex.StackTrace</code>？</b>因为 <code>ToString()</code> 一次性给你<b>类型名 + Message + StackTrace + InnerException 全套</b>,一个都不漏。手拼容易漏。<b>这个习惯请记住,它是你后面所有日志代码的基础。</b></p>
+    <div class="box info">
+      <div class="t">💡 三个 API 你会用到，值得认一下</div>
+      <ul style="margin:0">
+        <li><code>AppDomain.CurrentDomain.BaseDirectory</code> → exe 所在目录。用它比硬编码路径可靠,换台电脑也不会挂</li>
+        <li><code>Directory.Exists</code> → 目录不存在就创建,否则 <code>AppendAllText</code> 会抛 <code>DirectoryNotFoundException</code></li>
+        <li><code>File.AppendAllText</code> → 追加写。指定 <code>Encoding.UTF8</code> 不然中文可能乱码</li>
+      </ul>
+    </div>
+    <p><b>验收：</b>触发三次不同类型的异常,去 <code>bin\Debug\logs\</code> 目录找到 <code>error20261024.txt</code>,里面有 3 段记录,每段都有时间、原因、堆栈行号。</p>
+  </div>
+
+  <div class="unit">
+    <div class="uh"><label class="cbx"><input type="checkbox" data-id="day1-step3"></label><span class="id">步骤 3</span><span class="ti">区分"该 catch"和"不该 catch"</span></div>
+    <p>你现在的两个 catch 写得太"热情"了——什么都 catch,等于什么都没区分。真实的工程判断是:</p>
+    <table>
+      <thead><tr><th>异常类型</th><th>处理方式</th><th>为什么</th></tr></thead>
+      <tbody>
+        <tr><td><code>NullReferenceException</code><br><code>IndexOutOfRangeException</code><br><code>FormatException</code></td><td>属于<b>代码缺陷</b></td><td>正常流程不该发生。记日志 + <b>弹窗明确告诉开发者哪一步错了</b>,但不该静默吞掉</td></tr>
+        <tr><td>你自己抛的<b>业务异常</b></td><td>捕获 → 弹业务提示 → <b>不写堆栈</b></td><td>比如"相机未连接"。这是预期情况,不是 bug,写一堆堆栈是噪音</td></tr>
+        <tr><td>你没预料到的</td><td><b>让全局兜底接住</b>（单元 4 做）</td><td>你在按钮里 catch <code>Exception</code> 兜不住所有路径</td></tr>
+      </tbody>
+    </table>
+    <p>今天只要求你做到一件事:<b>把"代码缺陷类"和"预期失败类"在代码里分开注释出来</b>。用注释标记即可,不用真写业务异常(那是单元 3 的事)。</p>
+    <pre><span class="c">// 【代码缺陷类】理论上不该发生,要留证据</span>
+<span class="k">catch</span>(NullReferenceException ex) { ... }
+
+<span class="c">// 【预期失败类】业务上会发生,只需友好提示,不用堆栈</span>
+<span class="c">// catch (DeviceNotConnectedException ex) { ... }</span></pre>
+    <p><b>验收：</b>你能在代码里指出哪一行是"缺陷"、哪一行是"预期",并说出<b>为什么它们的处理方式不同</b>。</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="n">2</span>自检清单（今晚结束前逐条打勾）</h2>
+  <ul class="chk li-cb">
+    <li data-id="day1-li1">我跑过一次原代码,记下了弹窗原文（证据："没堆栈"是什么样）</li>
+    <li data-id="day1-li2">我改出了带 StackTrace 的版本,亲眼看到行号和文件名</li>
+    <li data-id="day1-li3">我建了 <code>logs</code> 目录并成功写入 <code>error20261024.txt</code></li>
+    <li data-id="day1-li4">我触发了<b>至少 3 种</b>不同异常,文件里有 3 段记录</li>
+    <li data-id="day1-li5">每段记录里都有:时间 / 异常类型 / Message / StackTrace</li>
+    <li data-id="day1-li6">我能用鼠标点着文件里的堆栈,指出崩溃在第几行</li>
+    <li data-id="day1-li7">我能说清 <code>ex.Message</code> 和 <code>ex.StackTrace</code> 的区别</li>
+    <li data-id="day1-li8">我能说清为什么写日志用 <code>ex.ToString()</code> 而不是手拼</li>
+    <li data-id="day1-li9">我把代码里的 catch 分成了"缺陷类"和"预期类"两类并写了注释</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2><span class="n">3</span>卡住的时候怎么办（别硬扛）</h2>
+  <div class="box gray">
+    <div class="t">🛠 我能给你的三种帮助</div>
+    <ol style="margin:0">
+      <li><b>方向</b>：说清该查哪个文件、搜哪个关键词、官方文档在哪个路径</li>
+      <li><b>判断依据</b>：告诉你为什么这样做,而不是直接给代码</li>
+      <li><b>验收</b>：你贴出结果,我帮你看对不对</li>
+    </ol>
+  </div>
+  <div class="box info">
+    <div class="t">📍 常见卡点预告（提前告诉你，省你时间）</div>
+    <ul style="margin:0">
+      <li><b>"找不到 logs 文件夹"</b> → 它在 <code>bin\Debug\logs\</code>,不在项目根目录。而且必须<b>先运行一次</b>才会被创建</li>
+      <li><b>"StackTrace 是空的"</b> → 说明异常是<b>你主动 throw</b> 的,不是真的崩溃。主动抛的异常本来就没有"发生现场"</li>
+      <li><b>"DirectoryNotFoundException"</b> → 忘了 <code>Directory.CreateDirectory</code>,或者路径拼错</li>
+      <li><b>"中文乱码"</b> → <code>File.AppendAllText</code> 没指定 <code>Encoding.UTF8</code></li>
+      <li><b>"为什么不用现成的 Log4Net?"</b> → 因为单元 5 你要自己写一遍才知道框架在做什么。<b>先造轮子,再用轮子</b>,这是理解最快的方式</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="n">4</span>顺便记一件事（面试会用）</h2>
+  <div class="box ok">
+    <div class="t">📌 这个单元对应的面试题</div>
+    <p style="margin:0 0 8px"><b>"你的程序出错怎么排查？"</b> —— 你现在的答案应该是:</p>
+    <p style="margin:0">"我用全局异常捕获 + 按天分文件的错误日志,记录时间、异常类型、完整堆栈。程序崩了不会静默退出,现场能还原到具体行号。"</p>
+    <p style="margin:8px 0 0;font-size:13px;color:var(--ink3)">注意:这句话里<b>每一项都是你今晚亲手做出来的</b>。等 W1 全部学完,这句话要能扩展成 2 分钟的完整回答。</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="n">5</span>明天预告</h2>
+  <div class="box purple">
+    <div class="t">单元 2 · 日志落盘（周末大块，4–6h）</div>
+    <p style="margin:0">今天写的是"出错才记"。明天做<b>完整日志系统</b>:按天分文件、日志级别（DEBUG/INFO/ERROR）、线程安全（<code>lock</code>）、以及<b>多线程同时写不丢行</b>。今天这一步是它的地基,今晚别跳。</p>
+  </div>
+</div>
+
+<footer>W1-Day1 · 指导式：你动手，我给思路 · 卡住了直接来问</footer>
+</div>
+
+<script>
+(function(){
+  var KEY='mv_w1d1_checkin_v1';
+  var LEGACY='mv_plan_checkin_v1';
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} }
+  var st=load(KEY);
+
+  // 迁移：老版本与「求职作战计划 v4」共用过同一个 KEY，把属于本页面 id 的旧记录搬过来
+  if(!Object.keys(st).length){
+    var old=load(LEGACY), ids={}, moved=0;
+    document.querySelectorAll('input[data-id]').forEach(function(i){ ids[i.getAttribute('data-id')]=1; });
+    document.querySelectorAll('li[data-id]').forEach(function(l){ ids[l.getAttribute('data-id')]=1; });
+    Object.keys(old).forEach(function(k){ if(ids[k]){ st[k]=old[k]; moved++; } });
+    if(moved) save();
+  }
+
+  function sync(){
+    var inputs=document.querySelectorAll('input[data-id]');
+    var lis=document.querySelectorAll('li[data-id]');
+    var done=0,total=inputs.length+lis.length;
+    inputs.forEach(function(i){ var on=!!st[i.getAttribute('data-id')]; i.checked=on; if(on)done++;
+      var tr=i.closest?i.closest('tr'):null; if(tr) tr.classList.toggle('done',on); });
+    lis.forEach(function(l){ var on=!!st[l.getAttribute('data-id')]; l.classList.toggle('checked',on); if(on)done++; });
+    var d=document.getElementById('pdone'), t=document.getElementById('ptotal'), p=document.getElementById('ppct'), b=document.querySelector('#pbar i');
+    if(d)d.textContent=done; if(t)t.textContent=total;
+    var pct=total?Math.round(done*100/total):0;
+    if(p)p.textContent=pct+'%'; if(b)b.style.width=pct+'%';
+  }
+  document.addEventListener('click',function(e){
+    var tg=e.target;
+    if(tg && tg.tagName==='INPUT' && tg.hasAttribute('data-id')){
+      st[tg.getAttribute('data-id')]=tg.checked; save(); sync(); return;
+    }
+    var li=(tg && tg.closest)? tg.closest('li[data-id]'):null;
+    if(li){ var id=li.getAttribute('data-id'); if(st[id]){delete st[id];}else{st[id]=true;} save(); sync(); }
+  });
+  var rb=document.getElementById('preset');
+  if(rb) rb.addEventListener('click',function(){
+    if(confirm('确定要清空本页面的打卡进度吗？此操作不可撤销。')){ st={}; save(); sync(); }
+  });
+
+  var ta=document.getElementById('bta');
+  var be=document.getElementById('bexp'), bi=document.getElementById('bimp');
+  if(be) be.addEventListener('click',function(){
+    ta.value='MVCHK1|'+KEY+'|'+JSON.stringify(st);
+    ta.select(); try{ document.execCommand('copy'); }catch(e){}
+    ta.scrollIntoView({block:'center'});
+  });
+  if(bi) bi.addEventListener('click',function(){
+    var t=(ta.value||'').trim(), i=t.indexOf('|'), j=t.lastIndexOf('|');
+    if(i<0||j<=i){ alert('这段文本不像备份内容。备份文本长这样：MVCHK1|...|{...}'); return; }
+    var o; try{ o=JSON.parse(t.substring(j+1)); }catch(e){ alert('解析失败：'+e.message); return; }
+    st=o||{}; save(); sync(); alert('已恢复 '+Object.keys(st).length+' 项勾选。');
+  });
+  sync();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>W1 · 单元 3 · 错误码表</title>
+<style>
+:root{--ink:#1f1f1e;--ink2:#5f5e5a;--ink3:#8a8984;--line:#e2dfd6;--line2:#d8d4c8;--bg:#f7f6f2;--card:#fff;--blue:#185fa5;--blue2:#e6f1fb;--red:#a32d2d;--red2:#fcebeb;--amber:#854f0b;--amber2:#faeeda;--green:#3b6d11;--green2:#eaf3de;--font-mono:Consolas,"Cascadia Mono",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;line-height:1.75}
+.wrap{max-width:940px;margin:0 auto;padding:26px 18px 80px}
+header{margin-bottom:18px}
+.kicker{font-size:12.5px;letter-spacing:.08em;color:var(--blue);font-weight:500;margin:0 0 6px}
+h1{font-size:24px;font:600 24px/1.3 "PingFang SC","Microsoft YaHei",-apple-system,sans-serif;margin:0 0 8px}
+.sub{color:var(--ink2);font-size:14px;margin:0}
+.meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.tag.b{background:var(--blue2);border-color:#b5d4f4;color:var(--blue)}
+.tag.a{background:var(--amber2);border-color:#fac775;color:var(--amber)}
+.tag.g{background:var(--green2);border-color:#c0dd97;color:var(--green)}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0 24px}
+.pmeta{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);margin-bottom:8px}
+.pbar{height:9px;background:#e4e9f1;border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2563eb,#0e7490);transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0}
+.card h2{font-size:17px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:9px}
+.card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--blue2);color:var(--blue);font-size:13px;font-weight:600;flex:none}
+.card h3{font-size:15px;font-weight:600;margin:18px 0 8px}
+p{margin:9px 0}
+code{font-family:var(--font-mono);font-size:12.8px;background:#f4f2ec;padding:1px 6px;border-radius:5px;color:#7a4a12}
+pre{background:#23231f;color:#e9e6dc;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--font-mono);font-size:12.6px;line-height:1.7;margin:10px 0}
+pre .k{color:#7ec8f0}
+pre .s{color:#a8d98a}
+pre .c{color:#8b8b82}
+pre .hl{color:#f0c36d}
+ul,ol{padding-left:22px;margin:9px 0}
+li{margin:5px 0}
+.callout{border-left:4px solid var(--blue);background:var(--blue2);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.callout.warn{border-color:#d19b2a;background:var(--amber2)}
+.callout.danger{border-color:#c0392b;background:var(--red2)}
+.callout.ok{border-color:#639922;background:var(--green2)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f2f0ea;font-weight:600}
+td.done{background:#f2f8f2}
+td.fill{background:#fffdf7}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line2);border-radius:10px;margin:8px 0;background:#fdfdfb;cursor:pointer}
+.chk:hover{border-color:#9dbde0;background:#fbfdff}
+.chk input{margin-top:3px;width:16px;height:16px;accent-color:#2563eb;flex:none}
+.chk .tx{font-size:14px}
+.chk .tx b{display:block}
+.chk .tx span{font-size:13px;color:var(--ink3)}
+.fillrow{margin:12px 0}
+.fillrow .lbl{font-size:12.5px;color:var(--ink3);margin-bottom:5px}
+.fillbox{min-height:64px;padding:10px 12px;font-size:14px;line-height:1.7;background:#fffdf7;border:1px dashed #d9c98f;border-radius:8px;color:var(--ink)}
+.fillbox:hover{border-color:#c9b464;background:#fffbe8}
+.fillbox:focus{outline:none;border-style:solid;border-color:var(--blue);background:#fff}
+.fillbox:empty::before{content:attr(data-ph);color:#b5b3a6}
+.fillbox.filled{background:#f4f9fd;border-color:#b5d4f4}
+.hint{font-size:13px;color:var(--ink3);margin:6px 0 10px}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+#bta{width:100%;margin-top:8px;padding:8px 10px;font-size:12px;line-height:1.6;border:1px solid var(--line2);border-radius:8px;background:#fffdf7;font-family:var(--font-mono);resize:vertical}
+#bta:focus{outline:none;border-color:var(--blue);background:#fff}
+.kbd{font-family:var(--font-mono);font-size:12.5px;background:#efece3;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">W1 · 单元 3 · Day 3 · 2026-10-27 周二 · 夜档</p>
+  <h1>错误码表：让报错说人话</h1>
+  <p class="sub">你现在的报错是 <code>System.NullReferenceException: 未将对象引用设置到对象的实例。</code><br>
+  客户看完这句话只知道「你程序坏了」，<b>不知道坏在哪、该怎么办</b>。今天给每个异常配一个<b>业务错误码</b>，
+  让程序能说：<code>[E1002] 相机采图超时，请检查网线或降低曝光</code>。</p>
+  <div class="meta">
+    <span class="tag b">今日投入 1.5–2h</span>
+    <span class="tag a">夜档 21:30 后</span>
+    <span class="tag g">产出：BizException + ErrorCodes + 5 个错误码</span>
+    <span class="tag">承接：单元 2（2A 级别 / 2B 格式 / 2C 加锁）已完成</span>
+  </div>
+</header>
+
+<div class="progress">
+  <div class="pmeta"><span>今日任务完成度</span><span id="ptext">0 / 0</span></div>
+  <div class="pmeta" style="margin-top:2px;"><span style="font-size:12px;color:var(--ink3)">填写区</span><span id="ftext" style="font-size:12px;color:var(--ink3)">已填写 0 / 0 处</span></div>
+  <div class="pbar"><i id="pbar"></i></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <span style="font-size:12px;color:var(--ink3);">进度存在本机浏览器，刷新不丢（预览面板与双击打开不互通）</span>
+    <button class="btn" id="reset">重置</button>
+  </div>
+  <div style="margin-top:10px;border-top:1px dashed #d8d4c8;padding-top:9px;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-size:12.5px;color:var(--ink3)">进度备份（换浏览器 / 换电脑 / 预览面板不同步时用）</span>
+      <button class="btn" id="bexp" type="button">生成备份文本</button>
+      <button class="btn" id="bimp" type="button">从文本恢复</button>
+    </div>
+    <textarea id="bta" rows="3" spellcheck="false" placeholder="点「生成备份文本」会在这里生成一段文本，复制它存到任意 .txt 文件；换环境后粘回来再点「从文本恢复」即可。"></textarea>
+  </div>
+</div>
+
+<div class="callout ok">
+  <b>今天结束时，你要能回答这个问题：</b><br>
+  「你的程序报错，除了英文异常，<b>还能给出什么信息让现场的人知道该怎么办</b>？这个信息怎么设计才不会乱？」
+</div>
+
+<!-- ============ 0 ============ -->
+<div class="card">
+  <h2><span class="n">0</span>前置检查：单元 2 的收尾（你已改了大半，还差 3 处）</h2>
+  <div class="callout danger">
+    <b>先说最重要的：<code>lock (_logLock)</code> 被注释掉了。</b><br>
+    你的 <code>Write</code> 方法现在是「<b>没有锁</b>」的状态 —— 第 37、38、62 行都是 <code>//</code> 注释。<br>
+    <b>这等于把单元 2C 的成果删掉了。</b>你之前验证过的「150 条一条不少」，是靠 <code>lock</code> 撑住的；
+    现在把锁去掉，那个结论立刻作废 —— 日志随时可能丢行，而且<b>你不会有任何报错</b>（异常被 catch 吞了）。<br>
+    <span style="font-size:13px;color:var(--ink3)">如果是因为「注释掉再跑一次想看看会不会丢行」—— 那请<b>先跑一次压测看结果</b>，然后<b>务必把锁加回来</b>，别带着注释过的锁往下走单元 3。</span>
+  </div>
+  <h3>你已经改对的（保持住）</h3>
+  <table>
+    <thead><tr><th style="width:30%">项目</th><th style="width:30%">现在的样子</th><th>评价</th></tr></thead>
+    <tbody>
+      <tr><td>枚举拼写</td><td><code>Error = 2</code></td><td>✅ 对了，方法名 / 标签 / 文件名都跟着对了</td></tr>
+      <tr><td>锁对象命名</td><td><code>private static readonly object _logLock</code></td><td>✅ 命名和 static readonly 都对</td></tr>
+      <tr><td>error 分支换行</td><td><code>...{ex}\n</code></td><td>✅ 补上了，多条错误不会再挤一行</td></tr>
+      <tr><td>过滤器比较对象</td><td><code>if (level &lt; MenLevel)</code></td><td>✅ <b>逻辑对了</b>（比写 <code>LogLevel.Debug</code> 强多了）</td></tr>
+    </tbody>
+  </table>
+  <h3>还差 3 处</h3>
+  <table>
+    <thead><tr><th style="width:24%">问题</th><th style="width:30%">现在的写法</th><th>该改成 + 为什么</th></tr></thead>
+    <tbody>
+      <tr><td><b>锁没了</b></td><td><code>//lock (_logLock) {</code></td><td><b>把注释去掉</b>，让「打开 → 写入 → 关闭」整段在锁里。这是单元 2C 的验收项，不带锁往下走，单元 3 的日志验证也没有意义。</td></tr>
+      <tr><td>旋钮名字 + 可见性</td><td><code>private static LogLevel MenLevel</code></td><td><code>public static LogLevel MinLevel = LogLevel.Debug;</code><br>① <b>MenLevel 拼错</b>（Min = 最小值，Men 是啥？）；② <b>private 外部改不了</b> —— 你昨天验证级别开关就是在 Form1 里改这个值，private 的话根本改不动。</td></tr>
+      <tr><td>类 / 方法可见性</td><td><code>internal class AppLogger</code><br><code>public static void Write(...)</code></td><td><code>public static class AppLogger</code> + <code>private static void Write(...)</code><br>类里全是 static 方法，从没被 new 过；<code>Write</code> 是内部实现，外部不该直接调。</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <b>关于「旋钮为什么必须 public static」，一句话讲透：</b><br>
+    <code>private static LogLevel MenLevel</code> —— 它是 static 了，但 private。<br>
+    <code>AppLogger</code> 类外面（包括你的 <code>Form1</code>）<b>没有任何办法改它的值</b>。<br>
+    而你昨天验证 MinLevel 开关时，是要在 <b>Form1 里</b>写 <code>AppLogger.MinLevel = LogLevel.Error;</code> 的 ——
+    private 的话这行直接<b>编译报错</b>。<br>
+    <b>记这条规律：静态字段默认 private，要外部能改就必须 public；实例字段是 private 是对的，但静态字段你几乎总是需要 public。</b>
+  </div>
+  <div class="callout">
+    <b>还有一个可选的小优化（不做也能过）：</b>Debug 和 Info 两个分支代码完全一样，可以合并成一个
+    <code>if (level == LogLevel.Debug || level == LogLevel.Info)</code>，少 4 行。<br>
+    <span style="font-size:13px;color:var(--ink3)">你要是觉得现在这样更清楚，就先不动 —— <b>代码不华丽，能跑懂比少几行重要</b>。</span>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s0_1"><span class="tx"><b>lock 加回来了（去掉注释）</b><span>最优先。这是单元 2C 的验收项</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s0_2"><span class="tx"><b>MenLevel 改成 public static LogLevel MinLevel</b><span>拼写 + 可见性两件事</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s0_3"><span class="tx"><b>class 改 public static class，Write 改 private</b><span>可选但推荐</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s0_4"><span class="tx"><b>重新编译通过 + 跑一次 3 线程压测，还是 150 条</b><span>代码改了就要重新验证</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s0_5"><span class="tx"><b>确认 ERROR 日志文件名是 Error开头（不是 Eooro）</b><span>看 bin\Debug\logs\ 目录</span></span></label>
+  <div class="fillrow">
+    <div class="lbl">这 3 个问题里，我踩得最深的是哪个？为什么？（写一句就够）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_pre" data-ph="点此填写：三个问题里哪个最隐蔽？"></div>
+  </div>
+  <div class="callout danger">
+    <b>额外提醒：如果你注释掉 lock 是为了「再跑一次看看会不会丢行」</b>——<br>
+    那这个实验<b>做完了记得把锁加回去</b>，别带着注释过的锁进单元 3。<br>
+    而且要记住上一轮那句话：<b>「没复现」不等于「没问题」</b>。真实项目里丢行是偶发的，
+    你现场跑一天没事、跑三天丢几行，排查成本极高。<b>所以即使这次没丢，锁也必须留着。</b>
+  </div>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="card">
+  <h2><span class="n">1</span>为什么光有英文异常不够</h2>
+  <p>想象一下这个画面：</p>
+  <div class="callout danger">
+    晚上 11 点，客户的产线停了。客户给你发一条微信：<br>
+    <code>[2026:10:27 23:41:02][button3]System.NullReferenceException: 未将对象引用设置到对象的实例。</code><br>
+    <b>客户看不懂，你也不知道是哪一行。</b>这就是「只有英文异常」的全部信息量。
+  </div>
+  <p>一个合格的错误信息要同时回答三个问题：</p>
+  <table>
+    <thead><tr><th style="width:26%">问题</th><th style="width:34%">现在能回答吗</th><th>工业项目里应该怎么答</th></tr></thead>
+    <tbody>
+      <tr><td><b>哪一类问题</b></td><td>能，但很笼统</td><td>用<b>错误码</b>分段：E1xxx 设备类 / E2xxx 通讯类 / E3xxx 参数类</td></tr>
+      <tr><td><b>客户该怎么办</b></td><td>完全不能</td><td>错误码对应一条<b>中文处置说明</b>，客户照着做</td></tr>
+      <tr><td><b>程序怎么处理</b></td><td>不能</td><td>程序按错误码<b>分支</b>：超时→重试一次；掉线→报警停机</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>第三行是错误码真正的价值，也是最容易被忽略的价值。</b><br>
+    很多同学以为错误码就是给客户看的「提示文字」。<b>错。</b><br>
+    错误的码 <code>throw new BizException("E2001", "PLC通讯超时")</code> 之后，
+    上层可以写 <code>if (ex.Code == ErrorCodes.PlcTimeout) { 重试一次; }</code> —— <b>用错误码驱动逻辑</b>。
+    这才是工业上位机里错误码和普通提示信息的分水岭。
+  </div>
+  <div class="fillrow">
+    <div class="lbl">用你自己的话说：为什么「一句中文提示」不够，非要搞一个错误码？（不用抄上面）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_why" data-ph="点此填写：错误码解决了中文提示解决不了的什么问题？"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s1_1"><span class="tx"><b>我想清楚了「错误码是给程序用的」这层</b><span>不只是给客户看的提示文字</span></span></label>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="card">
+  <h2><span class="n">2</span>码段怎么分：一条规则定全局</h2>
+  <div class="callout warn">
+    <b>分错码段，后面全乱。</b>错误码一旦发给客户就<b>不能随便改</b> —— 客户现场写死的报警逻辑会对不上。所以规则要在第一天定死。
+  </div>
+  <h3>规则一：按「模块」分，不按「严重程度」分</h3>
+  <p>有人会想：「E1xxx = 严重错误，E2xxx = 警告」—— <b>这是错的</b>。严重程度由<b>日志级别</b>（DEBUG/INFO/ERROR）表达，那是另一套东西，已经学过了。
+  错误码应该按<b>功能模块</b>分，这样客户报「E2003」时你立刻知道是通讯那块的问题。</p>
+  <h3>规则二：前缀 + 4 位数字</h3>
+  <pre><span class="c">E</span> + <span class="hl">模块段</span> + <span class="hl">顺序号</span>      <span class="c">// 模块段：哪一类问题；顺序号：这一类里的第几个</span>
+
+E1xxx  <span class="c">设备 / 采集类</span>   <span class="c">// 相机、图像、光源</span>
+E2xxx  <span class="c">通讯类</span>        <span class="c">// PLC、相机网口、Modbus</span>
+E3xxx  <span class="c">参数 / 流程类</span>   <span class="c">// ROI 超界、模板没加载、流程配置错</span>
+E4xxx  <span class="c">业务 / 判定类</span>   <span class="c">// 尺寸超差、NG、不良</span>
+E9xxx  <span class="c">兜底 / 未知</span>     <span class="c">// 没 catch 住的意外，一律走这里</span></pre>
+  <div class="callout danger">
+    <b>一定要留 E9xxx 兜底码。</b>没有兜底码的工程，最后一条没被接住的异常就会<b>裸奔</b>到界面上，
+    客户看到 <code>System.NullReferenceException</code> —— 前面建的所有码段全部白建。
+  </div>
+  <h3>规则三：一个原因，永远只有一个码</h3>
+  <p>「相机没连上」如果一会儿叫 E1001、一会儿叫 E3007，客户报障时你根本对不上。<b>码表是字典，字典不能有同义词。</b></p>
+  <div class="fillrow">
+    <div class="lbl">我用我自己项目的话，写一条错误码分段规则（一句话，不抄上面）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_rule" data-ph="点此填写：例如「E1 设备、E2 通讯、E3 参数、E9 未知」并说明为什么这么分"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">我给 5 个码分配的段位（自己填，别抄）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_seg" data-ph="点此填写：E1xxx 放什么？E2xxx 放什么？E3xxx 放什么？E9xxx 放什么？"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s2_1"><span class="tx"><b>码段规则定下来了</b><span>按模块分，不按严重程度分</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_2"><span class="tx"><b>留了 E9xxx 兜底码</b><span>意外异常必须有地方去</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_3"><span class="tx"><b>接受「码一旦发布就不能随便改」这条约束</b><span>所以要留码表文档</span></span></label>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="card">
+  <h2><span class="n">3</span>写代码：一个带错误码的异常类</h2>
+  <p>新建文件 <code>BizException.cs</code>。这是你今天的<b>核心产出</b>：</p>
+  <pre><span class="k">using</span> System;
+
+<span class="k">namespace</span> w1_day2_线程安全
+{
+    <span class="c">// 业务异常：比普通 Exception 多带一个"业务错误码"</span>
+    <span class="k">public class</span> BizException : Exception
+    {
+        <span class="c">// 错误码。放属性里，不要拼进 Message</span>
+        <span class="k">public string</span> Code { <span class="k">get</span>; <span class="k">private set</span>; }
+
+        <span class="k">public</span> BizException(<span class="k">string</span> code, <span class="k">string</span> message) : <span class="k">base</span>(message)
+        {
+            Code = code;
+        }
+    }
+}</pre>
+  <div class="callout">
+    <b>为什么 <code>Code</code> 要单独放一个属性，不能拼进 Message？</b><br>
+    因为 Message 是<b>给人读</b>的（中文，可能改），Code 是<b>给程序读</b>的（契约，不能改）。<br>
+    如果你写成 <code>new BizException("E1002 相机采图超时")</code>，那程序要判断就得做字符串切割
+    <code>ex.Message.Substring(0,5)</code> —— <b>一旦中文描述改了，程序就崩</b>。这跟「用字符串解析代替结构化数据」是同一个错误。
+  </div>
+  <p>再新建文件 <code>ErrorCodes.cs</code>，把码集中管理：</p>
+  <pre><span class="k">namespace</span> w1_day2_线程安全
+{
+    <span class="c">// 错误码集中在这里。不要把 "E1001" 这种字符串散落到各个 .cs 文件里。</span>
+    <span class="k">public static class</span> ErrorCodes
+    {
+        <span class="c">// E1xxx 设备 / 采集类</span>
+        <span class="k">public const string</span> CameraNotConnected = <span class="s">"E1001"</span>;
+        <span class="k">public const string</span> CameraTimeout      = <span class="s">"E1002"</span>;
+
+        <span class="c">// E2xxx 通讯类</span>
+        <span class="k">public const string</span> PlcTimeout         = <span class="s">"E2001"</span>;
+        <span class="k">public const string</span> ModbusCrcError     = <span class="s">"E2002"</span>;
+
+        <span class="c">// E3xxx 参数 / 流程类</span>
+        <span class="k">public const string</span> RoiOutOfRange      = <span class="s">"E3001"</span>;
+
+        <span class="c">// E9xxx 兜底</span>
+        <span class="k">public const string</span> Unknown            = <span class="s">"E9001"</span>;
+    }
+}</pre>
+  <div class="callout warn">
+    <b>为什么码要集中在一个类里，而不是直接写字符串？</b><br>
+    写 <code>"E1001"</code> 散落在 5 个文件里 → 改一次要改 5 个地方，漏一个就出两种写法。<br>
+    集中之后：<b>改码 = 改一个地方</b>；而且 IDE 能跳转、能拼写检查、能一眼看出全项目一共多少个码。
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s3_1"><span class="tx"><b>BizException.cs 建好了</b><span>继承 Exception，多一个 Code 属性</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_2"><span class="tx"><b>ErrorCodes.cs 建好了，至少 6 个码</b><span>5 个业务码 + 1 个兜底码</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_3"><span class="tx"><b>Code 放在属性里，没有拼进 Message</b><span>Message 是给人读的，Code 是给程序读的</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_4"><span class="tx"><b>项目编译通过</b><span>新文件要加进项目；VS 里右键 → 添加 → 类</span></span></label>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="card">
+  <h2><span class="n">4</span>让日志带上错误码</h2>
+  <p>错误码写进界面还不够，<b>必须写进日志</b> —— 否则事后翻日志还是只看到英文异常。</p>
+  <p>你现在的 <code>AppLogger.LogError(string whereText, Exception ex)</code> 签名里没有码的位置。<b>最小改法：加一个重载</b>，不动原来的方法（原来那个还要给「不带码的意外异常」用）。</p>
+  <pre><span class="c">// AppLogger.cs 里，在原有 LogError 旁边加一个重载</span>
+<span class="k">public static void</span> LogError(<span class="k">string</span> code, <span class="k">string</span> whereText, Exception ex)
+{
+    Write(LogLevel.Error, code, whereText, ex);
+}</pre>
+  <p>然后 <code>Write</code> 的 <b>Error 分支</b>要把 <code>msg</code>（也就是码）也打进去。改一行：</p>
+  <pre><span class="c">// 你现在（码丢了，日志里只有 where 和堆栈）</span>
+File.AppendAllText(file, <span class="s">$"[{time}][{level.ToString()}][{whereText}]{ex}\n"</span>, Encoding.UTF8);
+
+<span class="c">// 改成（把 msg 也就是错误码打进去）</span>
+File.AppendAllText(file, <span class="s">$"[{time}][{level.ToString()}][{msg}][{whereText}]{ex}\n"</span>, Encoding.UTF8);</pre>
+  <div class="callout ok">
+    <b>改完之后的日志行长这样：</b><br>
+    <code>[2026-10-27 21:58:33-120][Error][E1002][相机采图]System.TimeoutException: 采集超时...</code><br>
+    <b>五个字段各司其职：</b>时间 / 级别 / <b>错误码</b> / 出处 / 堆栈。
+  </div>
+  <div class="callout warn">
+    <b>顺手把 <code>level.ToString()</code> 改成 <code>level.ToString().ToUpper()</code>。</b><br>
+    你现在的标签是 <code>[Info]</code>、<code>[Error]</code>（首字母大写），日志里三个级别<b>大小写不统一看着别扭</b>，
+    而且跟工业现场常见的 <code>[INFO]</code> / <code>[ERROR]</code> 写法不一致 —— 客户 grep 关键字的时候大小写敏感就搜不到了。<br>
+    <span style="font-size:13px;color:var(--ink3)">三处都要改：Debug 分支、Info 分支、Error 分支。</span>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s4_1"><span class="tx"><b>AppLogger 加了带 code 的 LogError 重载</b><span>旧的那个保留，别删</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4_2"><span class="tx"><b>Error 分支的日志格式加上了 [msg]</b><span>错误码要出现在日志里</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4_3"><span class="tx"><b>三个分支的 level 都加了 .ToUpper()</b><span>标签统一成 [INFO] / [ERROR]</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4_4"><span class="tx"><b>Debug / Info 两个分支合并成一个</b><span>它们代码完全一样，合并后少 4 行（可选）</span></span></label>
+</div>
+
+<!-- ============ 5 ============ -->
+<div class="card">
+  <h2><span class="n">5</span>三层消费：抛出 → 记录 → 提示</h2>
+  <p>同一个错误码，要在三个地方各出现一次才算做完整：</p>
+  <table>
+    <thead><tr><th style="width:20%">层</th><th style="width:38%">干什么</th><th>写在哪</th></tr></thead>
+    <tbody>
+      <tr><td><b>抛出层</b></td><td>业务代码发现异常，抛 <code>BizException</code>，带上码</td><td>相机采图、PLC 读写那几行</td></tr>
+      <tr><td><b>记录层</b></td><td>catch 住，<code>LogError(ex.Code, ...)</code> 写进日志</td><td>界面层 / 全局兜底</td></tr>
+      <tr><td><b>提示层</b></td><td>给用户一句<b>能照着做</b>的中文</td><td>MessageBox</td></tr>
+    </tbody>
+  </table>
+  <h3>写法</h3>
+  <pre><span class="c">// ① 抛出层：业务代码里抛</span>
+<span class="k">try</span>
+{
+    <span class="k">if</span> (!cameraConnected)
+    {
+        <span class="k">throw new</span> BizException(ErrorCodes.CameraNotConnected,
+                        <span class="s">"相机未连接，请检查网线和相机 IP"</span>);
+    }
+    image = camera.Capture();
+}
+<span class="k">catch</span> (BizException ex)
+{
+    <span class="c">// ② 记录层：日志里必须带码</span>
+    AppLogger.LogError(ex.Code, <span class="s">"相机采图"</span>, ex);
+
+    <span class="c">// ③ 提示层：给客户能照着做的一句话</span>
+    MessageBox.Show(<span class="s">$"[{ex.Code}] {ex.Message}"</span>, <span class="s">"出错了"</span>);
+    <span class="k">return</span>;
+}</pre>
+  <h3>然后加一层：按码分支</h3>
+  <p>这一步是<b>单元 3 的分水岭</b>。做完上面那三步，你只是「把异常信息换成了中文」。加上按码分支，程序才真的「懂」了自己的错误：</p>
+  <pre><span class="k">catch</span> (BizException ex)
+{
+    AppLogger.LogError(ex.Code, <span class="s">"相机采图"</span>, ex);
+
+    <span class="c">// 按错误码决定程序怎么走 —— 这才是错误码的真正用途</span>
+    <span class="k">if</span> (ex.Code == ErrorCodes.CameraTimeout)
+    {
+        <span class="c">// 超时是偶发的 → 重试一次，不打断产线</span>
+        MessageBox.Show(<span class="s">"[E1002] 相机采图超时，正在重试..."</span>);
+        <span class="k">return</span>;
+    }
+    <span class="k">if</span> (ex.Code == ErrorCodes.CameraNotConnected)
+    {
+        <span class="c">// 掉线是硬故障 → 报警停机，等人来处理</span>
+        MessageBox.Show(<span class="s">"[E1001] 相机未连接，请检查网线或相机电源"</span>);
+        plc.Stop();   <span class="c">// 停机</span>
+        <span class="k">return</span>;
+    }
+
+    <span class="c">// 其余未预料到的业务错误，统一按兜底处理</span>
+    MessageBox.Show(<span class="s">$"[{ex.Code}] {ex.Message}"</span>);
+}</pre>
+  <div class="callout">
+    <b>「超时重试」和「掉线停机」的区别，就是工业上位机和玩具程序的区别。</b><br>
+    同一个「相机出问题」，超时就重试（产线继续跑），掉线就停机报警（再跑下去会撞坏产品）。<br>
+    <b>这个判断只有靠错误码才能写出来</b> —— 中文提示文字没法用来做分支。
+  </div>
+  <div class="callout danger">
+    <b>catch 的顺序不能反！</b>C# 从上往下匹配，<b>第一个匹配上的就停</b>。<br>
+    如果你写 <code>catch (Exception ex)</code> 在前、<code>catch (BizException ex)</code> 在后 →
+    <b>BizException 那个分支永远进不去</b>，而且<b>编译器不报错</b>。<br>
+    正确顺序：<code>catch (BizException)</code> 在前，<code>catch (Exception)</code> 在后。
+  </div>
+  <p>最后补一个<b>兜底 catch</b>，这是 E9xxx 存在的意义：</p>
+  <pre><span class="k">catch</span> (Exception ex)
+{
+    <span class="c">// 没被接住的意外，一律给兜底码 + 写完整堆栈</span>
+    AppLogger.LogError(ErrorCodes.Unknown, <span class="s">"未预期异常"</span>, ex);
+    MessageBox.Show(<span class="s">"[E9001] 系统未知错误，已记录日志，请联系技术人员"</span>,
+                    <span class="s">"出错了"</span>);
+}</pre>
+  <label class="chk"><input type="checkbox" data-id="s5_1"><span class="tx"><b>写了一个 button3 触发 BizException</b><span>故意抛一个带错误码的异常</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_2"><span class="tx"><b>catch (BizException) 写在前，catch (Exception) 写在后</b><span>顺序反了不报错但分支进不去</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_3"><span class="tx"><b>实现了「按错误码分支」：超时重试 / 掉线停机</b><span>单元 3 的核心验收</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_4"><span class="tx"><b>加了 catch (Exception) 兜底，走 E9xxx</b><span>意外异常不许裸奔到界面</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_5"><span class="tx"><b>MessageBox 显示的是 [错误码] + 中文，不是英文异常</b><span>客户看到的是能照着做的话</span></span></label>
+</div>
+
+<!-- ============ 6 ============ -->
+<div class="card">
+  <h2><span class="n">6</span>验证：5 个码全跑一遍</h2>
+  <p>验收不是「我觉得写对了」，是<b>打开日志能搜到</b>。</p>
+  <h3>做法</h3>
+  <ol>
+    <li>在 <code>button3</code> 里用 <b>5 个下拉项或 5 个按钮</b>，分别触发 5 个不同错误码</li>
+    <li>每点一个，界面上弹出<b>对应</b>的错误码和中文说明</li>
+    <li>点完之后，打开 <code>bin\Debug\logs\Error2026-10-27.txt</code>（文件名 = <code>level.ToString()</code> + 日期，所以是 <code>Error2026-10-27.txt</code>，注意<b>不是 ERROR 全大写</b>）</li>
+    <li>用 Ctrl+F 搜 <code>E1</code>、<code>E2</code>、<code>E3</code>、<code>E9</code>，<b>每个码都能搜到</b></li>
+  </ol>
+  <div class="callout warn">
+    <b>再顺手搜一下「堆栈」。</b>错误码行里必须<b>同时有码、有中文说明、有完整堆栈</b>。<br>
+    少了堆栈 → 现场排查还是抓瞎；少了码 → 这单元等于没做。
+  </div>
+  <div class="fillrow">
+    <div class="lbl">5 个码的实测结果（哪个码、日志里长什么样）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_verify" data-ph="点此填写：E1001 的日志行长什么样？E9001 那条呢？"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">5 个码表（这栏可以直接抄到学习记录里）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_table" data-ph="点此填写：| 错误码 | 含义 | 什么情况下出现 | 缺陷还是预期 |"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s6_1"><span class="tx"><b>5 个码都能从界面触发</b><span>每个码有各自的场景</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_2"><span class="tx"><b>日志里 5 个码全部搜得到</b><span>Ctrl+F 挨个搜一遍</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_3"><span class="tx"><b>确认日志行里有完整堆栈</b><span>码 + 中文 + 堆栈，三样齐全</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_4"><span class="tx"><b>确认 E9001 兜底码真的走到了</b><span>用一个普通 Exception（比如空引用）试</span></span></label>
+</div>
+
+<!-- ============ 7 ============ -->
+<div class="card">
+  <h2><span class="n">7</span>单元 3 的三个坑</h2>
+  <table>
+    <thead><tr><th style="width:26%">坑</th><th style="width:36%">为什么错</th><th>该怎么做</th></tr></thead>
+    <tbody>
+      <tr><td><b>码拼进 Message</b></td><td>要靠字符串切割才能判断，描述一改程序就崩</td><td>码单独放 <code>Code</code> 属性</td></tr>
+      <tr><td><b>码散落在各个文件里</b></td><td>改一次改 N 个地方，漏一个就出两种写法</td><td>全部集中到 <code>ErrorCodes</code></td></tr>
+      <tr><td><b>catch 顺序反了</b></td><td><code>catch(Exception)</code> 在前 → <code>BizException</code> 分支永远进不去，<b>编译器不报错</b></td><td>具体的在前，笼统的在后</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>还有一个坑不是代码坑，是「习惯坑」：</b>错误码一旦发给客户就<b>不能随便改</b>。<br>
+    所以要留一份<b>码表文档</b>（Excel 或 Markdown 都行），记着：码 / 含义 / 什么时候出 / 处置方法 / 日期。<br>
+    <b>面试时「我维护过一份错误码表文档」这句话，比「我用了 try/catch」值钱得多。</b>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">这三个坑里，我打算写进学习记录「踩坑记录」的是哪一个？</div>
+    <div class="fillbox" contenteditable="true" data-k="q_pit" data-ph="点此填写：选一个，说明现象/根因/怎么修"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s7_1"><span class="tx"><b>能说出「码不能随便改」这条约束</b><span>所以要有码表文档</span></span></label>
+</div>
+
+<!-- ============ 8 ============ -->
+<div class="card">
+  <h2><span class="n">8</span>填学习记录：单元 3 那一节</h2>
+  <p>打开 <code>E:\上位机工程模板\W1学习记录.md</code>，找到「<b>单元 3：错误码表</b>」这一节（大约在第 124 行），填三块：</p>
+  <table>
+    <thead><tr><th style="width:34%">要填的位置</th><th>填什么</th></tr></thead>
+    <tbody>
+      <tr><td>单元 3 · 日期</td><td>写今天日期</td></tr>
+      <tr><td>单元 3 · 错误码设计原则</td><td>一句话，<b>必须是你自己写的规则</b>，不是抄任务卡的</td></tr>
+      <tr><td>单元 3 · 错误码表</td><td>上面那 5 个码 + 你自己加的第 6 个（兜底码），四列都填</td></tr>
+      <tr><td>单元 3 · 一个错误码该怎么用</td><td>贴你那段 <code>BizException</code> 的代码片段，<b>含码 + 中文 + 日志</b></td></tr>
+    </tbody>
+  </table>
+  <div class="callout ok">
+    <b>顺便把单元 2 剩下的补上（你之前说一起填，现在正好）：</b><br>
+    ① 单元 2 日期还是 <code>____</code>；② 坑 1 的根因写错了 —— 你写的是「多线程同时改变一个数据会导致误判」，
+    真实根因是<b>文件独占打开 → 抛 IOException → 被 catch 吞掉 → 静默丢行</b>；
+    ③ 坑 1 的「怎么定位的」写的是「学习了 lock 锁」，那不是排查方法，
+    真实过程是<b>跑压测发现条数少于 150 → 去掉 catch 再跑 → 看到 IOException 出现 → 定位到文件独占打开</b>；
+    ④ 坑 2 还全空。
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s8_1"><span class="tx"><b>单元 3 的三块都填了</b><span>日期 / 设计原则 / 码表 / 用法示例</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_2"><span class="tx"><b>单元 2 的日期、坑 1 根因、坑 2 都补完了</b><span>坑 1 的根因和定位过程要改对</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_3"><span class="tx"><b>建了错误码表文档（Excel / Markdown 都行）</b><span>码 / 含义 / 触发条件 / 处置方法</span></span></label>
+</div>
+
+<!-- ============ 9 ============ -->
+<div class="card">
+  <h2><span class="n">9</span>交付清单 + 今天不做的 3 件事</h2>
+  <table>
+    <thead><tr><th style="width:44%">今天不做</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td><b>错误码做成配置文件</b></td><td>客户能自己改错误码听起来很美，但<b>改错了更致命</b>。配置化留给单元 5（那时你要对比 Log4Net 的配置外置能力）。</td></tr>
+      <tr><td><b>建 30 个错误码</b></td><td>你现在项目里根本触发不了 30 种错误。写了不验证 = 一堆死码。<b>先 5 个，每个都真跑过。</b></td></tr>
+      <tr><td><b>全局异常兜底</b></td><td>那是<b>单元 4</b> 的内容（三处挂载）。今天别提前碰。</td></tr>
+    </tbody>
+  </table>
+  <label class="chk"><input type="checkbox" data-id="s9_1"><span class="tx"><b>BizException.cs + ErrorCodes.cs 已建并编译通过</b><span>两个核心产出</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s9_2"><span class="tx"><b>AppLogger 的 3 个问题 + 日志格式改完了</b><span>过滤器 / 拼写 / MinLevel / [msg] / \n</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s9_3"><span class="tx"><b>按错误码分支的逻辑写出来了</b><span>超时重试 / 掉线停机</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s9_4"><span class="tx"><b>5 个码全部实测过，日志里搜得到</b><span>单元 3 验收标准：每个异常都带业务语言码</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s9_5"><span class="tx"><b>学习记录单元 3 填完了</b><span>W1学习记录.md</span></span></label>
+  <div class="fillrow">
+    <div class="lbl">卡住的地方（哪里想不通，直接写，明天问我）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_block" data-ph="点此填写：哪一步卡住了？报错原文是什么？"></div>
+  </div>
+</div>
+
+</div>
+<script>
+(function(){
+  var KEY='mv_w1_d3_checkin_v1';
+  var FKEY='mv_w1_d3_fill_v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[type=checkbox][data-id]'));
+  var fills=[].slice.call(document.querySelectorAll('[contenteditable][data-k]'));
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+  function save(k,d){ try{ localStorage.setItem(k, JSON.stringify(d)); }catch(e){} }
+  var st=load(KEY), ft=load(FKEY);
+
+  function markFilled(el){
+    if(el.textContent.replace(/[\u200B\s]/g,'').length>0){ el.classList.add('filled'); }
+    else { el.classList.remove('filled'); }
+  }
+  function applyAll(){
+    boxes.forEach(function(b){ b.checked=!!st[b.dataset.id]; });
+    fills.forEach(function(el){ if(ft[el.dataset.k]) el.innerHTML=ft[el.dataset.k]; markFilled(el); });
+  }
+  applyAll();
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      st[b.dataset.id]=b.checked; save(KEY,st); upd();
+    });
+  });
+  fills.forEach(function(el){
+    el.addEventListener('input', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft); markFilled(el); upd();
+    });
+    el.addEventListener('blur', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft);
+    });
+    el.addEventListener('keydown', function(e){
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); el.blur(); }
+    });
+    el.addEventListener('paste', function(e){
+      e.preventDefault();
+      var t=(e.clipboardData||window.clipboardData).getData('text');
+      document.execCommand('insertText', false, t.replace(/\r?\n/g,' '));
+    });
+  });
+
+  function upd(){
+    var n=boxes.filter(function(b){return b.checked;}).length;
+    var t=boxes.length;
+    var fn=fills.filter(function(el){return el.textContent.replace(/[\u200B\s]/g,'').length>0;}).length;
+    document.getElementById('ptext').textContent=n+' / '+t;
+    document.getElementById('pbar').style.width=(t? n/t*100:0)+'%';
+    var f=document.getElementById('ftext');
+    if(f) f.textContent='已填写 '+fn+' / '+fills.length+' 处';
+  }
+  upd();
+
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('清空今天的勾选进度和所有填写内容？')) return;
+    boxes.forEach(function(b){ b.checked=false; });
+    fills.forEach(function(el){ el.innerHTML=''; el.classList.remove('filled'); });
+    st={}; ft={}; save(KEY,st); save(FKEY,ft); upd();
+  });
+
+  var ta=document.getElementById('bta');
+  var be=document.getElementById('bexp'), bi=document.getElementById('bimp');
+  if(be) be.addEventListener('click',function(){
+    ta.value='MVCHK2|'+KEY+'|'+JSON.stringify(st)+'|'+JSON.stringify(ft);
+    ta.select(); try{ document.execCommand('copy'); }catch(e){}
+    ta.scrollIntoView({block:'center'});
+  });
+  if(bi) bi.addEventListener('click',function(){
+    var t=(ta.value||'').trim(), parts=t.split('|');
+    if(parts.length<4||parts[0]!=='MVCHK2'){ alert('这段文本不像备份内容。备份文本长这样：MVCHK2|...|{勾选}|{填写}'); return; }
+    var a,b2; try{ a=JSON.parse(parts[2]); b2=JSON.parse(parts[3]); }catch(e){ alert('解析失败：'+e.message); return; }
+    st=a||{}; ft=b2||{}; save(KEY,st); save(FKEY,ft); applyAll(); upd();
+    alert('已恢复 '+Object.keys(st).length+' 项勾选、'+Object.keys(ft).length+' 处填写。');
+  });
+})();
+</script>
+</body>
+</html>

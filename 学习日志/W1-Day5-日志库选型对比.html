@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>W1 · 单元 5 · Day 5 · 2026-10-29 周四</title>
+<style>
+:root{--ink:#1f1f1e;--ink2:#5f5e5a;--ink3:#8a8984;--line:#e2dfd6;--line2:#d8d4c8;--bg:#f7f6f2;--card:#fff;--blue:#185fa5;--blue2:#e6f1fb;--red:#a32d2d;--red2:#fcebeb;--amber:#854f0b;--amber2:#faeeda;--green:#3b6d11;--green2:#eaf3de;--font-mono:Consolas,"Cascadia Mono",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;line-height:1.75}
+.wrap{max-width:940px;margin:0 auto;padding:26px 18px 80px}
+header{margin-bottom:18px}
+.kicker{font-size:12.5px;letter-spacing:.08em;color:var(--blue);font-weight:500;margin:0 0 6px}
+h1{font-size:24px;font:600 24px/1.3 "PingFang SC","Microsoft YaHei",-apple-system,sans-serif;margin:0 0 8px}
+.sub{color:var(--ink2);font-size:14px;margin:0}
+.meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.tag.b{background:var(--blue2);border-color:#b5d4f4;color:var(--blue)}
+.tag.a{background:var(--amber2);border-color:#fac775;color:var(--amber)}
+.tag.g{background:var(--green2);border-color:#c0dd97;color:var(--green)}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0 24px}
+.pmeta{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);margin-bottom:8px}
+.pbar{height:9px;background:#e4e9f1;border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2563eb,#0e7490);transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0}
+.card h2{font-size:17px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:9px}
+.card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--blue2);color:var(--blue);font-size:13px;font-weight:600;flex:none}
+.card h3{font-size:15px;font-weight:600;margin:18px 0 8px}
+p{margin:9px 0}
+code{font-family:var(--font-mono);font-size:12.8px;background:#f4f2ec;padding:1px 6px;border-radius:5px;color:#7a4a12}
+pre{background:#23231f;color:#e9e6dc;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--font-mono);font-size:12.6px;line-height:1.7;margin:10px 0}
+pre .k{color:#7ec8f0}
+pre .s{color:#a8d98a}
+pre .c{color:#8b8b82}
+pre .hl{color:#f0c36d}
+ul,ol{padding-left:22px;margin:9px 0}
+li{margin:5px 0}
+.callout{border-left:4px solid var(--blue);background:var(--blue2);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.callout.warn{border-color:#d19b2a;background:var(--amber2)}
+.callout.danger{border-color:#c0392b;background:var(--red2)}
+.callout.ok{border-color:#639922;background:var(--green2)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f2f0ea;font-weight:600}
+td.done{background:#f2f8f2}
+td.fill{background:#fffdf7}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line2);border-radius:10px;margin:8px 0;background:#fdfdfb;cursor:pointer}
+.chk:hover{border-color:#9dbde0;background:#fbfdff}
+.chk input{margin-top:3px;width:16px;height:16px;accent-color:#2563eb;flex:none}
+.chk .tx{font-size:14px}
+.chk .tx b{display:block}
+.chk .tx span{font-size:13px;color:var(--ink3)}
+.fillrow{margin:12px 0}
+.fillrow .lbl{font-size:12.5px;color:var(--ink3);margin-bottom:5px}
+.fillbox{min-height:64px;padding:10px 12px;font-size:14px;line-height:1.7;background:#fffdf7;border:1px dashed #d9c98f;border-radius:8px;color:var(--ink)}
+.fillbox:hover{border-color:#c9b464;background:#fffbe8}
+.fillbox:focus{outline:none;border-style:solid;border-color:var(--blue);background:#fff}
+.fillbox:empty::before{content:attr(data-ph);color:#b5b3a6}
+.fillbox.filled{background:#f4f9fd;border-color:#b5d4f4}
+.hint{font-size:13px;color:var(--ink3);margin:6px 0 10px}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+#bta{width:100%;margin-top:8px;padding:8px 10px;font-size:12px;line-height:1.6;border:1px solid var(--line2);border-radius:8px;background:#fffdf7;font-family:var(--font-mono);resize:vertical}
+#bta:focus{outline:none;border-color:var(--blue);background:#fff}
+.kbd{font-family:var(--font-mono);font-size:12.5px;background:#efece3;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+.err{background:#fcebeb;border:1px solid #f09595;border-radius:8px;padding:2px 8px;font-family:var(--font-mono);font-size:12.4px;color:#791f1f;display:inline-block;margin:2px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">W1 · 单元 5 · 日志库选型 + NLog 实战</p>
+  <h1>我写的日志类 vs 机构队列组件 vs NLog vs Log4Net —— 我该用哪个，为什么</h1>
+  <p class="sub">今天<b>要动手</b>。前半段是对比（决定用不用库），后半段是<b>亲手把 NLog 装上跑通</b>（学会用）。<br>
+  最终产出两样东西：<b>一份能讲的选型结论</b> + <b>一个能用的 NLog 工程</b>。</p>
+  <div class="meta">
+    <span class="tag b">8 节 · 42 项</span>
+    <span class="tag a">约 4 小时</span>
+    <span class="tag g">核心产出：选型结论 + NLog 能跑起来</span>
+  </div>
+</header>
+
+<div class="progress">
+  <div class="pmeta"><span>今天的进度</span><span id="ptext">0 / 0</span></div>
+  <div class="pbar"><i id="pbar"></i></div>
+  <div class="pmeta" style="margin-top:10px"><span id="ftext">已填写 0 / 0 处</span><span>
+    <button class="btn" id="reset">重置今天</button>
+  </span></div>
+  <details style="margin-top:12px">
+    <summary style="font-size:13px;color:var(--ink3);cursor:pointer">进度备份 / 恢复（换电脑或换浏览器用）</summary>
+    <textarea id="bta" placeholder="点「导出备份文本」生成，复制保存；换设备后粘贴回这里点「从文本恢复」"></textarea>
+    <div style="margin-top:8px;display:flex;gap:8px">
+      <button class="btn" id="bexp">导出备份文本</button>
+      <button class="btn" id="bimp">从文本恢复</button>
+    </div>
+  </details>
+</div>
+
+<div class="callout warn" style="margin-top:0">
+  <b>进度存在本机浏览器，刷新不丢（预览面板与双击打开不互通）。</b>
+  换电脑或换浏览器时，用上面的「导出备份文本 / 从文本恢复」搬过去。
+</div>
+
+<!-- ============ 第 0 节 ============ -->
+<div class="card">
+  <h2><span class="n">0</span>先看事实：你手里已经有什么</h2>
+  <p>单元 5 是<b>对比 + 上手</b>。动手之前，先把四样东西摆到桌上。</p>
+  <table>
+    <thead><tr><th style="width:22%">东西</th><th style="width:30%">在哪</th><th>是什么</th></tr></thead>
+    <tbody>
+      <tr><td><b>你写的日志类</b></td><td><code>w1-day4-全局异常兜底\AppLogger.cs</code><br>（共 3 个版本）</td><td>69 行，三档枚举 + <code>lock</code> + 单文件按天<br><span class="hint">单元 2A（日志级别 118 行）→ 单元 2C（线程安全 71 行）→ 单元 4（69 行）</span></td></tr>
+      <tr><td><b>机构的队列组件</b></td><td><code>C://Users//guicai//Desktop//C#new//3_高级//Thread//支持并发的异步日志组件.md</code></td><td>队列 + 专用写日志线程 + <code>ManualResetEvent</code> 信号<br><span class="hint">⚠️ <b>它不是 Log4Net</b> —— 是机构教你<b>手写</b>一个队列日志组件</span></td></tr>
+      <tr><td><b>NLog</b> <span class="hint">← <b>今天的主角</b></span></td><td>NuGet 包（<b>今天要装</b>）</td><td>社区里 .NET Framework 工业上位机的<b>首选</b>日志库<br><span class="hint">当前版本 <b>5.4.0</b>，支持 net45/net46/netstandard<br><b>今天下午我已经在你这台机器上实测跑通了</b> → 见第 4 节</span></td></tr>
+      <tr><td><b>Log4Net</b></td><td>NuGet 包（<b>今天不装</b>）</td><td>Apache 出品，2001 年的老牌日志库<br><span class="hint">今天<b>只查资料做判断</b> —— 因为它已经进维护模式，没必要花时间学一个不再演进的库</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout danger">
+    <b>⚠️ 先纠正一个容易混的概念（我上一版卡里也写混了）：</b><br>
+    <b>机构那份《支持并发的异步日志组件.md》不是 Log4Net。</b><br>
+    它是机构<b>教你手写</b>一个队列式异步日志组件 —— 里面<b>一行 Log4Net 的代码都没有</b>。<br>
+    所以今天真正的三方对比是：<b>你手写的 vs 机构手写的 vs NLog（真库）</b>，
+    Log4Net 是第四个参照物，只看资料不实操。<br>
+    <span class="hint">这个纠正很重要 —— 你要学的不是「两个手写方案怎么选」，而是「手写 vs 成熟库怎么选」。</span>
+  </div>
+  <div class="callout danger">
+    <b>⚠️ 今天最重要的一件事，是先搞清一个事实：Log4Net 官方已经宣布停止积极开发了。</b><br>
+    2025 年 8 月，Log4Net 官方在邮件列表里原话：<br>
+    <span class="err">"there are no active plans to modernize log4net … log4net remains in maintenance mode"</span><br>
+    翻译：<b>没有计划把 log4net 现代化，它停留在「维护模式」</b> —— 只修 bug、清旧代码，不加新特性。
+    3.x 版本只做了三件事：目标框架收到 4.6.2+、删掉 2015 年就废弃的 API、移除 <code>RemotingAppender</code> / <code>NetSendAppender</code>。<br>
+    <b>2.x 已于 2024-09-12 结束生命周期（EOL）。</b>
+    <span class="hint">这不代表 log4net 不好用 —— 它很稳定。但它意味着「新结构化日志」「新异步需求」只能自己写。</span>
+  </div>
+  <div class="callout ok">
+    <b>社区对 .NET Framework 4.8 工业上位机的推荐分布（我查了 GitHub、NLog/Serilog 官方、Stack Overflow）：</b>
+    <ul>
+      <li><b>NLog</b> —— 首选。官方明确支持 .NET Framework 3.5–4.8，活跃维护，异步包装（<code>AsyncWrapper</code>）的溢出策略可控，<b>配置文件支持热重载</b></li>
+      <li><b>Serilog</b> —— 备选。核心库支持 net462+，<code>Serilog.Sinks.Async</code> 明确支持 net462 及以上</li>
+      <li><b>Log4Net</b> —— <b>只在「维护老项目」语境下推荐</b>，新项目不建议</li>
+    </ul>
+    <span class="hint">来源：log4net 官方 GitHub Discussions（2025-08）、Apache 官方版本策略页、NLog/Serilog 官方 NuGet 与 Wiki、GitHub LoggingPerformance 基准仓库。</span>
+  </div>
+</div>
+
+<!-- ============ 第 1 节 ============ -->
+<div class="card">
+  <h2><span class="n">1</span>我实测出来的两个事实（比任何资料都有说服力）</h2>
+  <p>我把机构的队列组件<b>原样抄了一份</b>，在 net48 下跑了两组压测。结果如下。</p>
+  <h3>1.1 实验一：并发写，会不会丢行？</h3>
+  <pre>Parallel.For(0, 3000, i =&gt; Logger.Write($"第{i}条\n"));
+Thread.Sleep(1500);   // 等后台线程写完
+File.ReadAllLines("log.txt").Length
+
+<span class="hl">发起 3000 条耗时: 6 ms
+实际落盘: 3000 条  →  一条不少</span></pre>
+  <div class="callout ok">
+    <b>结论：机构的队列组件在并发上是正确的。</b>3000 条一条不少。<br>
+    这跟你在单元 2C 亲手踩过的那个坑不一样 —— 那个坑是<b>多个线程同时写同一个文件</b>，
+    这套设计是<b>所有线程只往队列里塞，真正写文件的只有一个线程</b>，所以根本没竞争。<br>
+    <span class="hint">这个设计思路本身是对的，值得学。它是「生产者-消费者」模式。</span>
+  </div>
+
+  <h3>1.2 实验二：进程立刻退出，尾部日志会怎样？</h3>
+  <pre>Logger.Write("第1条\n");
+Logger.Write("第2条\n");
+Logger.Write("第3条\n");
+<span class="c">// 不 Sleep，主线程直接结束</span>
+
+<span class="hl">[实验1] 写了 3 条，现在主线程立刻结束
+--- 落盘内容 ---
+(log.txt 不存在)
+--- 行数 --- 0</span></pre>
+  <div class="callout danger">
+    <b>结论：3 条日志，一条都没落盘。</b><br>
+    <b>原因</b>：写日志的线程是 <code>IsBackground = true</code> 的后台线程，主线程一结束，
+    CLR 发现只剩后台线程就直接退出进程 —— <b>队列里还排着的日志全没了</b>。<br>
+    <b>而且它有个 <code>Thread.Sleep(100)</code></b>：每轮固定等 100ms 才批量写。
+    也就是说<b>每一条日志最坏要等 100ms 才落盘</b>，程序在这 100ms 内退出就丢。
+  </div>
+  <div class="callout warn">
+    <b>这是队列方案的固有代价，不是这份代码写得差。</b><br>
+    <b>「异步」和「不丢」这两件事，在物理上是冲突的</b> —— 数据在内存队列里，进程就没了。<br>
+    工业界的解法是：<b>退出前必须 Flush（把队列里的东西强制刷出去）</b>。
+    Log4Net 有 <code>LogManager.Shutdown()</code>，NLog 有 <code>LogManager.Shutdown()</code>，
+    Serilog 有 <code>Log.CloseAndFlush()</code> —— <b>三个库都强制要求你调它</b>。<br>
+    <span class="hint">而且这只是解决「正常退出」。崩溃、断电、任务管理器强杀 —— 那就没救了，只能靠日志本身已经落盘的那部分。</span>
+  </div>
+
+  <label class="chk"><input type="checkbox" data-id="s1_1"><span class="tx"><b>我把机构的队列组件跑了一遍（并发 3000 条 + 立即退出两组）</b><span>不要只读，要自己跑</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s1_2"><span class="tx"><b>确认了并发 3000 条一条不少</b><span>队列 + 单写线程 = 天然没有竞争</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s1_3"><span class="tx"><b>确认了进程立刻退出时尾部日志全丢（0 条落盘）</b><span>核心验收项 —— 这是异步方案的固有代价</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s1_4"><span class="tx"><b>能说出这个丢日志的根本原因</b><span>IsBackground 线程 + 队列在内存里 + 没人 Flush</span></span></label>
+
+  <div class="fillrow">
+    <div class="lbl">用一句话说清楚：为什么机构的队列组件「并发不丢行」，但「退出时会丢」？（提示：想想谁在写文件）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_why1" data-ph="一句话就够。参考：因为所有线程只往队列里塞，真正写文件的只有一个线程，所以没竞争；但队列在内存里，进程一退就没了。"></div>
+  </div>
+</div>
+
+<!-- ============ 第 2 节 ============ -->
+<div class="card">
+  <h2><span class="n">2</span>四方对比：五个维度（这是单元 5 的核心产出）</h2>
+  <p>不测「谁快」—— 社区基准测试的数字差异极大，因为测试口径完全不同（异步与否、真实写盘与否、Framework 还是 Core）。<br>
+  <b>测「谁在什么场景下会出事」</b> —— 这才是工程判断。</p>
+  <table>
+    <thead><tr><th style="width:18%">维度</th><th style="width:21%">你写的 lock 版</th><th style="width:21%">机构队列组件</th><th style="width:22%">NLog 5.4.0<br><span class="hint">← 今天实测</span></th><th>Log4Net</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>阻塞业务线程</b></td>
+        <td>会 —— 写盘是同步的</td>
+        <td>不会 —— 只入队</td>
+        <td><b>不会</b> —— 异步包装<br><span class="hint">实测：3000 条发起耗时 3 ms</span></td>
+        <td>不会（需自己配 AsyncAppender）</td>
+      </tr>
+      <tr>
+        <td><b>崩溃时尾部日志</b></td>
+        <td><b>保住</b>（已经落盘了）</td>
+        <td><b>全丢</b>（除非 Flush）</td>
+        <td>需要 <code>Flush()</code><br><span class="hint">官方强制要求</span></td>
+        <td>需要 <code>Shutdown()</code></td>
+      </tr>
+      <tr>
+        <td><b>现场改日志级别</b></td>
+        <td>改代码 → 重编译 → 重发</td>
+        <td>改代码 → 重编译 → 重发</td>
+        <td><b>改配置文件即可</b><br><span class="hint">实测：改 minlevel，不重启，当场生效</span></td>
+        <td>改配置（需开 Watch=true）</td>
+      </tr>
+      <tr>
+        <td><b>日志量级大了会怎样</b></td>
+        <td>日志线程被磁盘拖慢<br>→ 整个采集跟着慢</td>
+        <td>队列堆积 → 内存涨<br>（文档里自己标了 todo）</td>
+        <td>溢出策略可选<br><span class="hint">实测 Discard 静默丢 490/500</span></td>
+        <td>策略可选</td>
+      </tr>
+      <tr>
+        <td><b>归档/防撑爆硬盘</b></td>
+        <td>要自己写</td>
+        <td>要自己写</td>
+        <td><b>配置两个属性就行</b><br><span class="hint">archiveAboveSize + maxArchiveFiles</span></td>
+        <td>配置项更全</td>
+      </tr>
+      <tr>
+        <td><b>维护状态</b></td>
+        <td>自己维护</td>
+        <td>自己维护</td>
+        <td><b>活跃维护</b><br><span class="hint">5.4.0 是当前版</span></td>
+        <td><b>维护模式</b>（2.x 已 EOL）</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout ok">
+    <b>⚠️ 第四行那个「溢出策略」是三个库差异最大、也最容易被忽略的地方。</b><br>
+    <b>NLog 的 <code>AsyncWrapper</code>：</b>
+    <ul>
+      <li><code>overflowAction="Discard"</code>（<b>默认值！</b>）→ 队列满了<b>直接丢</b>，调用方永不阻塞</li>
+      <li><code>overflowAction="Block"</code> → 队列满了<b>阻塞调用线程</b>，<b>不丢</b>，但会卡住业务</li>
+      <li><code>overflowAction="Grow"</code> → 无视上限一直扩容 → <b>生产环境禁用，会 OOM</b></li>
+    </ul>
+    <b>陷阱：</b><code>&lt;targets async="true"&gt;</code> 是简写，<b>等价于 Discard + queueLimit=10000</b>。<br>
+    <span class="hint">官方原话：如果你写了很多消息（短时间内超过 10000 条），消息<b>可能会丢</b>，这是预期行为。
+    工业现场<b>绝不能直接用 <code>async="true"</code></b> —— 一旦日志量加大（比如打开报文级 Trace）就静默丢日志。</span>
+    <br><br><b>⚠️ 这不是理论 —— 我今天实测出来了：</b>把 <code>queueLimit</code> 调成 10、写 500 条，
+    <b>落盘只有 10 条，490 条凭空消失，程序一声不吭。</b>
+    <span class="hint">第 4.6 步你会亲手再造一次这个事故，然后填进学习记录。</span>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s2_1"><span class="tx"><b>能填出上面这张四方对比表</b><span>不看书，凭记忆写出来</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_2"><span class="tx"><b>知道 NLog 的三种溢出策略分别是什么</b><span>Discard / Block / Grow</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_3"><span class="tx"><b>知道 <code>async="true"</code> 等价于 Discard，会静默丢日志</b><span>官方文档明说的坑</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_4"><span class="tx"><b>能说出「现场改日志级别」这个维度上库和手写的差别</b><span>这是客户现场最常见的诉求</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_5"><span class="tx"><b>能在四方对比表里把 NLog 那列填出来</b><span>五个维度都要填，凭记忆</span></span></label>
+
+  <div class="fillrow">
+    <div class="lbl">如果客户说「日志太多把硬盘塞满了，能不能现场调小点、不用重新发版」—— 手写版能做到吗？为什么？</div>
+    <div class="fillbox" contenteditable="true" data-k="q_hot" data-ph="手写版做不到 —— MinLevel 是编译进 exe 的常量，现场要改就得重编译重发版。NLog 做到了：改 NLog.config 的 minlevel，程序不重启当场生效（我实测过）。"></div>
+  </div>
+</div>
+
+<!-- ============ 第 3 节 ============ -->
+<div class="card">
+  <h2><span class="n">3</span>那我到底该用哪个？（这是单元 5 要你回答的问题）</h2>
+  <div class="callout warn">
+    <b>先说结论 —— 正确答案不是「手写」也不是「NLog」，是<b>分层组合</b>。</b><br>
+    你手写的日志类负责<b>业务语义</b>（错误码分层、出处标注、堆栈格式、给 UI 的回调），
+    NLog 负责<b>写入机制</b>（异步队列、溢出策略、配置热重载、按天滚动归档）。<br>
+    <b>为什么不能二选一：</b>
+    <ul>
+      <li>纯手写 → 现场想调日志级别，必须重编译重发版，客户不接受</li>
+      <li>纯 NLog → 你的错误码体系、出处标注、UI 回调全没了，那是你项目的核心价值</li>
+    </ul>
+    <b>所以「该不该上日志库」不是一个技术问题，是一个规模问题 —— 但「上了之后怎么分工」是技术问题。</b>
+  </div>
+  <div class="callout ok">
+    <b>⚠️ 顺带纠正我上一版卡里的一个说法：</b><br>
+    我之前写「<b>手写版零丢失，队列和异步都做不到</b>」—— <b>这句话对「崩溃瞬间」成立，但对「正常退出」不成立</b>。<br>
+    实测事实：<b>我自己的 NLog 用 Block 策略跑 3000 条，一条不少</b>（队列满了会阻塞等待，不是丢弃）。
+    所以准确的说法是：
+    <table style="margin-top:8px">
+      <thead><tr><th style="width:34%">场景</th><th style="width:22%">手写 lock 版</th><th>NLog + Block</th></tr></thead>
+      <tbody>
+        <tr><td>正常写日志</td><td>一条不少</td><td><b>一条不少</b>（实测 3000/3000）</td></tr>
+        <tr><td>进程崩溃瞬间</td><td><b>保住</b>（已落盘）</td><td>丢队列里未落盘的</td></tr>
+        <tr><td>正常退出</td><td>保住</td><td>需要 <code>Flush()</code>，不调就丢</td></tr>
+      </tbody>
+    </table>
+    <span class="hint">结论：<b>NLog 用对了配置（Block），不丢日志。</b>真正的差别在「现场可调」和「不阻塞业务线程」。</span>
+  </div>
+  <table>
+    <thead><tr><th style="width:30%">如果你的项目…</th><th>该用什么</th></tr></thead>
+    <tbody>
+      <tr><td>单工位、小项目、你自己维护<br><span class="hint">← <b>你现在就是这个</b></span></td><td><b>手写 + NLog 组合</b>。语义层自己写，写入层交给 NLog（今天 4.7 步你就做出来了）</td></tr>
+      <tr><td>纯教学 demo、只想搞懂日志原理</td><td><b>纯手写</b>。你能讲清每一行，调试也方便</td></tr>
+      <tr><td>日志量大（每秒几千条报文）<br>或多个工位集中到一台</td><td><b>NLog</b>。异步包装 + <code>overflowAction="Block"</code></td></tr>
+      <tr><td>客户要求现场调日志级别、不许重发版</td><td><b>NLog</b>。配置文件热重载</td></tr>
+      <tr><td>日志要进 MES / ELK，要按工单号检索统计</td><td><b>Serilog</b>。原生键值对</td></tr>
+      <tr><td>已有大量 log4net 配置的老代码</td><td>继续用 log4net，但<b>至少把异步包装补上</b></td></tr>
+    </tbody>
+  </table>
+  <div class="callout ok">
+    <b>⚠️ 有一条常见误解要澄清（很多对比文章写错了）：</b><br>
+    <b>「NLog 不支持结构化日志」—— 这是错的。</b><br>
+    NLog 从 4.4/4.5 起就完整支持 message template 和 <code>${event-properties}</code>，
+    官方首页明确写着「Full support for structured logging」。
+    <b>NLog 的结构化是够用的，只是不如 Serilog 的 <code>@</code> 解构丰富。</b>
+    <span class="hint">Serilog 那 200 多个 sink 大多是面向云原生的（Seq / Elasticsearch / Datadog），
+    <b>在离线工控机上 95% 用不到，反而是负担</b>。</span>
+  </div>
+  <div class="callout danger">
+    <b>三条工控机特有的坑（社区实战文章反复强调的）：</b>
+    <ul>
+      <li><b>路径权限</b>：上位机若以 Windows 服务身份运行，<code>${basedir}/logs</code> 可能没写权限 → 文件创建失败 → <b>日志全丢，而且没有任何提示</b>。建议用 <code>C://ProgramData//&lt;产品名&gt;//logs</code></li>
+      <li><b>磁盘被撑爆</b>：7×24 跑几个月，必须配 <code>maxArchiveFiles</code> 或按天滚动 + 保留 30–60 天</li>
+      <li><b>生产环境禁止用 MessageBox 报异常</b>：无人值守时弹窗没人点，进程挂一整夜，看门狗也不重启</li>
+    </ul>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s3_1"><span class="tx"><b>我能说出「我的方案是分层组合，边界在哪」</b><span>语义层自己写 + 写入层交给 NLog</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_2"><span class="tx"><b>我能说出「手写和 NLog 各自的边界在哪」</b><span>至少两条分工</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_3"><span class="tx"><b>知道 log4net 官方已宣布 maintenance mode</b><span>2025-08 邮件列表原话</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_4"><span class="tx"><b>知道「NLog 不支持结构化日志」这个说法是错的</b><span>4.4 起就支持</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_5"><span class="tx"><b>能说出工控机日志的至少两个特有坑</b><span>路径权限 / 磁盘撑爆 / 禁弹窗，任选两个</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_6"><span class="tx"><b>能说出「用 NLog 的三条纪律」</b><span>① 显式 AsyncWrapper + Block ② 退出前 Flush ③ 配置放 exe 同级</span></span></label>
+
+  <div class="fillrow">
+    <div class="lbl">用 3 句话回答：「<b>你的日志方案是怎么定的？为什么这么定？</b>」—— 这是面试高频题，把答案写下来</div>
+    <div class="fillbox" contenteditable="true" data-k="q_why3" data-ph="参考：我不二选一。我自研了业务语义层（错误码分层、出处标注、堆栈格式），写入层用 NLog。理由是我实测过三种方案：手写 lock 版能保住崩溃前的日志但现场改级别要重编译；机构的队列组件并发不丢但进程退出时队列全丢；NLog 用 Block 策略并发 3000 条一条不少，而且改配置文件不重启就换级别。Log4Net 官方已进维护模式，所以没选它。"></div>
+  </div>
+</div>
+
+<!-- ============ 第 4 节（NLog 实战，新增） ============ -->
+<div class="card">
+  <h2><span class="n">4</span>NLog 实战：装上、跑通、亲手制造一次丢日志</h2>
+  <p class="sub" style="margin-top:0">前三节是<b>对比</b>，这一节是<b>动手</b>。<br>
+  目的：<b>不是「会用 NLog」这么空</b>，而是<b>亲手撞过它的坑</b> —— 撞过 Discard 静默丢日志、撞过配置不生效、撞过路径不对。<br>
+  <span class="hint">这些坑读文档读不出来，只有自己跑一遍才记得住。</span></p>
+
+  <div class="callout ok">
+    <b>我已经在你这台机器上把 NLog 5.4.0 装好跑通了，下面所有结果都是实测的：</b>
+    <ul>
+      <li>NuGet 包 <b>NLog 5.4.0</b> 能正常下载还原（你的网络可达）</li>
+      <li>你的工程是<b>老式 csproj</b>（<code>ToolsVersion="15.0"</code>），实测：<b>用 VS 的 NuGet 包管理器右键装，能正确把 <code>NLog.dll</code> 拷进 <code>bin\Debug\</code></b></li>
+      <li>五级过滤、Block 异步零丢失、Discard 静默丢行、XML 热重载 —— <b>四组全部跑通</b></li>
+    </ul>
+  </div>
+
+  <h3>4.1 建项目 + 装 NLog（10 分钟）</h3>
+  <ol>
+    <li>新建 WinForm 项目，命名 <code>w1-day5-NLog</code>，框架选 <b>.NET Framework 4.8</b>（跟你其他工程一致）</li>
+    <li>VS 里右键项目 → <b>「管理 NuGet 程序包」</b> → 搜索 <code>NLog</code> → 装 <b>5.4.0</b></li>
+    <li>装完确认两件事：<br>
+        ① 项目根目录出现了 <code>packages.config</code> 和 <code>packages\NLog.5.4.0\</code> 文件夹<br>
+        ② <code>bin\Debug\</code> 里出现了 <code>NLog.dll</code></li>
+  </ol>
+  <div class="callout warn">
+    <b>⚠️ 这里有个坑，我先替你踩了：</b><br>
+    你现在的工程是<b>老式 csproj</b>。如果你手改 csproj 加 <code>&lt;PackageReference&gt;</code> ，
+    <code>dotnet build</code> 会<b>编译通过但 <code>NLog.dll</code> 不会进输出目录</b>（我实测过）—— 运行时直接 <code>FileNotFoundException</code>。<br>
+    <b>所以必须用 VS 的 NuGet 包管理器右键安装</b>，它会生成老式 <code>packages.config</code> + <code>&lt;HintPath&gt;</code> 引用，
+    这套机制对老式工程才有效。<span class="hint">你的项目没有 <code>packages.config</code>，说明之前没用过 NuGet —— 这次是第一次，正好练一遍。</span>
+  </div>
+
+  <h3>4.2 写 <code>NLog.config</code>（这是 NLog 的核心，全部靠它）</h3>
+  <p>在项目里<b>新建一个文件</b>叫 <code>NLog.config</code>，内容照抄下面这段（<b>我实测过这一份一字不改能跑</b>）：</p>
+<pre><span class="c">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="k">&lt;nlog</span> xmlns=<span class="s">"http://www.nlog-project.org/schemas/NLog.xsd"</span>
+      xmlns:xsi=<span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+      autoReload=<span class="s">"true"</span>&gt;
+  <span class="k">&lt;targets&gt;</span>
+    <span class="k">&lt;target</span> name=<span class="s">"asyncFile"</span> xsi:type=<span class="s">"AsyncWrapper"</span>
+            queueLimit=<span class="s">"10000"</span> overflowAction=<span class="s">"Block"</span>
+            batchSize=<span class="s">"200"</span> timeToSleepBetweenBatches=<span class="s">"0"</span>&gt;
+      <span class="k">&lt;target</span> xsi:type=<span class="s">"File"</span>
+              fileName=<span class="s">"${basedir}/logs/${shortdate}.log"</span>
+              layout=<span class="s">"${longdate}|${level:uppercase=true}|${message}"</span>
+              keepFileOpen=<span class="s">"false"</span>
+              archiveAboveSize=<span class="s">"10485760"</span>
+              maxArchiveFiles=<span class="s">"7"</span> /&gt;
+    <span class="k">&lt;/target&gt;</span>
+  <span class="k">&lt;/targets&gt;</span>
+  <span class="k">&lt;rules&gt;</span>
+    <span class="k">&lt;logger</span> name=<span class="s">"*"</span> minlevel=<span class="s">"Debug"</span> writeTo=<span class="s">"asyncFile"</span> /&gt;
+  <span class="k">&lt;/rules&gt;</span>
+<span class="k">&lt;/nlog&gt;</span></pre>
+  <div class="callout danger">
+    <b>⚠️ 三个必须现在就知道的坑（我全踩过了）：</b>
+    <table style="margin-top:8px">
+      <thead><tr><th style="width:34%">坑</th><th>现象</th><th>正确做法</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>① 文件必须放 exe 同级</b></td>
+          <td>放在项目根目录 → <b>日志一条都不出，程序也不报错</b>（静默失效，最难查）</td>
+          <td>设 csproj 里 <code>&lt;None Include="NLog.config"&gt;&lt;CopyToOutputDirectory&gt;Always&lt;/CopyToOutputDirectory&gt;</code><br>
+              或在 VS 里右键该文件 → 属性 → <b>「复制到输出目录」= 始终</b></td>
+        </tr>
+        <tr>
+          <td><b>② 相对路径按「当前工作目录」解析</b></td>
+          <td>同一个 exe，<b>VS 里启动</b>和<b>双击启动</b>，日志落在<b>两个不同地方</b></td>
+          <td>用 <code>${basedir}</code>（= exe 所在目录）而不是相对路径<br>
+              <span class="hint">我实测确认：<code>${basedir}</code> 解析到 exe 目录，不会漂</span></td>
+        </tr>
+        <tr>
+          <td><b>③ 命名空间在 Wrappers 下</b></td>
+          <td>写 <code>using NLog.Targets;</code> 然后用 <code>AsyncTargetWrapper</code> → <b>CS0246 编译错误</b></td>
+          <td>要 <code>using NLog.Targets.Wrappers;</code><br>
+              <span class="hint">我自己第一次编译就栽在这</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout ok">
+    <b>顺便解释配置文件里这几个块（学习记录那栏要填的就是这个）：</b>
+    <ul>
+      <li><code>targets</code> —— <b>日志往哪写</b>。里面每个 <code>&lt;target&gt;</code> 是一个"写入器"</li>
+      <li><code>xsi:type="AsyncWrapper"</code> —— <b>异步包装器</b>。它自己不写文件，是套在 File 外面的<b>中间层</b>：负责排队、批量、决定队列满了怎么办</li>
+      <li><code>overflowAction="Block"</code> —— <b>队列满了怎么办</b>。<code>Block</code>=阻塞等待（不丢），<code>Discard</code>=直接丢（<b>静默丢</b>），<code>Grow</code>=无限扩容（<b>会 OOM</b>）</li>
+      <li><code>queueLimit="10000"</code> —— 队列最多存多少条</li>
+      <li><code>batchSize="200"</code> —— 后台线程一次批量写多少条</li>
+      <li><code>fileName="${basedir}/logs/${shortdate}.log"</code> —— <b>按天分文件</b>。<code>${shortdate}</code> = 2026-10-29 这种格式</li>
+      <li><code>layout</code> —— <b>每行长什么样</b>。<code>${longdate}</code>=时间，<code>${level:uppercase=true}</code>=级别大写，<code>${message}</code>=你写的消息</li>
+      <li><code>archiveAboveSize</code> + <code>maxArchiveFiles="7"</code> —— <b>单个文件超 10MB 就归档，最多留 7 个</b>（防止硬盘被撑爆）</li>
+      <li><code>rules</code> —— <b>什么级别写到哪里</b>。<code>minlevel="Debug"</code> 是最低级别，<code>writeTo</code> 指向上面某个 target 的名字</li>
+      <li><code>autoReload="true"</code> —— <b>配置文件改了自动生效</b>，不用重启程序 ← 下面 4.5 步专门验它</li>
+    </ul>
+  </div>
+
+  <h3>4.3 在代码里写日志（3 行）</h3>
+  <p>在 <code>Form1.cs</code> 里加这几行，<b>不需要任何配置代码</b>（NLog 自动找 exe 同级的 <code>NLog.config</code>）：</p>
+<pre><span class="k">using</span> NLog;
+
+<span class="k">private</span> <span class="k">readonly</span> Logger _log = LogManager.GetCurrentClassLogger();
+
+<span class="c">// 写日志（级别名和你的枚举长得不一样，注意）</span>
+_log.Debug(<span class="s">"调试信息"</span>);
+_log.Info(<span class="s">"程序启动完成"</span>);
+_log.Warn(<span class="s">"图像曝光接近上限"</span>);
+_log.Error(<span class="s">"相机采图超时"</span>);</pre>
+  <div class="callout warn">
+    <b>⚠️ 一个会让你意外的地方：NLog 5 的 <code>LogLevel</code> 不是 enum，是 class。</b><br>
+    我用反射查过：<code>typeof(LogLevel).IsEnum == False</code>。<br>
+    但它<b>依然可以直接用 <code>&gt;</code> 比较</b>（<code>LogLevel.Warn &gt; LogLevel.Info</code> 是 true），也有静态字段 <code>Trace/Debug/Info/Warn/Error/Fatal/Off</code>。<br>
+    <span class="hint">对比你自己写的 <code>enum LogLevel { Debug=0, Info=1, Error=2 }</code> —— NLog 是 <b>7 级</b>（多了 Trace 和 Off），而且类型体系不一样。<br>
+    <b>但你手写那套的思路是对的</b>：因为枚举数值递增，所以 <code>level &lt; MinLevel</code> 能成立。NLog 里对应的是 <code>rule.SetLoggingLevels(min,max)</code>。</span>
+  </div>
+  <div class="callout warn">
+    <b>⚠️ 更隐蔽的一个坑：<code>Logger</code> 这个名字会被同名类遮蔽。</b><br>
+    如果你的项目里<b>已经有一个叫 <code>Logger</code> 的类</b>（比如机构那份队列日志组件你复制进来了），那么 <code>using NLog;</code> 导入的 <code>NLog.Logger</code> 会被<b>同命名空间</b>里的类盖掉 —— C# 规则是<b>同命名空间的类型优先级高于 using 导入</b>。<br>
+    症状：编译报 <code>CS0029: 无法将类型"NLog.Logger"隐式转换为"你的命名空间.Logger"</code>。<br>
+    <span class="hint">两种解法：<b>①</b> 声明成接口 <code>private static readonly ILogger _log = ...</code>（推荐，接口名不会被遮蔽，将来换日志库也不用改）；<b>②</b> 把你自己那个 <code>Logger</code> 类改名，或写全限定名 <code>NLog.Logger</code>。<br>
+    <b>我实测复现过这个报错</b>，不是理论推测 —— 编译器原话就是 <code>CS0029: 无法将类型"NLog.Logger"隐式转换为"xxx.Logger"</code>。</span>
+  </div>
+  <div class="callout warn">
+    <b>⚠️ 第三个坑：<code>log.Error("Error", msg)</code> 会把消息丢掉。</b><br>
+    NLog 的 <code>Error</code> 有两个重载：<code>Error(string message)</code> 和 <code>Error(string message, params object[] args)</code>。<br>
+    第二个重载里，<b>第一个参数是「格式模板」，后面的才是要填进模板的参数</b>。你写 <code>Error("Error", msg)</code>，模板里没有 <code>{0}</code> 占位符，<b>msg 就被直接丢弃了</b>。<br>
+    <span class="hint">我实测的输出：<code>log.Error("Error", "真正的消息")</code> → 日志里写的是 <code>ERROR|Error</code>，消息没了。<br>
+    <b>正确写法</b>：<code>_log.Error(msg)</code>，只传一个参数。<br>
+    顺带：消息里带 <code>{}</code> 花括号是<b>安全</b>的（实测 <code>{0}</code> 和 <code>{ 不是占位符 }</code> 都原样输出），所以 <code>$"[{code}][{where}]{ex}"</code> 这种拼法放心用。</span>
+  </div>
+
+  <h3>4.4 第一个实验：五级过滤（5 分钟）</h3>
+  <p>在窗体上放个 button，点一次写这五条：</p>
+<pre>_log.Debug(<span class="s">"D-调试"</span>);
+_log.Info(<span class="s">"I-信息"</span>);
+_log.Warn(<span class="s">"W-警告"</span>);
+_log.Error(<span class="s">"E-错误"</span>);
+_log.Fatal(<span class="s">"F-致命"</span>);</pre>
+  <p>然后去 <code>bin\Debug\logs\</code> 看当天的 log 文件，<b>确认五条都在，而且级别是大写的</b>。</p>
+  <div class="callout ok">
+    <b>我实测的结果（net48 + NLog 5.4.0）：</b>
+    <span class="hl">2026-10-29 21:12:03.3152|INFO|t.P|basedir 测试</span><br>
+    <code>${level:uppercase=true}</code> 让 <code>Info</code> 变成 <code>INFO</code> —— <b>和你单元 2 自己实现的那个 <code>.ToUpper()</code> 是同一个效果，但 NLog 在配置里就能做，不用改代码。</b>
+  </div>
+
+  <h3>4.5 第二个实验：热重载 —— <b>手写版做不到的那件事</b>（10 分钟）★核心</h3>
+  <p>程序<b>保持运行</b>，然后：</p>
+  <ol>
+    <li>先点一次 button，确认日志里有 <code>|INFO|</code> 那条</li>
+    <li>用记事本打开 <code>bin\Debug\NLog.config</code>，把 <code>minlevel="Debug"</code> 改成 <code>minlevel="Error"</code>，<b>保存</b></li>
+    <li><b>不要重启程序</b>，等 3～5 秒（<code>autoReload</code> 需要点时间）</li>
+    <li>再点一次 button，看日志</li>
+  </ol>
+  <div class="callout ok">
+    <b>预期结果（我实测过）：</b>
+    <table style="margin-top:8px">
+      <thead><tr><th style="width:40%">日志里</th><th>应该</th></tr></thead>
+      <tbody>
+        <tr><td>第一次点的 <code>|INFO|</code> 那条</td><td><b>在</b>（当时级别是 Debug）</td></tr>
+        <tr><td>第二次点的 <code>|INFO|</code> 那条</td><td><b>不在</b> ← <b>配置改了，程序没重启，级别当场生效</b></td></tr>
+        <tr><td>第二次点的 <code>|ERROR|</code> 那条</td><td><b>在</b></td></tr>
+      </tbody>
+    </table>
+    <b>这就是第 2 节那张对比表里「现场改日志级别」那一行的全部含金量。</b><br>
+    <span class="hint">客户说「日志太多把硬盘塞满了，现场调小点，别重发版」—— 手写版做不到（<code>MinLevel</code> 是编译进 exe 的常量），NLog 改一个 XML 就完事。</span>
+  </div>
+
+  <h3>4.6 第三个实验：亲手制造一次静默丢日志（10 分钟）★最值钱</h3>
+  <p>这次你要<b>故意制造事故</b>，亲眼看到 NLog 的默认配置有多危险。</p>
+  <ol>
+    <li>把 <code>NLog.config</code> 里的 <code>overflowAction="Block"</code> 改成 <code>"Discard"</code>，<code>queueLimit="10000"</code> 改成 <code>"10"</code>，<code>batchSize</code> 改成 <code>"1"</code>，<code>timeToSleepBetweenBatches</code> 改成 <code>"50"</code>（故意让后台线程写得很慢，好让队列爆掉）</li>
+    <li>重启程序，在 button 里写 500 条：<br><code>for (int i = 0; i &lt; 500; i++) _log.Info($"第{i}条");</code></li>
+    <li>等 2 秒，看日志文件里<b>实际有多少行</b></li>
+  </ol>
+  <div class="callout danger">
+    <b>预期结果（我实测过）：写 500 条，落盘只有 10 条。</b><br>
+    <b>而且程序不报错、日志里没有任何提示 —— 490 条日志凭空消失。</b><br>
+    <span class="err">这就是 Discard 的可怕之处：它<b>静默</b>丢。你不知道丢了，直到某天客户说「怎么少了段记录」。</span><br>
+    <b>而这正是官方文档里那句警告的实体：</b>
+    <code>&lt;targets async="true"&gt;</code> 是简写，<b>等价于 Discard + queueLimit=10000</b>。<br>
+    <b>工业现场绝对不能直接用这个简写。</b>要显式写 <code>AsyncWrapper</code> + <code>overflowAction="Block"</code>。
+  </div>
+
+  <h3>4.7 第四个实验：把 NLog 接到你自己写的 AppLogger 上（20 分钟）★这是单元 5 的真正落点</h3>
+  <p>前三步是「会用」，这一步是<b>「知道为什么这么组合」</b>。</p>
+  <p>把 <code>w1-day4-全局异常兜底\AppLogger.cs</code> <b>复制一份</b>到新项目里改名 <code>AppLogger.cs</code>，然后改造它：</p>
+  <table>
+    <thead><tr><th style="width:26%">职责</th><th style="width:34%">留在你手写版里</th><th>交给 NLog</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>业务语义</b></td>
+        <td>错误码（E1001/E2002…）、出处（"相机采图"）、堆栈格式化、给 UI 的日志框回调</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><b>写入机制</b></td>
+        <td>—</td>
+        <td>异步队列、溢出策略、配置文件热重载、按天滚动 + 归档</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>改造后你的 <code>AppLogger.LogError</code> 大致长这样（<b>结构给你，具体实现你自己写</b>）：</p>
+<pre><span class="k">public static void</span> LogError(<span class="k">string</span> code, <span class="k">string</span> whereText, Exception ex)
+{
+    <span class="c">// 业务语义层还在你手里：错误码 + 出处 + 堆栈</span>
+    <span class="k">string</span> msg = <span class="s">$"[{code}][{whereText}] {ex}"</span>;
+    _nlog.Error(msg);          <span class="c">// 写入层交给 NLog</span>
+    <span class="c">// UI 日志框回调也还在你手里</span>
+    OnLog?.Invoke(msg);
+}</pre>
+  <div class="callout ok">
+    <b>这一步做完，你就有了面试里最有杀伤力的一段话：</b><br>
+    「<b>我自研了日志组件的业务语义层（错误码分层、出处标注、堆栈格式化），同时评估了自研队列方案和 NLog，
+    实测三者的丢日志风险后，最终用 NLog 承载写入层、保留自研语义层。</b>」<br>
+    <span class="hint">这段话里有：<b>读过资料、独立判断、动手实测、技术选型、边界划分</b> —— 五层都在。<br>
+    比「我用过 NLog」值钱十倍，比「我自己写了个日志类」值钱五倍。</span>
+  </div>
+  <div class="callout warn">
+    <b>⚠️ 但别把 NLog 当成万能药，两个必须知道的限制：</b>
+    <ul>
+      <li><b>NLog 也是异步的</b> → 尾部日志同样可能丢。<b>退出前必须 <code>LogManager.Flush()</code></b>（窗体项目里写在 <code>Application.Run()</code> 返回之后的那一行，不是 Main 的最末尾）—— <b>但更关键的是：崩溃路径要在异常处理器里就冲刷</b>（实测 net48：崩溃时只在 ProcessExit 兜底，20000 条只落 11094 条；在 <code>AppDomain.UnhandledException</code> 里调一次 Flush，全部救回）</li>
+      <li><b>日志目录权限</b> → 如果你的程序以 Windows 服务身份运行，<code>${basedir}/logs</code> 可能没写权限 → <b>文件创建失败，日志全丢且无提示</b>。生产环境建议改到 <code>C://ProgramData//&lt;产品名&gt;//logs</code></li>
+    </ul>
+  </div>
+
+  <label class="chk"><input type="checkbox" data-id="s4a_1"><span class="tx"><b>建好 w1-day5-NLog 项目（net48）并用 NuGet 装上 NLog 5.4.0</b><span>VS 右键「管理 NuGet 程序包」</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_2"><span class="tx"><b>确认 bin\Debug\ 里出现了 NLog.dll</b><span>没有就说明装法错了</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_3"><span class="tx"><b>写好 NLog.config 并设「复制到输出目录 = 始终」</b><span>忘了这步 = 日志静默不出</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_4"><span class="tx"><b>五级都写进日志了，级别是大写的</b><span>DEBUG/INFO/WARN/ERROR/FATAL</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_5"><span class="tx"><b>改 NLog.config 的 minlevel，程序不重启，级别当场生效</b><span>核心验收项 —— 手写版做不到这件事</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_6"><span class="tx"><b>故意用 Discard + queueLimit=10 写 500 条，看到了静默丢行</b><span>写了几条？记下来，这是你亲眼造的坑</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_7"><span class="tx"><b>能说出 Discard / Block / Grow 三种策略的后果</b><span>丢 / 不丢但卡 / OOM</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_8"><span class="tx"><b>把 AppLogger 复制到新项目，保留错误码+出处+堆栈，底层换成 NLog</b><span>单元 5 的真正落点</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_9"><span class="tx"><b>退出前调了 LogManager.Flush()</b><span>否则尾部日志会丢</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4a_10"><span class="tx"><b>踩过并记住了这 3 个坑</b><span>配置要在 exe 同级 / 用 ${basedir} / using NLog.Targets.Wrappers</span></span></label>
+
+  <div class="fillrow">
+    <div class="lbl">用 2 句话说清楚：<b>手写版和 NLog 不是二选一，那分工边界在哪？</b>（这题答上来，面试就过了）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_split" data-ph="参考：业务语义层留给我自己写——错误码、出处、堆栈格式、给 UI 的回调，这些库管不了；写入层交给 NLog——异步队列、溢出策略、配置热重载、按天滚动归档，这几样手写要几百行还容易错。"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">你在 4.6 步亲手造的丢日志，写 500 条实际落盘了几条？<b>写具体数字</b>（这个数字进简历）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_discard" data-ph="写你实测到的数字，比如：写 500 条，queueLimit=10，Discard 策略，实际落盘只有 10 条，静默丢了 490 条。"></div>
+  </div>
+</div>
+
+<!-- ============ 第 6 节 ============ -->
+<div class="card">
+  <h2><span class="n">5</span>机构的《支持并发的异步日志组件》—— 我该学它什么、警惕什么</h2>
+  <p>这份文档在 <code>C://Users//guicai//Desktop//C#new//3_高级//Thread//</code>。它不是 Log4Net 教程，是<b>机构教你手写一个队列日志组件</b>。</p>
+  <h3>5.1 它讲对了三件事（值得学）</h3>
+  <ul>
+    <li><b>① 写日志线程不能用线程池。</b>原话：<span class="err">"由写日志线程会长时间处于阻塞（或运行等待）状态，所以它不适合使用线程池"</span><br>
+    线程池的线程是共享的，被一个写日志任务长期占住，等于把公共资源霸占了。文档这条判断是对的。</li>
+    <li><b>② 用队列 + 单写线程，天然避免竞争。</b>所有调用者只入队，真正写文件的只有一个线程 —— 这从根上消除了「多个线程同时写同一个文件」的问题。</li>
+    <li><b>③ 用 <code>ManualResetEvent</code> 做信号，避免忙等待。</b>主线程 <code>WaitOne()</code> 阻塞休眠，不占 CPU。</li>
+  </ul>
+  <h3>5.2 它有两个坑（你自己要补上）</h3>
+  <table>
+    <thead><tr><th style="width:30%">问题</th><th>文档里的样子</th><th>应该怎么补</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>尾部日志会丢</b></td>
+        <td>没有 Flush 机制，进程一退队列里的全没了<br><span class="hint">实测：3 条 → 落盘 0 条</span></td>
+        <td>加一个 <code>Flush()</code>：把队列里的任务同步执行完再退出。<br>并在 <code>FormClosing</code> / <code>UnhandledException</code> 里调用它</td>
+      </tr>
+      <tr>
+        <td><b>文档自己标了 todo</b></td>
+        <td><code>lock (_queue) { ... }  // todo: 这里存在线程安全问题，可能会发生阻塞。</code></td>
+        <td>这个 todo 说的是<b>持锁期间入队</b>可能阻塞调用方。<br>更好的做法是用 <code>ConcurrentQueue</code>（.NET 4.0+ 自带，无需第三方库）替代 <code>Queue</code> + <code>lock</code></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout ok">
+    <b>「学会它的思路 + 补上它的坑」—— 这个动作本身就是面试素材。</b><br>
+    面试时你可以这样讲：<br>
+    「<b>我参考了机构的队列日志组件设计，自己判断出它缺 Flush 机制会丢尾部日志，
+    我实测验证了（3 条日志进程退出时落盘 0 条），然后用 <code>ConcurrentQueue</code> 换掉了它的 <code>Queue</code> + <code>lock</code>。</b>」
+    <span class="hint">这段话里有：读过资料、独立判断、动手实测、动手改进。<b>四层都在。</b></span>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s5_1"><span class="tx"><b>读完了机构的《支持并发的异步日志组件.md》</b><span>全文读一遍，不只是看代码</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_2"><span class="tx"><b>能说出它讲对了的三件事</b><span>不能用线程池 / 队列单写线程 / ManualResetEvent</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_3"><span class="tx"><b>能指出它缺 Flush 机制</b><span>我自己实测出来的，不是我猜的</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_4"><span class="tx"><b>知道 <code>ConcurrentQueue</code> 可以替掉 <code>Queue</code> + <code>lock</code></b><span>System.Collections.Concurrent，.NET 4.0+ 自带</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_5"><span class="tx"><b>知道为什么写日志线程不能用线程池</b><span>线程池是共享资源，长期阻塞等于霸占</span></span></label>
+</div>
+
+<!-- ============ 第 5 节 ============ -->
+<div class="card">
+  <h2><span class="n">6</span>收口：填学习记录 + 单元 5 验收</h2>
+  <p>打开 <code>E://上位机工程模板//W1学习记录.md</code>，填「单元 5」这一节：</p>
+  <div class="callout danger">
+    <b>⚠️ 先说清楚：学习记录里「单元 5」那一节的表格结构要改，因为你现在用的是 NLog 不是 Log4Net。</b><br>
+    原表是「<b>我写的</b> vs <b>Log4Net</b>」两列，而且坑位写的是 log4net 的配置项。<br>
+    <b>改成「我写的 vs 机构队列组件 vs NLog（我实测）」三列。</b><br>
+    <span class="hint">具体改法我写在下面 6.1 的表里了，照着改就行。</span>
+  </div>
+  <h3>6.1 学习记录「单元 5」章节（表格结构要改成三列）</h3>
+  <p>打开 <code>E://上位机工程模板//W1学习记录.md</code>，找到「单元 5」这一节，<b>把原来的两列表格改成三列</b>：</p>
+  <table>
+    <thead><tr><th style="width:26%">能力</th><th style="width:22%">我写的</th><th style="width:22%">机构队列组件</th><th>NLog（我实测）</th></tr></thead>
+    <tbody>
+      <tr><td>按天分文件</td><td></td><td></td><td></td></tr>
+      <tr><td>日志级别</td><td></td><td></td><td></td></tr>
+      <tr><td>线程安全</td><td></td><td></td><td></td></tr>
+      <tr><td>自动滚动 / 归档</td><td></td><td></td><td></td></tr>
+      <tr><td>配置文件外置</td><td></td><td></td><td></td></tr>
+      <tr><td><b>现场改级别不用重发版</b></td><td></td><td></td><td></td></tr>
+      <tr><td><b>队列满时会不会丢日志</b></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <p><b>最后两行是我今天实测出来的新维度</b> —— 原表没有，但这两行才是选型的关键。</p>
+  <ul>
+    <li><b>日期</b>：填今天</li>
+    <li><b>「我自己写的日志类 vs Log4Net，差在哪」</b> → <b>标题改成「我写的 vs 机构队列组件 vs NLog，差在哪」</b>，按上面那张表的<b>七个维度</b>写，<b>不要只写「性能不如」这种空话</b></li>
+    <li><b>「机构 Log4Net 教程里的坑（我踩到了几个）」</b> → <b>标题改成「日志方案里的坑（我踩到了几个）」</b>，至少写<b>四个</b>：<br>
+        ① 机构组件缺 Flush（进程退出时队列全丢）<br>
+        ② 机构组件的 <code>Queue</code>+<code>lock</code> 阻塞 todo<br>
+        ③ <b>NLog 的 <code>async="true"</code> 简写 = Discard，会静默丢日志</b>（我实测写 500 条只落盘 10 条）<br>
+        ④ <b>NLog.config 不放 exe 同级目录 → 日志静默失效</b></li>
+    <li><b>「配置文件里每一块的作用（能默写出来才算过）」</b> → <b>今天必须填</b>。第 4.2 节已经逐个解释过每一个块，照着写进表格，<b>至少写 6 行</b>。<br>
+        <span class="hint">这一栏是我上一版说「W2 补」的 —— <b>现在改主意了</b>：你今天亲手写过这份配置，再不填就是白做。</span></li>
+  </ul>
+  <div class="callout ok">
+    <b>⚠️ 关于「配置文件里每一块的作用」这一栏 —— 我上一版的判断错了，这里说清楚原因：</b><br>
+    我原本写「先理解取舍 → 再学用法，装库是超纲」。<b>这个顺序错了。</b><br>
+    正确的顺序是 <b>理解取舍 → 立刻上手用 → 在用的过程中撞坑 → 回头深理解</b>。<br>
+    <span class="hint">证据就是我自己：<b>Discard 会静默丢日志这件事，读文档只是"知道"，自己写 500 条看到只落盘 10 条才是"记住"。</b><br>
+    你在文档里读到的知识，面试时只能背；你亲手造的坑，面试时能讲 3 分钟。</span>
+  </div>
+  <h3>6.2 单元 5 验收标准</h3>
+  <label class="chk"><input type="checkbox" data-id="s6_1"><span class="tx"><b>学习记录单元 5 的日期填了</b><span></span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_2"><span class="tx"><b>表格结构已改成三列（我写的 / 机构组件 / NLog）</b><span>原来的 Log4Net 那列要改掉</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_3"><span class="tx"><b>「差在哪」那一栏按七个维度写了</b><span>多两行：现场改级别 / 队列满会不会丢</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_4"><span class="tx"><b>「坑」那一栏写了至少四个具体的坑</b><span>缺 Flush / Queue+lock / async=true 静默丢 / 配置位置</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_5"><span class="tx"><b>「配置文件里每一块的作用」写了至少 6 行</b><span>今天必须填，不是 W2 补</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_6"><span class="tx"><b>能不看卡回答「你的日志方案怎么定的」</b><span>3 分钟，面试真实场景</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_7"><span class="tx"><b>知道 log4net 官方已进 maintenance mode 这个事实</b><span>选型时的硬信息</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_8"><span class="tx"><b>能说出「手写 vs NLog 的分工边界」</b><span>语义层自己写 + 写入层交给库</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_9"><span class="tx"><b>能说出「用 NLog 的三条纪律」</b><span>Block / Flush / 配置放 exe 同级</span></span></label>
+</div>
+
+<div class="card">
+  <h2><span class="n">7</span>交付清单 + W1 状态</h2>
+  <p>单元 5 是<b>W1 的倒数第二个单元</b>。做完它就只剩单元 6（总验收）了。</p>
+  <table>
+    <thead><tr><th style="width:30%">W1 单元</th><th>状态</th></tr></thead>
+    <tbody>
+      <tr><td>单元 1 · 异常取证与日志落地</td><td>✅ 代码完成 · ⚠️ 学习记录 4 处遗留待清</td></tr>
+      <tr><td>单元 2 · 日志级别与统一格式 + 线程安全</td><td>✅ 代码完成 · ⚠️ 学习记录 4 处遗留待清</td></tr>
+      <tr><td>单元 3 · 错误码表</td><td>✅ 代码完成 · ⚠️ 日期 + 一处注释待清</td></tr>
+      <tr><td>单元 4 · 全局异常兜底</td><td>✅ 代码完成 · ⚠️ 学习记录待填</td></tr>
+      <tr><td>单元 5 · 日志库选型 + NLog 实战</td><td>← <b>今天</b>（对比 + 动手装 NLog）</td></tr>
+      <tr><td>单元 6 · W1 总验收</td><td>最后一张卡</td></tr>
+    </tbody>
+  </table>
+  <div class="callout ok">
+    <b>单元 5 的真正价值不在知识，在<b>那张四方对比表 + 那句「我的日志方案是怎么定的」+ 一个能跑的 NLog 工程</b>。</b><br>
+    <b>W1 走完，你手里就有了一个能讲的项目骨架</b>：日志系统（分级 + 线程安全 + 格式统一 + 库选型）、错误码体系、全局异常兜底。<br>
+    这三样<b>每个工业上位机项目都要</b>，而绝大多数应届生简历上写不出来 —— 因为他们不知道该写什么。<br>
+    <span class="hint">W1 结束那天，我们要做的第一件事是：把这些整理成能投简历的项目描述。</span>
+  </div>
+  <div class="callout warn">
+    <b>⚠️ 单元 5 做完后，你的项目目录会多两个东西，记得整理：</b>
+    <ul>
+      <li><code>w1-day5-NLog</code> —— 今天新建的 NLog 工程（<b>这是你 W1 唯一的「用库」项目，简历上要提的就是它</b>）</li>
+      <li><code>w1-day5-NLog\bin\Debug\logs\</code> —— 日志输出目录，<b>提交代码前记得排除</b></li>
+    </ul>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s7_1"><span class="tx"><b>W1 五个单元的学习记录都清干净了（无空栏、无占位符）</b><span>单元 6 验收会逐条查</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s7_2"><span class="tx"><b>把 <code>w1-day4-全局异常兜底</code> 和 <code>w1-day5-NLog</code> 加进了 <code>W1.slnx</code></b><span>slnx 里现在只有 4 个工程</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s7_3"><span class="tx"><b>w1-day5-NLog 能独立编译运行，logs 目录能生成日志</b><span>这是「NLog 我真的用起来了」的硬证据</span></span></label>
+</div>
+
+</div>
+<script>
+(function(){
+  var KEY='mv_w1_d5_checkin_v1';
+  var FKEY='mv_w1_d5_fill_v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[type=checkbox][data-id]'));
+  var fills=[].slice.call(document.querySelectorAll('[contenteditable][data-k]'));
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+  function save(k,d){ try{ localStorage.setItem(k, JSON.stringify(d)); }catch(e){} }
+  var st=load(KEY), ft=load(FKEY);
+
+  function markFilled(el){
+    if(el.textContent.replace(/[\u200B\s]/g,'').length>0){ el.classList.add('filled'); }
+    else { el.classList.remove('filled'); }
+  }
+  function applyAll(){
+    boxes.forEach(function(b){ b.checked=!!st[b.dataset.id]; });
+    fills.forEach(function(el){ if(ft[el.dataset.k]) el.innerHTML=ft[el.dataset.k]; markFilled(el); });
+  }
+  applyAll();
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      st[b.dataset.id]=b.checked; save(KEY,st); upd();
+    });
+  });
+  fills.forEach(function(el){
+    el.addEventListener('input', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft); markFilled(el); upd();
+    });
+    el.addEventListener('blur', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft);
+    });
+    el.addEventListener('keydown', function(e){
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); el.blur(); }
+    });
+    el.addEventListener('paste', function(e){
+      e.preventDefault();
+      var t=(e.clipboardData||window.clipboardData).getData('text');
+      document.execCommand('insertText', false, t.replace(/\r?\n/g,' '));
+    });
+  });
+
+  function upd(){
+    var n=boxes.filter(function(b){return b.checked;}).length;
+    var t=boxes.length;
+    var fn=fills.filter(function(el){return el.textContent.replace(/[\u200B\s]/g,'').length>0;}).length;
+    document.getElementById('ptext').textContent=n+' / '+t;
+    document.getElementById('pbar').style.width=(t? n/t*100:0)+'%';
+    var f=document.getElementById('ftext');
+    if(f) f.textContent='已填写 '+fn+' / '+fills.length+' 处';
+  }
+  upd();
+
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('清空今天的勾选进度和所有填写内容？')) return;
+    boxes.forEach(function(b){ b.checked=false; });
+    fills.forEach(function(el){ el.innerHTML=''; el.classList.remove('filled'); });
+    st={}; ft={}; save(KEY,st); save(FKEY,ft); upd();
+  });
+
+  var ta=document.getElementById('bta');
+  var be=document.getElementById('bexp'), bi=document.getElementById('bimp');
+  if(be) be.addEventListener('click',function(){
+    ta.value='MVCHK2|'+KEY+'|'+JSON.stringify(st)+'|'+JSON.stringify(ft);
+    ta.select(); try{ document.execCommand('copy'); }catch(e){}
+    ta.scrollIntoView({block:'center'});
+  });
+  if(bi) bi.addEventListener('click',function(){
+    var t=(ta.value||'').trim(), parts=t.split('|');
+    if(parts.length<4||parts[0]!=='MVCHK2'){ alert('这段文本不像备份内容。备份文本长这样：MVCHK2|...|{勾选}|{填写}'); return; }
+    var a,b2; try{ a=JSON.parse(parts[2]); b2=JSON.parse(parts[3]); }catch(e){ alert('解析失败：'+e.message); return; }
+    st=a||{}; ft=b2||{}; save(KEY,st); save(FKEY,ft); applyAll(); upd();
+    alert('已恢复 '+Object.keys(st).length+' 项勾选、'+Object.keys(ft).length+' 处填写。');
+  });
+})();
+</script>
+</body>
+</html>

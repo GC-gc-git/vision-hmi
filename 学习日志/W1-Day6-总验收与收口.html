@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>W1 · 单元 6 · Day 6 · 2026-10-31 周六</title>
+<style>
+:root{--ink:#1f1f1e;--ink2:#5f5e5a;--ink3:#8a8984;--line:#e2dfd6;--line2:#d8d4c8;--bg:#f7f6f2;--card:#fff;--blue:#185fa5;--blue2:#e6f1fb;--red:#a32d2d;--red2:#fcebeb;--amber:#854f0b;--amber2:#faeeda;--green:#3b6d11;--green2:#eaf3de;--purple:#534ab7;--purple2:#eeedfe;--font-mono:Consolas,"Cascadia Mono",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;line-height:1.75}
+.wrap{max-width:940px;margin:0 auto;padding:26px 18px 80px}
+header{margin-bottom:18px}
+.kicker{font-size:12.5px;letter-spacing:.08em;color:var(--blue);font-weight:500;margin:0 0 6px}
+h1{font-size:24px;font:600 24px/1.3 "PingFang SC","Microsoft YaHei",-apple-system,sans-serif;margin:0 0 8px}
+.sub{color:var(--ink2);font-size:14px;margin:0}
+.meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.tag.b{background:var(--blue2);border-color:#b5d4f4;color:var(--blue)}
+.tag.a{background:var(--amber2);border-color:#fac775;color:var(--amber)}
+.tag.g{background:var(--green2);border-color:#c0dd97;color:var(--green)}
+.tag.p{background:var(--purple2);border-color:#cecbf6;color:var(--purple)}
+.tag.r{background:var(--red2);border-color:#f09595;color:var(--red)}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0 24px}
+.pmeta{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);margin-bottom:8px}
+.pbar{height:9px;background:#e4e9f1;border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2563eb,#0e7490);transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0}
+.card h2{font-size:17px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:9px}
+.card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--blue2);color:var(--blue);font-size:13px;font-weight:600;flex:none}
+.card h2 .n.p{background:var(--purple2);color:var(--purple)}
+.card h2 .n.r{background:var(--red2);color:var(--red)}
+.card h2 .n.g{background:var(--green2);color:var(--green)}
+.card h2 .n.a{background:var(--amber2);color:var(--amber)}
+.card h3{font-size:15px;font-weight:600;margin:18px 0 8px}
+p{margin:9px 0}
+code{font-family:var(--font-mono);font-size:12.8px;background:#f4f2ec;padding:1px 6px;border-radius:5px;color:#7a4a12}
+pre{background:#23231f;color:#e9e6dc;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--font-mono);font-size:12.6px;line-height:1.7;margin:10px 0}
+pre .k{color:#7ec8f0}
+pre .s{color:#a8d98a}
+pre .c{color:#8b8b82}
+pre .hl{color:#f0c36d}
+ul,ol{padding-left:22px;margin:9px 0}
+li{margin:5px 0}
+.callout{border-left:4px solid var(--blue);background:var(--blue2);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.callout.warn{border-color:#d19b2a;background:var(--amber2)}
+.callout.danger{border-color:#c0392b;background:var(--red2)}
+.callout.ok{border-color:#639922;background:var(--green2)}
+.callout.purple{border-color:var(--purple);background:var(--purple2)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f2f0ea;font-weight:600}
+td.done{background:#f2f8f2}
+td.fill{background:#fffdf7}
+td.no{background:#fdf0f0}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line2);border-radius:10px;margin:8px 0;background:#fdfdfb;cursor:pointer}
+.chk:hover{border-color:#9dbde0;background:#fbfdff}
+.chk input{margin-top:3px;width:16px;height:16px;accent-color:#2563eb;flex:none}
+.chk .tx{font-size:14px}
+.chk .tx b{display:block}
+.chk .tx span{font-size:13px;color:var(--ink3)}
+.fillrow{margin:12px 0}
+.fillrow .lbl{font-size:12.5px;color:var(--ink3);margin-bottom:5px}
+.fillbox{min-height:64px;padding:10px 12px;font-size:14px;line-height:1.7;background:#fffdf7;border:1px dashed #d9c98f;border-radius:8px;color:var(--ink)}
+.fillbox:hover{border-color:#c9b464;background:#fffbe8}
+.fillbox:focus{outline:none;border-style:solid;border-color:var(--blue);background:#fff}
+.fillbox:empty::before{content:attr(data-ph);color:#b5b3a6}
+.fillbox.filled{background:#f4f9fd;border-color:#b5d4f4}
+.hint{font-size:13px;color:var(--ink3);margin:6px 0 10px}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+#bta{width:100%;margin-top:8px;padding:8px 10px;font-size:12px;line-height:1.6;border:1px solid var(--line2);border-radius:8px;background:#fffdf7;font-family:var(--font-mono);resize:vertical}
+#bta:focus{outline:none;border-color:var(--blue);background:#fff}
+.kbd{font-family:var(--font-mono);font-size:12.5px;background:#efece3;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+.err{background:#fcebeb;border:1px solid #f09595;border-radius:8px;padding:2px 8px;font-family:var(--font-mono);font-size:12.4px;color:#791f1f;display:inline-block;margin:2px 0}
+.verdict{font-family:var(--font-mono);font-size:12.5px;background:#f2f8f2;border:1px solid #c0dd97;border-radius:6px;padding:1px 7px;color:#27500a;white-space:nowrap}
+.verdict.bad{background:#fdf0f0;border-color:#f09595;color:#791f1f}
+.verdict.warn{background:var(--amber2);border-color:#fac775;color:var(--amber)}
+.evo{display:flex;gap:10px;overflow-x:auto;padding:6px 0 12px}
+.evo .step{flex:none;width:172px;border:1px solid var(--line2);border-radius:11px;padding:11px 12px;background:#fdfdfb}
+.evo .step .d{font-size:11.5px;color:var(--ink3);letter-spacing:.04em}
+.evo .step .t{font-size:13.5px;font-weight:600;margin:3px 0 5px}
+.evo .step .m{font-size:12.2px;color:var(--ink2);line-height:1.6}
+.evo .step .bar{height:4px;border-radius:99px;margin-top:8px}
+.evo .arrow{flex:none;align-self:center;color:var(--ink3);font-size:15px}
+footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">W1 · 单元 6 · DAY 6</p>
+  <h1>总验收与收口</h1>
+  <p class="sub">前五天你造了五版日志系统。今天不写新功能，只做三件事：<b>验收</b>、<b>补坑</b>、<b>收口</b>。</p>
+  <div class="meta">
+    <span class="tag b">2026-10-31 周六</span>
+    <span class="tag a">建议 4~5 小时</span>
+    <span class="tag p">收口单元</span>
+    <span class="tag g">产出：最终版工程 + 简历素材</span>
+  </div>
+</header>
+
+<div class="progress">
+  <div class="pmeta">
+    <span>单元 6 进度</span>
+    <span id="ptext">0 / 0</span>
+  </div>
+  <div class="pbar"><i id="pbar"></i></div>
+  <div class="pmeta" style="margin:8px 0 0">
+    <span id="ftext" style="font-size:12.5px;color:var(--ink3)">已填写 0 / 0 处</span>
+    <span><button class="btn" id="reset" type="button">清空今天的勾选</button></span>
+  </div>
+</div>
+
+<div class="callout danger">
+  <b>⚠️ 今天的验收标准里有两条是假的，我先跟你说清楚。</b><br>
+  你在 <code>W1学习记录.md</code> 里写的「删掉配置文件重启，程序自动生成默认配置不报错」——<b>我实测了，NLog 不会这样。</b><br>
+  实测结果：删掉 <code>NLog.config</code> 后，程序<b>不报错</b>、<b>退出码 0</b>，但<b>日志一条都写不出来</b>，而且配置<b>不会被自动重建</b>。<br>
+  <span class="hint">同一条标准如果照着打勾，你就带着一条假的标准去找工作。面试官真让你现场删配置试试，你的程序就哑了。今天第 4 节专门解决这个。</span>
+</div>
+
+<!-- ==================== 1 ==================== -->
+<div class="card">
+  <h2><span class="n">1</span>W1 总验收：六条标准逐条跑</h2>
+  <p>下面六条是 <code>W1学习记录.md</code> 里的原版验收标准。<b>左边是原始写法，右边是我实测出来的真实结论。</b>你先看右边的「实测结论」列，再决定勾不勾。</p>
+
+  <table>
+    <thead>
+      <tr><th style="width:26%">原验收标准</th><th style="width:14%">实测结论</th><th>我实测的过程与数据</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>点「触发异常」会弹提示但<b>程序不闪退</b>，日志里有完整堆栈</td>
+        <td><span class="verdict">✅ 成立</span></td>
+        <td>Day4 的 <code>button1_Click</code> 抛异常 → <code>Application.ThreadException</code> 接住 → 弹窗 + 日志有堆栈 + 程序继续跑。你的 Day4 日志文件里已经验证过。</td>
+      </tr>
+      <tr>
+        <td>关闭窗体后，任务管理器里<b>没有残留进程</b></td>
+        <td><span class="verdict">✅ 成立</span></td>
+        <td>我实测了一个 net48 WinForm：后台线程写 100 条日志，窗体 3 秒后关闭。6 秒后查 <code>tasklist</code>：<b>找不到 W.exe 进程</b>，退出码 0，日志落盘 102 行（含关闭后那句）。</td>
+      </tr>
+      <tr>
+        <td>多线程同时写日志，<b>总条数一条不少</b></td>
+        <td><span class="verdict">✅ 成立</span></td>
+        <td>我实测：10 线程 × 500 条 = 5000 条，NLog <code>AsyncWrapper</code>（<code>overflowAction="Block"</code>）落盘 <b>5000 / 5000，丢失 0 条</b>。</td>
+      </tr>
+      <tr>
+        <td>删掉配置文件重启，程序<b>自动生成默认配置</b>不报错</td>
+        <td><span class="verdict bad">❌ 不成立</span></td>
+        <td>实测：删掉 <code>NLog.config</code> → 日志目录都不生成，<b>0 条落盘</b>，程序<b>不报错、退出码 0</b>，配置<b>不会被重建</b>。<b>这条标准必须改</b>，见第 4 节。</td>
+      </tr>
+      <tr>
+        <td>改完配置保存后，<b>不用重新编译</b>就生效</td>
+        <td><span class="verdict">✅ 成立</span></td>
+        <td>net48 实测，<code>autoReload="true"</code>：原地覆盖配置后 <code>ConfigurationReloaded</code> 事件触发 <b>1 次</b>，级别集合变成 <code>Error,Fatal</code>，改配置后写的 <code>Info</code> <b>被正确过滤掉</b>。连跑 3 次结果一致。</td>
+      </tr>
+      <tr>
+        <td>每个异常都带<b>业务错误码</b>，不是只有英文报错</td>
+        <td><span class="verdict warn">⚠️ Day5 成立，Day4 断了</span></td>
+        <td>Day5 的 <code>LogError(code, whereText, ex)</code> 带错误码 ✅。但 <b>Day4 版本的 <code>LogError</code> 只有两个参数</b>，错误码在 Day4 丢了 —— 见第 3 节。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>现在轮到你跑一遍</h3>
+  <p>上表是我的结论。<b>下面这些必须你自己动手跑</b>，因为面试官问的是「你测过吗」，不是「AI 测过吗」。</p>
+
+  <label class="chk"><input type="checkbox" data-id="d6_acc_1"><span class="tx"><b>我在 Day5 工程里点 button4，确认日志里有完整堆栈</b><span>看 <code>bin\Debug\logs\*.log</code> 最后一行，应该能看到 <code>System.Exception</code> + 堆栈行号</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_acc_2"><span class="tx"><b>我关掉窗体后查了任务管理器，确认没有残留进程</b><span>关掉程序 → 打开任务管理器 → 看不到 exe 还在跑</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_acc_3"><span class="tx"><b>我让多个线程同时写日志，数了总条数</b><span>按钮触发 → 结束后数日志文件行数，和写入条数对上</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_acc_4"><span class="tx"><b>我删掉过 NLog.config，亲眼看到日志不出来了</b><span>先备份 → 删掉 <code>bin\Debug\NLog.config</code> → 运行 → 点按钮 → 看日志目录</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_acc_5"><span class="tx"><b>我改了配置里的 minlevel，没重编译，日志级别真的变了</b><span>改成 <code>Error</code> → 保存 → 不重启程序 → 点 button5 → INFO 那几条应该没落盘</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_acc_6"><span class="tx"><b>我确认了日志里的每条错误都带错误码</b><span>grep 一下日志里有没有 <code>[E</code> 开头的错误码前缀</span></span></label>
+
+  <div class="callout ok">
+    <b>✔ 验收标准改法（第 4 条）</b><br>
+    把学习记录里那条假的，改成这句：
+    <br><br>
+    <code>- [ ] 删掉配置文件重启，程序能<b>自己生成一份默认配置</b>并继续写日志（不是"框架自动重建"，是我在 Program.cs 里写的兜底逻辑）</code>
+    <br><br>
+    <span class="hint">这条改完之后，你就是<b>实现了</b>一个能力，而不是<b>假设</b>了一个能力。这就是区别。</span>
+  </div>
+</div>
+
+<!-- ==================== 2 ==================== -->
+<div class="card">
+  <h2><span class="n p">2</span>五个版本的演进账：这是你 W1 最值钱的资产</h2>
+  <p>你写了五版 <code>AppLogger</code>。别觉得这是在重复劳动 —— <b>这五版就是你面试时讲「我怎么一步步把日志做成能上生产的」的完整证据链。</b></p>
+
+  <div class="evo">
+    <div class="step"><div class="d">DAY 2 · 118 行</div><div class="t">按天分文件 + 级别</div><div class="m">手写 <code>File.AppendAllText</code>，定义了 <code>enum LogLevel</code>，靠 <code>if (level &lt; MinLevel)</code> 过滤</div><div class="bar" style="background:#888780"></div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="d">DAY 2 · 71 行</div><div class="t">加 lock 修并发</div><div class="m">发现多线程写会丢行，加 <code>lock (_logLock)</code>，代码反而短了 47 行（去掉重复分支）</div><div class="bar" style="background:#888780"></div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="d">DAY 3 · 82 行</div><div class="t">加业务错误码</div><div class="m">新建 <code>ErrorCodes</code> / <code>BizException</code>，<code>LogError</code> 加 <code>code</code> 参数</div><div class="bar" style="background:#378add"></div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="d">DAY 4 · 69 行</div><div class="t">加全局兜底</div><div class="m"><code>Program.cs</code> 挂三处处理器。<b>但错误码在这一版丢了</b></div><div class="bar" style="background:#378add"></div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="d">DAY 5 · 100 行</div><div class="t">换成 NLog</div><div class="m">自研 <code>enum</code> 退役，<code>AsyncWrapper</code> 异步写，加 <code>Flush()</code></div><div class="bar" style="background:#1d9e75"></div></div>
+  </div>
+
+  <h3>把演进账写成你自己的话</h3>
+  <p>下面每一条都要<b>你自己写</b>，不要抄我给的提示。面试官问「你这套日志系统怎么设计的」，你要能一口气讲 3 分钟。</p>
+
+  <div class="fillrow">
+    <div class="lbl">① Day2 → Day2（线程安全）：我发现并解决了什么问题？改动的核心是什么？</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_evo_1" data-ph="例：多线程同时写日志时日志行会丢失甚至文件损坏，我用一把全局锁把写入串行化……"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">② 为什么 Day3 要引入「业务错误码」？光有英文异常消息不够用在哪？</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_evo_2" data-ph="例：现场运维看不懂英文堆栈，需要一个能对上处理手册的编号……"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">③ Day4 我做全局兜底时，为什么在 <code>Program.cs</code> 里挂载，而不是在每个按钮里写 try/catch？</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_evo_3" data-ph="例：手写 try/catch 一定会漏，而且漏的地方正好是崩溃的地方……"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">④ Day5 换成 NLog 之后，我<b>自己写的代码</b>还剩什么？边界在哪？</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_evo_4" data-ph="例：业务语义层（错误码、级别映射、UI 回调）还是我自己的，写入机制层交给 NLog……"></div>
+  </div>
+
+  <div class="callout purple">
+    <b>这四条合起来，就是你简历上那句话的底稿</b><br>
+    我给你一个句式框架，你按自己的话填：
+    <br><br>
+    「独立实现了上位机日志与异常体系，从<b>手写分级日志</b> → <b>并发加锁</b> → <b>业务错误码</b> → <b>全局异常兜底</b> → <b>迁移到 NLog 异步写入</b>，累计定位并修复 <b>N</b> 个日志可靠性问题（配置缺失静默失效、异步队列丢弃、崩溃路径日志丢失等）。」
+    <br><br>
+    <span class="hint">关键词是「<b>定位并修复</b>」，不是「使用了」。面试官对「用了什么库」没兴趣，对「你发现了什么别人没发现的问题」有兴趣。</span>
+  </div>
+</div>
+
+<!-- ==================== 3 ==================== -->
+<div class="card">
+  <h2><span class="n r">3</span>补坑 A：Day4 的错误码断了（你的 W1 产物链有个洞）</h2>
+
+  <div class="callout danger">
+    <b>这是一个真实缺陷，不是教学演示。</b><br>
+    Day3 的 <code>AppLogger</code>：<code>public static void LogError(string code, string whereText, Exception ex)</code> —— 带错误码。<br>
+    Day4 的 <code>AppLogger</code>：<code>public static void LogError(string whereText, Exception ex)</code> —— <b>只有两个参数，错误码没了</b>。<br>
+    Day4 工程目录下<b>也没有 <code>ErrorCodes.cs</code></b>。<br>
+    <span class="hint">也就是说：单元 3 辛苦建立的错误码体系，在单元 4 被你无意间弄丢了。Day5 才补回来。<b>如果你拿 Day4 当最终交付物，错误码这一整周的工作等于白做。</b></span>
+  </div>
+
+  <h3>我为什么不建议直接改 Day4 的源码</h3>
+  <p>因为<b>它记录的是你当时真实的状态</b>。面试时你可以说「我在第四天做全局兜底时不小心把错误码丢了，第五天发现并补了回来」—— 这比「我一次就做对了」更可信，因为<b>真实项目就是这样：加功能时容易把老功能挤掉。</b></p>
+  <p>但 <b>Day5 那版也不能直接用</b>，因为它少了配置自愈、少了 UI 日志实时回调的接线、也没有把版本演进沉淀成可复用的模板。</p>
+
+  <h3>正确做法：新建一个「最终版」工程（W2 直接复用它）</h3>
+  <p>把五天的东西合并到一个工程里。这个工程就是你 W1 的<b>交付物</b>，也是你 W2 做通讯层时的地基。</p>
+
+  <h3>任务：建 <code>w1-final-日志与异常体系</code> 工程</h3>
+  <ol>
+    <li>在 VS 里新建 <b>Windows 窗体应用程序</b>（net48），命名 <code>w1-final-日志与异常体系</code>，放在 <code>VisionHMI\W1\</code> 下</li>
+    <li>从 <code>w1-day5-日志库选型+NLog 实战</code> 复制这 4 个文件过去：<code>AppLogger.cs</code>、<code>ErrorCodes.cs</code>、<code>BizException.cs</code>、<code>NLog.config</code></li>
+    <li>用 NuGet 包管理器装 <code>NLog 5.4.0</code>（<b>不要手改 csproj</b>，Day5 你踩过这个坑）</li>
+    <li>把 <code>Program.cs</code> 改成下面这个版本（多了<b>配置自愈</b>和<b>版本标记</b>）</li>
+  </ol>
+
+<pre><span class="c">// Program.cs · 最终版</span>
+<span class="k">using</span> NLog;
+<span class="k">using</span> NLog.Common;
+<span class="k">using</span> System;
+<span class="k">using</span> System.IO;
+<span class="k">using</span> System.Text;
+<span class="k">using</span> System.Threading;
+<span class="k">using</span> System.Windows.Forms;
+<span class="k">using</span> System.Xml;
+
+<span class="k">namespace</span> w1_final_日志与异常体系
+{
+    <span class="k">internal static class</span> Program
+    {
+        <span class="c">// 默认配置模板：配置缺失或损坏时用它重建一份</span>
+        <span class="k">private const string</span> DefaultNLogConfig = <span class="s">@"&lt;?xml version=""1.0"" encoding=""utf-8""?&gt;
+&lt;nlog xmlns=""http://www.nlog-project.org/schemas/NLog.xsd""
+      xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" autoReload=""true""&gt;
+  &lt;targets&gt;
+    &lt;target name=""asyncFile"" xsi:type=""AsyncWrapper""
+            queueLimit=""10000"" overflowAction=""Block""
+            batchSize=""200"" timeToSleepBetweenBatches=""0""&gt;
+      &lt;target xsi:type=""File""
+              fileName=""${basedir}/logs/${shortdate}.log""
+              layout=""${longdate}|${level:uppercase=true}|${message}""
+              keepFileOpen=""false""
+              archiveAboveSize=""10485760"" maxArchiveFiles=""7"" /&gt;
+    &lt;/target&gt;
+  &lt;/targets&gt;
+  &lt;rules&gt;
+    &lt;logger name=""*"" minlevel=""Debug"" writeTo=""asyncFile"" /&gt;
+  &lt;/rules&gt;
+&lt;/nlog>"</span>;
+
+        [<span class="k">STAThread</span>]
+        <span class="k">static void</span> Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            <span class="c">// ① 内部日志：NLog 自己出问题时，错误原因要能留下证据</span>
+            <span class="c">//    必须用编程接口，不能靠 XML（实测：XML 写 internalLogFile 无效）</span>
+            InternalLogger.LogLevel = LogLevel.Warn;
+            InternalLogger.LogToConsole = <span class="hl">true</span>;
+            InternalLogger.LogFile = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory, <span class="s">"logs"</span>, <span class="s">"nlog-internal.log"</span>);
+            InternalLogger.IncludeTimestamp = <span class="hl">true</span>;
+            LogManager.ThrowExceptions = <span class="hl">false</span>;
+
+            <span class="c">// ② 配置兜底：缺失或损坏就自己写一份默认的</span>
+            EnsureNLogConfig();
+
+            <span class="c">// ③ UI 线程未捕获异常</span>
+            Application.ThreadException += (<span class="k">delegate</span>(<span class="k">object</span> sender, ThreadExceptionEventArgs e)
+            {
+                <span class="k">try</span>
+                {
+                    AppLogger.LogError(ErrorCodes.Unknown, <span class="s">"未捕获异常"</span>, e.Exception);
+                }
+                <span class="k">catch</span> { }
+                <span class="k">finally</span>
+                {
+                    <span class="c">// 致命错误：立刻落盘，不能只留在内存队列里</span>
+                    LogManager.Flush();
+                }
+
+                <span class="k">try</span>
+                {
+                    MessageBox.Show(<span class="s">"程序遇到未处理的错误，已记录日志，请联系技术人员。"</span>,
+                        <span class="s">"出错了"</span>, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                <span class="k">catch</span> (Exception ex2)
+                {
+                    System.Diagnostics.Debug.Write(ex2);
+                }
+            });
+
+            <span class="c">// ④ 非 UI 线程未捕获异常（进程即将终止）</span>
+            AppDomain.CurrentDomain.UnhandledException += <span class="k">delegate</span>(<span class="k">object</span> sender, UnhandledExceptionEventArgs e)
+            {
+                <span class="k">try</span>
+                {
+                    Exception ex = e.ExceptionObject <span class="k">as</span> Exception;
+                    AppLogger.LogError(ErrorCodes.Unknown, <span class="s">"进程级未捕获异常"</span>, ex);
+                    <span class="c">// 关键：进程马上要死了，这是队列里日志的最后机会</span>
+                    LogManager.Flush();
+                }
+                <span class="k">catch</span> { }
+            };
+
+            <span class="c">// ⑤ 启动信息：先知道程序起来了、配置好了</span>
+            AppLogger.LogInfo(<span class="s">"程序启动，配置自愈检查通过"</span>);
+
+            Application.Run(<span class="k">new</span> Form1());
+
+            <span class="c">// ⑥ 正常退出路径：窗体关闭后 Application.Run 才返回</span>
+            AppLogger.LogInfo(<span class="s">"程序正常退出"</span>);
+            LogManager.Flush();
+            LogManager.Shutdown();
+        }
+
+        <span class="c">/// &lt;summary&gt;确保 NLog.config 存在且是合法 XML。缺失或损坏就生成默认配置。&lt;/summary&gt;</span>
+        <span class="k">private static void</span> EnsureNLogConfig()
+        {
+            <span class="k">string</span> path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, <span class="s">"NLog.config"</span>);
+            <span class="k">if</span> (IsConfigUsable(path)) <span class="k">return</span>;
+
+            <span class="k">try</span>
+            {
+                File.WriteAllText(path, DefaultNLogConfig, <span class="k">new</span> UTF8Encoding(<span class="hl">false</span>));
+                System.Diagnostics.Debug.WriteLine(<span class="s">"[自愈] NLog.config 缺失或损坏，已重建默认配置"</span>);
+            }
+            <span class="k">catch</span> (Exception ex)
+            {
+                <span class="c">// 连默认配置都写不了（权限问题），只能放弃，不能抛</span>
+                System.Diagnostics.Debug.WriteLine(<span class="s">"[自愈失败] "</span> + ex.Message);
+            }
+        }
+
+        <span class="c">/// &lt;summary&gt;配置是否可用：文件在、XML 合法、根节点是 nlog&lt;/summary&gt;</span>
+        <span class="k">private static bool</span> IsConfigUsable(<span class="k">string</span> path)
+        {
+            <span class="k">if</span> (!File.Exists(path)) <span class="k">return</span> <span class="hl">false</span>;
+            <span class="k">try</span>
+            {
+                XmlDocument doc = <span class="k">new</span> XmlDocument();
+                doc.Load(path);
+                <span class="k">return</span> doc.DocumentElement != <span class="hl">null</span>
+                    &amp;&amp; doc.DocumentElement.Name == <span class="s">"nlog"</span>;
+            }
+            <span class="k">catch</span>
+            {
+                <span class="k">return</span> <span class="hl">false</span>;
+            }
+        }
+    }
+}</pre>
+
+  <div class="callout warn">
+    <b>⚠️ 顺序不能反</b><br>
+    <code>InternalLogger.LogToConsole = true</code> 和 <code>EnsureNLogConfig()</code> 必须在 <code>Application.ThreadException</code> 挂载<b>之前</b>、在第一次写日志<b>之前</b>。<br>
+    <span class="hint">因为 <code>LogManager.GetCurrentClassLogger()</code> 一旦被调用，NLog 就会去读配置。配置坏了的话，那一刻的错误会被静默吞掉 —— 你必须先把「能看见错误」的开关打开。</span>
+  </div>
+
+  <h3>验证自愈真的生效</h3>
+  <label class="chk"><input type="checkbox" data-id="d6_heal_1"><span class="tx"><b>我把最终版工程跑起来，日志里有「程序启动，配置自愈检查通过」</b><span>正常路径的基线</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_heal_2"><span class="tx"><b>我删掉 bin\Debug\NLog.config 再运行，日志照常写出来</b><span>这次是<b>你的代码</b>把它重建了，不是框架</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_heal_3"><span class="tx"><b>我把 NLog.config 改成非法 XML 再运行，日志照常写出来</b><span>实测过：损坏的配置也会被识别并重建</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_heal_4"><span class="tx"><b>我把根节点改成 &lt;wrong&gt; 再运行，也会被识别出来</b><span>合法 XML 但不是 nlog 根节点 —— 这是我实测过的第 4 种情况</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_heal_5"><span class="tx"><b>我确认最终版里错误码、全局兜底、NLog、Flush 四样都在</b><span>这四样合起来才是完整交付物</span></span></label>
+</div>
+
+<!-- ==================== 4 ==================== -->
+<div class="card">
+  <h2><span class="n a">4</span>补坑 B：NLog 配置出问题时，它是<b>静默</b>的</h2>
+
+  <h3>我实测到的三种「静默」</h3>
+  <table>
+    <thead><tr><th style="width:24%">场景</th><th style="width:16%">程序表现</th><th style="width:20%">日志表现</th><th>最危险的地方</th></tr></thead>
+    <tbody>
+      <tr class="no">
+        <td><code>NLog.config</code> 被删除</td>
+        <td>不报错，退出码 0</td>
+        <td><b>一条都写不出来</b>，日志目录都不生成</td>
+        <td>你以为在记日志，其实什么都没记。现场出事时你才发现没证据</td>
+      </tr>
+      <tr class="no">
+        <td><code>NLog.config</code> XML 语法写错</td>
+        <td>不报错，退出码 0</td>
+        <td><b>一条都写不出来</b></td>
+        <td>改配置时手滑打错一个字，日志就哑了，而且没有任何提示</td>
+      </tr>
+      <tr>
+        <td>配置文件合法但根节点写错</td>
+        <td>不报错，退出码 0</td>
+        <td>同上</td>
+        <td>同上</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok">
+    <b>✔ 一个好消息：运行中配置坏掉，NLog 不会崩</b><br>
+    我实测过：程序跑着，我把它正在用的 <code>NLog.config</code> 删掉 / 改成非法 XML，<b>已写入的 500 条日志一条不少</b>，程序照常跑完。<br>
+    <span class="hint">NLog 的策略是「新配置加载失败就继续用旧配置」。所以<b>配置错误不会导致日志丢失</b>，只会导致<b>你改的新配置没生效</b>。这个区别很重要 —— 别把锅全甩给「NLog 不可靠」。</span>
+  </div>
+
+  <h3>两个能救命的诊断开关</h3>
+
+  <div class="callout bad">
+    <b>✘ 先纠正一个我自己写错的地方：<code>throwExceptions</code> 不是 NLog 的 XML 属性</b><br>
+    我在 NLog 5.4.0 的官方 XML 文档里查过：<code>throwExceptions</code> <b>0 次命中</b>。
+    它是 <code>LogManager.ThrowExceptions</code> 这个<b>编程接口</b>（静态属性），写在 <code>&lt;nlog&gt;</code> 里<b>会被静默忽略</b>。<br>
+    <span class="hint">我实测过：XML 里写 <code>throwExceptions="true"</code> + <code>internalLogFile="..."</code>，日志照常写出，<b>没有任何警告</b>，内部日志文件<b>一个都没生成</b>。写错的属性名不会有任何提示 —— 这正是 NLog 最坑的地方。</span>
+  </div>
+
+  <h4>① <code>LogManager.ThrowConfigExceptions = true</code> —— 让配置错误变成异常</h4>
+  <p>默认 NLog 会把配置加载错误<b>吞掉</b>。用编程接口打开开关，错误会直接抛出来（<b>必须写在 <code>LogManager</code> 第一次加载配置之前</b>）：</p>
+<pre><span class="c">// 开发/调试期：让问题现形（写在 Program.cs 最开头）</span>
+LogManager.ThrowConfigExceptions = <span class="hl">true</span>;
+
+<span class="c">// 实测结果（net48 + NLog 5.4.0）：</span>
+<span class="c">// 配置语法错误 →</span>
+<span class="c">//   NLog.NLogConfigurationException:</span>
+<span class="c">//   Exception when loading configuration ...\NLog.config</span>
+<span class="c">//   ---&gt; System.Xml.XmlException: 根元素未闭合: targets, nlog</span></pre>
+
+  <div class="callout warn">
+    <b>⚠️ 千万别在生产环境开着</b><br>
+    官方文档原话（Troubleshooting logging 节）：<br>
+    「<code>throwExceptions</code> 会让日志异常传播到调用方……<b>只应该在排查问题时和单元测试时开启</b>，<b>不要在生产环境开启</b>，否则日志出问题会导致程序崩溃。」<br>
+    <span class="hint">区分清楚：<code>LogManager.ThrowExceptions</code> 管<b>运行时</b>日志异常，<code>LogManager.ThrowConfigExceptions</code> 管<b>配置加载</b>异常。官方说后者在生产环境反而是推荐的。</span>
+  </div>
+
+  <h4>② <code>InternalLogger.LogFile</code> —— 把 NLog 自己的错误写下来</h4>
+<pre><span class="c">// 让 NLog 把自己的内部错误（含配置加载失败原因）写到文件</span>
+<span class="c">// 注意：属性名是 LogFile / LogLevel，<span class="err">不是</span> InternalLogFile</span>
+InternalLogger.LogLevel  = LogLevel.Warn;
+InternalLogger.LogFile   = Path.Combine(baseDir, <span class="s">"logs"</span>, <span class="s">"nlog-internal.log"</span>);
+InternalLogger.IncludeTimestamp = <span class="hl">true</span>;</pre>
+  <p>官方文档原话：「Internal logging 往往是排查配置加载、日志路由、target 写入问题时<b>最有用的诊断工具</b>。」</p>
+
+  <div class="callout ok">
+    <b>✔ 实测：编程接口能留下完整证据，XML 属性做不到</b><br>
+    同样一个「配置语法错误」场景，两种写法实测对比：<br>
+    <table class="tbl">
+      <thead><tr><th style="width:38%">做法</th><th style="width:26%">内部日志文件</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>XML 里写 <code>internalLogFile</code></td><td><b style="color:#c0392b">没生成</b></td><td>—</td></tr>
+        <tr><td>代码里设 <code>InternalLogger.LogFile</code></td><td><b style="color:#27ae60">17 行</b></td><td>完整堆栈 + <code>XmlException</code> 的行列号</td></tr>
+      </tbody>
+    </table>
+    <span class="hint"><b>原因</b>：配置文件语法错误时，NLog <b>连配置都还没加载成功</b>，XML 里写的 <code>internalLogFile</code> 根本没人读。只有编程接口能在这个时间点生效。<br>
+    → 所以 <b>内部日志必须用代码设，不能靠 XML</b>。这是本节最值钱的一条。</span>
+  </div>
+
+  <div class="callout">
+    <b>我实测的一个坑</b><br>
+    我用 <code>InternalLogger.LogWriter = (level, msg, ex) =&gt; {...}</code> 想接内部日志，<b>编译报错</b>：<br>
+    <span class="err">CS1660: 无法将 lambda 表达式转换为类型"TextWriter"，原因是它不是委托类型</span><br>
+    原因：<code>InternalLogger.LogWriter</code> 的类型是 <code>TextWriter</code>，<b>不是委托</b>。要接得自己写一个 <code>TextWriter</code> 子类。
+    <br><br>
+    <span class="hint">但这条我后来发现<b>不是最好的方案</b> —— 直接用 <code>InternalLogger.LogFile</code> 更省事。这条记下来就行，别真去写 TextWriter。</span>
+  </div>
+
+  <h3>把这条写进你的笔记</h3>
+  <div class="fillrow">
+    <div class="lbl">用你自己的话总结：NLog 的配置问题为什么比想象中危险？你打算怎么防？</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_silent" data-ph="例：因为它不报错，我以为在记日志其实没有……所以我在 Program.cs 里加了自愈检查……"></div>
+  </div>
+</div>
+
+<!-- ==================== 5 ==================== -->
+<div class="card">
+  <h2><span class="n g">5</span>工程收口：git、slnx、简历</h2>
+
+  <h3>5.1 建 git 仓库（你现在一个都没有）</h3>
+  <p>面试问「你平时怎么管理代码版本」，你要是答「我用文件夹复制」—— 直接减分。<b>git 是这个岗位的最低门槛，不是加分项。</b></p>
+  <p>今天不需要学 git 命令的原理，<b>只需要让你的 W1 出现在版本历史里</b>。下面命令照抄就行：</p>
+
+<pre><span class="c"># 1) 进到仓库根目录</span>
+<span class="k">cd</span> E:\上位机工程模板
+
+<span class="c"># 2) 初始化</span>
+git init
+
+<span class="c"># 3) 加 .gitignore（告诉 git 哪些不要管）</span>
+<span class="c">#    右键新建文件 .gitignore，内容见下面</span>
+
+<span class="c"># 4) 第一次提交</span>
+git add .
+git commit -m <span class="s">"feat: W1 异常体系与日志系统 - 五个版本演进"</span>
+
+<span class="c"># 5) 确认有历史了</span>
+git log --oneline</pre>
+
+  <h4><code>.gitignore</code> 内容（VSCode / VS 都能识别）</h4>
+<pre><span class="c"># 编译产物</span>
+bin/
+obj/
+*.user
+
+<span class="c"># NuGet 包（用 NuGet 还原，不入库）</span>
+packages/
+
+<span class="c"># 运行时日志</span>
+logs/
+*.log
+
+<span class="c"># 但配置模板要入库（它是源码的一部分）</span>
+!NLog.config</pre>
+
+  <div class="callout warn">
+    <b>⚠️ 关于 <code>packages/</code> 目录</b><br>
+    你现在用的是老式 csproj（<code>HintPath</code> 指向 <code>..\packages\NLog.5.4.0\</code>）。<b>如果你把 packages/ 加进 .gitignore，别人 clone 你的代码就编译不了</b>。<br>
+    <span class="hint">两个选择：<b>①</b> 不忽略 packages/（仓库会变大，但能直接编译）；<b>②</b> 忽略它，然后改用 PackageReference + <code>dotnet restore</code>（更现代，但老 csproj 要改造）。<br>今天选 <b>①</b>，简单可靠。W2 换新项目时再用 ②。</span>
+  </div>
+
+  <label class="chk"><input type="checkbox" data-id="d6_git_1"><span class="tx"><b>我建了 .gitignore，把 bin/obj/logs 都排除了</b><span>logs/ 一定要排除，不然每次跑都产生一堆变更</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_git_2"><span class="tx"><b>我执行了第一次提交，git log 能看到记录</b><span>能看到 commit 就算成功</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_git_3"><span class="tx"><b>我改了 <code>W1.slnx</code>，把工程路径全改成相对路径</b><span>原因：绝对路径 <code>E:/...</code> 一旦整包拷到别的机器，<b>所有人打开解决方案都报错</b></span></span></label>
+
+  <h3>5.2 <code>W1.slnx</code> 的路径问题</h3>
+  <p>你现在的 <code>W1.slnx</code> 里 5 个工程路径<b>混着写</b>：3 个是绝对路径（<code>E:/上位机工程模板/...</code>），2 个是相对路径（<code>w1-day4-...</code>）。</p>
+  <p>我实测确认：<b>7 条路径当前全部有效</b>，所以现在打开不会报错。但绝对路径是<b>定时炸弹</b> —— 你换电脑、换盘符、或者把项目发给别人，整包就废了。</p>
+
+<pre><span class="c">// 改之前（混着写）</span>
+&lt;Project Path=<span class="hl">"E:/上位机工程模板/VisionHMI/W1/w1-day2-日志级别及统一格式/....csproj"</span> ... /&gt;
+&lt;Project Path=<span class="k">"w1-day4-全局异常兜底/w1-day4-全局异常兜底.csproj"</span> ... /&gt;
+
+<span class="c">// 改之后（统一相对路径，基准是 slnx 所在目录）</span>
+&lt;Project Path=<span class="k">"w1-day2-日志级别及统一格式/w1-day2-日志级别及统一格式.csproj"</span> ... /&gt;
+&lt;Project Path=<span class="k">"w1-day4-全局异常兜底/w1-day4-全局异常兜底.csproj"</span> ... /&gt;</pre>
+
+  <p><b>操作</b>：用记事本打开 <code>VisionHMI\W1\W1.slnx</code>，把每行 <code>Path="E:/上位机工程模板/VisionHMI/W1/</code> 后面的前缀删掉，让它变成 <code>Path="w1-xxx/xxx.csproj"</code>。改完在 VS 里打开解决方案，确认 6 个工程都还在。</p>
+
+  <h3>5.3 简历项目描述（这段你直接拿去用，但要改成你自己的话）</h3>
+  <div class="callout purple">
+    <b>给「视觉应用/集成工程师」岗位写的版本</b><br><br>
+    <b>项目名</b>：机器视觉上位机日志与异常体系（W1 基础工程）<br><br>
+    <b>描述</b>：为 WinForm 上位机搭建统一的日志与全局异常处理体系，覆盖从手写分级日志到第三方日志库迁移的完整迭代。<br><br>
+    <b>技术要点</b>：<br>
+    · 设计五级日志（Debug/Info/Warn/Error/Fatal）与业务错误码体系，使现场故障可按编号定位<br>
+    · 实现 UI 线程与非 UI 线程的全局异常兜底，确保崩溃时堆栈完整落盘<br>
+    · 通过并发写入实测（5000 条零丢失）与压力场景测试（20000 条日志），定位并修复异步队列溢出丢弃、进程退出日志丢失等可靠性缺陷<br>
+    · 配置缺失/损坏时自动重建配置文件，避免日志静默失效<br>
+    · 使用 Git 管理多版本工程演进
+    <br><br>
+    <span class="hint">这段的关键在第 3 条 —— <b>「定位并修复」+ 具体数字</b>。别写成「使用 NLog 实现日志功能」，那谁都能写。</span>
+  </div>
+
+  <div class="fillrow">
+    <div class="lbl">改写成你自己的版本（换掉所有细节，改成你真做过的）：</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_resume" data-ph="把上面那段改写成你自己的话……" style="min-height:120px"></div>
+  </div>
+</div>
+
+<!-- ==================== 6 ==================== -->
+<div class="card">
+  <h2><span class="n">6</span>复盘与面试自检</h2>
+
+  <h3>6.1 面试题自检（能答出来才算 W1 过了）</h3>
+  <table>
+    <thead><tr><th style="width:44%">面试题</th><th style="width:12%">我能答吗</th><th>答不上来的话，缺的是什么</th></tr></thead>
+    <tbody>
+      <tr><td>你的程序出错怎么排查？</td><td></td><td class="fill"></td></tr>
+      <tr><td>catch 里你打印了什么？为什么不是只打印 Message？</td><td></td><td class="fill"></td></tr>
+      <tr><td>什么错误该抛异常，什么该返回？</td><td></td><td class="fill"></td></tr>
+      <tr><td>为什么不用 <code>throw e</code> 而是 <code>throw</code>？</td><td></td><td class="fill"></td></tr>
+      <tr><td>日志文件怎么设计的？多线程安全吗？</td><td></td><td class="fill"></td></tr>
+      <tr><td>为什么用 NLog 不用 log4net？</td><td></td><td class="fill"></td></tr>
+      <tr><td>程序崩溃了日志没记下来，你怎么办？</td><td></td><td class="fill"></td></tr>
+      <tr><td>日志配置被你改坏了，怎么发现？</td><td></td><td class="fill"></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <b>第 7、8 题是今天新增的</b> —— 它们直接对应你今天实测的两个坑。<br>
+    <span class="hint">「崩溃了日志没记下来」→ 答：崩溃处理器里 <code>Flush()</code>，实测 20000 条从丢一半变成全部落盘。<br>
+    「配置改坏了怎么发现」→ 答：默认是静默的，我用 <code>LogManager.ThrowConfigExceptions</code> 让它抛异常，再用 <code>InternalLogger.LogFile</code> 把原因写进文件。</span>
+  </div>
+
+  <h3>6.2 W1 复盘</h3>
+  <div class="fillrow">
+    <div class="lbl">本周投入学习时长（小时）</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_hours" data-ph="例：28" style="min-height:44px"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">这周最大的卡点是什么？我是怎么解决的？</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_block" data-ph="写下来。面试问「你遇到过最难的问题」，这题就是答案"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">这周我推翻过自己的哪些判断？（这题最能体现工程思维）</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_falsify" data-ph="例：我以为 NLog 会自动重建配置，实测发现不会……"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">W2 三个必交付目标</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_w2" data-ph="1. \n2. \n3. " style="min-height:90px"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">这周最值得写进简历的一句话（自己写，不要抄第 5 节）</div>
+    <div class="fillbox" contenteditable="true" data-k="d6_best" data-ph="一句话，要具体、带数字"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="n p">7</span>W1 收口清单</h2>
+  <p>全部勾上，W1 才算真的结束。这张清单同时也是你 W2 开工前的检查表。</p>
+  <label class="chk"><input type="checkbox" data-id="d6_fin_1"><span class="tx"><b>W1学习记录.md 全部填完，没有空白横线</b><span>还有 26 处待填</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_fin_2"><span class="tx"><b>最终版工程建好了，四个要素齐全</b><span>错误码 + 全局兜底 + NLog + Flush + 配置自愈</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_fin_3"><span class="tx"><b>最终版工程加进 W1.slnx 了</b><span>别忘了这一步，不然下次打开看不到它</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_fin_4"><span class="tx"><b>git 仓库建好了，至少一次提交</b><span>面试问版本管理，你能答上</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_fin_5"><span class="tx"><b>W1.slnx 路径全改成相对的了</b><span>整包换机器还能打开</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_fin_6"><span class="tx"><b>简历项目描述改写成我自己的话了</b><span>不能直接抄卡片</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="d6_fin_7"><span class="tx"><b>8 道面试题我都能答上来了</b><span>答不上来的记下来，W2 第一周补</span></span></label>
+
+  <div class="callout ok" style="margin-top:16px">
+    <b>✔ W1 完成标志</b><br>
+    不是「六个单元都打过勾」，而是 —— <b>你能对着一个陌生人的提问，把这五版日志系统的演进、踩过的坑、修复方式从头讲一遍，还不翻资料。</b><br>
+    <span class="hint">讲不出来，说明只是做完了，没变成你的。这个区别，面试官三句话就能问出来。</span>
+  </div>
+</div>
+
+<div class="card">
+  <h2>本卡片的实测数据来源</h2>
+  <p>下面每条都是我在 <b>net48 + NLog 5.4.0</b> 环境下真跑出来的，不是从文档抄的。所有临时工程已清理。</p>
+  <table>
+    <thead><tr><th style="width:34%">结论</th><th>实测方式与数据</th></tr></thead>
+    <tbody>
+      <tr><td>配置缺失 → 日志静默全丢</td><td>删 <code>NLog.config</code> 运行 → logs 目录不生成、0 条落盘、退出码 0、配置未被重建</td></tr>
+      <tr><td>配置语法错误 → 同样静默</td><td>写非法 XML → 同上；<code>LogManager.ThrowConfigExceptions = true</code> 时抛 <code>NLogConfigurationException</code>（含 <code>XmlException</code> 行列号）</td></tr>
+      <tr><td>运行中配置坏掉 → 不会丢日志</td><td>程序运行中删掉/破坏配置，已写的 500 条<b>一条不少</b>，程序正常跑完</td></tr>
+      <tr><td>配置自愈方案有效</td><td>4 种场景全过：语法错误 / 完全缺失 / 配置正常不覆盖 / 根节点写成 &lt;wrong&gt;</td></tr>
+      <tr><td>热重载可用</td><td>net48，<code>autoReload="true"</code>，事件触发 1 次，级别集合变 <code>Error,Fatal</code>，改后写的 Info 被正确过滤；连跑 3 次一致</td></tr>
+      <tr><td>并发不丢行</td><td>10 线程 × 500 条 = 5000，落盘 5000，丢失 0</td></tr>
+      <tr><td>关闭无残留进程</td><td>net48 WinForm，后台线程 + 窗体关闭 → tasklist 查不到进程，退出码 0，日志 102 行完整</td></tr>
+      <tr><td>崩溃路径要手动 Flush</td><td>崩溃处理器里加一次 <code>Flush()</code>：20000 条从 11094 救回到 20006（全部落盘）</td></tr>
+      <tr><td><code>throwExceptions</code> 不是 XML 属性</td><td>NLog 5.4.0 官方 XML 文档中 <code>throwExceptions</code> 0 次命中；它在 XML 里被<b>静默忽略</b>（日志照常写出，无任何警告）</td></tr>
+      <tr><td>内部日志必须用编程接口</td><td>同一「配置语法错误」场景：XML 写 <code>internalLogFile</code> → <b>0 个文件</b>；代码设 <code>InternalLogger.LogFile</code> → <b>17 行完整堆栈</b></td></tr>
+    </tbody>
+  </table>
+
+  <h3>来源标注</h3>
+  <ul>
+    <li><b>官方文档说的</b>：<code>LogManager.ThrowExceptions</code> / <code>LogManager.ThrowConfigExceptions</code> 的语义 —— NLog 官方 Wiki「Configuration file」页 Troubleshooting logging 节；属性是否存在以本机 <code>NLog.5.4.0/lib/net46/NLog.xml</code> 为准</li>
+    <li><b>社区共识</b>：<code>autoReload</code> 依赖 FileSystemWatcher，在容器 / 符号链接场景下可能不触发（NLog GitHub Issue #4348）—— 你本机 Windows 桌面场景实测正常</li>
+    <li><b>我实测的</b>：上表所有数字</li>
+  </ul>
+</div>
+
+<footer>
+  <p><b>W1 · 单元 6 · Day 6</b>　2026-10-31</p>
+  <p>下一站：<b>W2</b> —— 通讯层（Modbus RTU / TCP），那才是视觉集成工程师真正天天用的东西。</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY='mv_w1_d6_checkin_v1';
+  var FKEY='mv_w1_d6_fill_v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[type=checkbox][data-id]'));
+  var fills=[].slice.call(document.querySelectorAll('[contenteditable][data-k]'));
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+  function save(k,d){ try{ localStorage.setItem(k, JSON.stringify(d)); }catch(e){} }
+  var st=load(KEY), ft=load(FKEY);
+
+  function markFilled(el){
+    if(el.textContent.replace(/[\u200B\s]/g,'').length>0){ el.classList.add('filled'); }
+    else { el.classList.remove('filled'); }
+  }
+  function applyAll(){
+    boxes.forEach(function(b){ b.checked=!!st[b.dataset.id]; });
+    fills.forEach(function(el){ if(ft[el.dataset.k]) el.innerHTML=ft[el.dataset.k]; markFilled(el); });
+  }
+  applyAll();
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      st[b.dataset.id]=b.checked; save(KEY,st); upd();
+    });
+  });
+  fills.forEach(function(el){
+    el.addEventListener('input', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft); markFilled(el); upd();
+    });
+    el.addEventListener('blur', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft);
+    });
+    el.addEventListener('keydown', function(e){
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); el.blur(); }
+    });
+    el.addEventListener('paste', function(e){
+      e.preventDefault();
+      var t=(e.clipboardData||window.clipboardData).getData('text');
+      document.execCommand('insertText', false, t.replace(/\r?\n/g,' '));
+    });
+  });
+
+  function upd(){
+    var n=boxes.filter(function(b){return b.checked;}).length;
+    var t=boxes.length;
+    var fn=fills.filter(function(el){return el.textContent.replace(/[\u200B\s]/g,'').length>0;}).length;
+    document.getElementById('ptext').textContent=n+' / '+t;
+    document.getElementById('pbar').style.width=(t? n/t*100:0)+'%';
+    var f=document.getElementById('ftext');
+    if(f) f.textContent='已填写 '+fn+' / '+fills.length+' 处';
+  }
+  upd();
+
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('清空今天的勾选进度和所有填写内容？')) return;
+    boxes.forEach(function(b){ b.checked=false; });
+    fills.forEach(function(el){ el.innerHTML=''; el.classList.remove('filled'); });
+    st={}; ft={}; save(KEY,st); save(FKEY,ft); upd();
+  });
+})();
+</script>
+</body>
+</html>

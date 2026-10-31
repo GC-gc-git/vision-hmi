@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1-Day2 · 日志级别与统一格式</title>
+<style>
+:root{
+  --bg:#f7f7f5; --card:#ffffff; --ink:#1f1f1e; --ink2:#5f5e5a; --ink3:#8a8984;
+  --line:#e3e2dd; --line2:#cfcec7;
+  --blue:#185fa5; --bluebg:#e6f1fb;
+  --teal:#0f6e56; --tealbg:#e1f5ee;
+  --amber:#854f0b; --amberbg:#faeeda;
+  --red:#a32d2d; --redbg:#fcebeb;
+  --purple:#534ab7; --purplebg:#eeedfe;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.75;}
+.wrap{max-width:940px;margin:0 auto;padding:32px 20px 80px;}
+header{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin-bottom:20px;}
+.kicker{font-size:13px;color:var(--blue);letter-spacing:.08em;margin:0 0 6px;}
+h1{font-size:26px;margin:0 0 8px;font-weight:600;line-height:1.4;}
+.sub{color:var(--ink2);margin:0;font-size:14px;}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.tag{font-size:12px;padding:3px 10px;border-radius:20px;border:1px solid var(--line2);color:var(--ink2);background:#fbfbfa;}
+.tag.b{background:var(--bluebg);border-color:#b5d4f4;color:var(--blue);}
+.tag.t{background:var(--tealbg);border-color:#9fe1cb;color:var(--teal);}
+.tag.a{background:var(--amberbg);border-color:#fac775;color:var(--amber);}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 28px;margin-bottom:18px;}
+h2{font-size:19px;margin:0 0 6px;font-weight:600;}
+h2 .n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--blue);color:#fff;font-size:14px;margin-right:10px;vertical-align:2px;}
+h3{font-size:16px;margin:22px 0 8px;font-weight:600;}
+p{margin:10px 0;}
+ul,ol{padding-left:22px;margin:10px 0;}
+li{margin:5px 0;}
+code{font-family:ui-monospace,Consolas,Menlo,monospace;font-size:13px;background:#f0efea;padding:1px 5px;border-radius:4px;color:#333;}
+pre{background:#fbfbfa;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:8px;padding:14px 16px;overflow-x:auto;margin:12px 0;}
+pre code{background:none;padding:0;font-size:13px;line-height:1.65;}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top;}
+th{background:#f3f2ee;font-weight:600;}
+.callout{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:14px;border:1px solid;}
+.co-blue{background:var(--bluebg);border-color:#b5d4f4;}
+.co-teal{background:var(--tealbg);border-color:#9fe1cb;}
+.co-amber{background:var(--amberbg);border-color:#fac775;}
+.co-red{background:var(--redbg);border-color:#f7c1c1;}
+.co-purple{background:var(--purplebg);border-color:#cecbf6;}
+.co-blue b{color:var(--blue);} .co-teal b{color:var(--teal);}
+.co-amber b{color:var(--amber);} .co-red b{color:var(--red);}
+.co-purple b{color:var(--purple);}
+.chk{display:flex;align-items:flex-start;gap:10px;padding:7px 0;cursor:pointer;font-size:14px;}
+.chk input{margin:6px 0 0;width:15px;height:15px;accent-color:#185fa5;flex:0 0 auto;cursor:pointer;}
+.chk span{flex:1;}
+.chk input:checked + span{color:var(--ink3);text-decoration:line-through;}
+.goal{background:linear-gradient(90deg,#e6f1fb,#eef4fc);border:1px solid #b5d4f4;border-radius:12px;padding:18px 22px;margin-bottom:18px;}
+.goal h3{margin:0 0 8px;font-size:15px;color:var(--blue);}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 22px;margin-bottom:18px;}
+.pbar{height:8px;background:#eceae4;border-radius:4px;overflow:hidden;margin:10px 0 6px;}
+.pbar > i{display:block;height:100%;width:0;background:#185fa5;border-radius:4px;transition:width .25s;}
+.pmeta{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;font-family:inherit;}
+.btn:hover{border-color:#b5d4f4;color:var(--blue);}
+.kv{font-size:14px;}
+.kv td:first-child{width:150px;font-weight:500;background:#fafaf8;}
+footer{text-align:center;color:var(--ink3);font-size:13px;margin-top:30px;}
+.faq{border:1px solid var(--line);border-radius:10px;margin:10px 0;overflow:hidden;}
+.faq > b{display:block;padding:10px 14px;background:#fafaf8;cursor:pointer;font-size:14px;}
+.faq > div{padding:12px 16px;font-size:14px;color:var(--ink2);border-top:1px solid var(--line);display:none;}
+.faq.open > div{display:block;}
+
+/* 可填写单元格 */
+td.fill, th.fill{
+  cursor:text; min-width:90px; position:relative;
+  background:#fffdf7;
+  box-shadow:inset 0 0 0 1px #e6dfc8;
+  border-radius:4px;
+}
+td.fill:hover, th.fill:hover{box-shadow:inset 0 0 0 1px #d9c98f;background:#fffbe8;}
+td.fill:focus, th.fill:focus{outline:none;box-shadow:inset 0 0 0 2px #185fa5;background:#fff;}
+td.fill:empty::before, th.fill:empty::before{
+  content:attr(data-ph); color:#b5b3a6; font-size:13px; pointer-events:none;
+}
+td.fill.filled{background:#f4f9fd;box-shadow:inset 0 0 0 1px #b5d4f4;}
+.fillrow{
+  display:flex;align-items:flex-start;gap:10px;margin:8px 0;
+}
+.fillrow .lbl{flex:0 0 210px;font-size:14px;color:var(--ink);padding-top:8px;}
+.fillrow .box{
+  flex:1;min-height:34px;padding:7px 10px;font-size:14px;line-height:1.6;
+  background:#fffdf7;border:1px dashed #d9c98f;border-radius:6px;color:var(--ink);
+}
+.fillrow .box:hover{border-color:#c9b464;background:#fffbe8;}
+.fillrow .box:focus{outline:none;border-style:solid;border-color:#185fa5;background:#fff;}
+.fillrow .box:empty::before{content:attr(data-ph);color:#b5b3a6;}
+.fillrow .box.filled{background:#f4f9fd;border-color:#b5d4f4;}
+.fillbox{
+  min-height:70px;padding:10px 12px;font-size:14px;line-height:1.7;
+  background:#fffdf7;border:1px dashed #d9c98f;border-radius:8px;color:var(--ink);
+}
+.fillbox:hover{border-color:#c9b464;background:#fffbe8;}
+.fillbox:focus{outline:none;border-style:solid;border-color:#185fa5;background:#fff;}
+.fillbox:empty::before{content:attr(data-ph);color:#b5b3a6;}
+.fillbox.filled{background:#f4f9fd;border-color:#b5d4f4;}
+.hint{font-size:13px;color:var(--ink3);margin:6px 0 10px;}
+
+#bta{width:100%;margin-top:8px;padding:8px 10px;font-size:12px;line-height:1.6;border:1px solid #d8d4c8;border-radius:8px;background:#fffdf7;font-family:var(--font-mono,Consolas,monospace);resize:vertical}
+#bta:focus{outline:none;border-color:var(--blue,#2563eb);background:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">W1 · 单元 2（前半） · Day 2 · 2026-10-25 周日</p>
+  <h1>日志级别与统一格式</h1>
+  <p class="sub"><b>浅黄色的格子都可以点开直接输入</b>，输入内容自动存在本机浏览器，刷新不丢。<br>今天只做单元 2 的 2A + 2B：把「只能记异常的日志类」升级成「有级别、能记录流程的日志系统」。<br>不碰多线程加锁——那个推到下一个大块时间。</p>
+  <div class="meta">
+    <span class="tag b">今日投入 1.5–2h</span>
+    <span class="tag t">周日晚档 · 轻任务</span>
+    <span class="tag a">新建项目</span>
+    <span class="tag">产出：AppLogger + 3 个日志级别 + 统一格式</span>
+  </div>
+</header>
+
+<div class="progress">
+  <div class="pmeta"><span>今日任务完成度</span><span id="ptext">0 / 22</span></div>
+  <div class="pmeta" style="margin-top:2px;"><span style="font-size:12px;color:var(--ink3)">填写区</span><span id="ftext" style="font-size:12px;color:var(--ink3)">已填写 0 / 0 处</span></div>
+  <div class="pbar"><i id="pbar"></i></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <span style="font-size:12px;color:var(--ink3);">进度存在本机浏览器，刷新不丢（预览面板与双击打开不互通）</span>
+    <button class="btn" id="reset">重置</button>
+  </div>
+
+<div class="bkwrap" style="margin-top:10px;border-top:1px dashed var(--line, #d8d4c8);padding-top:9px">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <span style="font-size:12.5px;color:var(--ink3,#8a8984)">进度备份（换浏览器 / 换电脑 / 预览面板不同步时用）</span>
+    <button class="btn" id="bexp" type="button">生成备份文本</button>
+    <button class="btn" id="bimp" type="button">从文本恢复</button>
+  </div>
+  <textarea id="bta" rows="3" spellcheck="false" placeholder="点「生成备份文本」会在这里生成一段文本，复制它存到任意 .txt 文件；换环境后粘回来再点「从文本恢复」即可。"></textarea>
+</div>
+
+</div>
+
+<div class="goal">
+  <h3>今天结束时，你要能回答这个问题</h3>
+  <p style="margin:0;font-size:15px;">「程序一天跑 8 小时、检测了 10 万次，现在出了点怪现象，我该往哪找线索？」——<b>日志级别就是答案的一半，另一半是单元 2C 的线程安全。</b></p>
+</div>
+
+<!-- ============ 0 ============ -->
+<div class="card">
+  <h2><span class="n">0</span>开课前：5 分钟想清楚「级别」到底解决什么问题</h2>
+  <p>先别写代码。你现在的日志只有一档——只要调用了写日志的方法就往文件里塞一行。这在两种情况下都会出事：</p>
+  <ul>
+    <li><b>全都记</b>：程序里一句「相机已打开」都写进去，一天下来日志几百 MB，硬盘遭殃，真要查问题时翻日志翻到崩溃。</li>
+    <li><b>全不记</b>：只记异常，那程序「今天效率特别低」这种怪现象，日志里一个字都没有，因为你只记了错误。</li>
+  </ul>
+  <div class="callout co-blue">
+    <b>核心认知：</b>日志级别不是「三种不同的日志写法」，而是<b>同一份日志，按重要程度分流</b>。级别决定的是「这条信息值不值得占磁盘」。
+  </div>
+  <div class="fillrow" style="margin-top:14px;"><div class="lbl">我的一句话总结（自己写）</div>
+  <div class="box" contenteditable="true" data-k="q1sum" data-ph="点此填写：级别是什么、解决什么问题"></div></div>
+  <p>动手前先自己回答（写在下面的勾选框旁边或纸上）：</p>
+  <div class="faq" onclick="this.classList.toggle('open')">
+    <b>Q1 · 你的日志现在只有 ERROR 一档，够用吗？举一个「只记错误会漏掉什么」的具体场景。</b>
+    <div>参考思路：程序跑到第 3 步时性能下降、或者相机连上了但没出图、或者某次标定结果偏移了——这些都不会抛异常，ERROR 日志里一个字都没有。你只能靠「重跑一次看看还这样吗」来碰运气。INFO 档记下「方案加载完成 → 相机打开 → 第1次检测 → 标定 → 检测完成」这条链路，才能定位到断在哪一步。</div>
+  </div>
+  <div class="faq" onclick="this.classList.toggle('open')">
+    <b>Q2 · 三个级别分别留什么？把你的答案写在这里（下面还有一份建议版可参考）</b>
+    <div>
+      <table class="kv">
+        <tr><th>级别</th><th>什么时候用</th><th>你项目里的例子（自己写）</th></tr>
+        <tr><td>DEBUG</td><td>开发调试的细节</td><td class="fill" contenteditable="true" data-k="td01" data-ph="点此填写"></td></tr>
+        <tr><td>INFO</td><td>正常业务流程节点</td><td class="fill" contenteditable="true" data-k="td02" data-ph="点此填写"></td></tr>
+        <tr><td>ERROR</td><td>出错了，需要人看</td><td class="fill" contenteditable="true" data-k="td03" data-ph="点此填写"></td></tr>
+      </table>
+      建议版：DEBUG =「相机已打开」「第 3 次匹配成功」；INFO =「方案加载完成」「开始检测」；ERROR =「检测失败」+异常。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="card">
+  <h2><span class="n">1</span>新建项目，把单元 1 的成果搬进来（30 分钟）</h2>
+  <p>你决定每个 Day 新建一个项目——这是好习惯，不会越改越乱。但<b>新项目里必须把单元 1 的代码重写进来</b>，否则昨天的成果就丢了。</p>
+
+  <h3>1.1 建项目</h3>
+  <ul>
+    <li>Windows 窗体应用（.NET Framework 4.8，和你之前的一致）</li>
+    <li>项目名建议：<code>w2-日志级别</code> 或 <code>w1-日志系统</code></li>
+    <li>建议建一个 <code>Core</code> 文件夹放日志类（以后单元 3 的错误码、单元 4 的全局兜底都往里放）</li>
+  </ul>
+
+  <h3>1.2 搬代码 —— 注意是「重写」，不是「复制粘贴」</h3>
+  <div class="callout co-amber">
+    <b>关键：</b>新项目里不要建 <code>WriteError</code> 了，直接建 <code>AppLogger</code>。为什么改名？<br>
+    这个类今天开始要记三种级别，不再只是「记错误」。名字叫 WriteError 却在写 INFO 级别的日志，以后你自己看代码会困惑——<b>类名和职责不符，是新人最常见的技术债来源之一</b>。
+  </div>
+  <p>在 <code>Core</code> 文件夹里新建 <code>AppLogger.cs</code>，把你昨天 <code>WriteError</code> 里已经跑通的部分<b>照着写一遍</b>（重写，不是拷贝）：</p>
+  <ul>
+    <li>目录 <code>logs</code>（复数，今天统一）</li>
+    <li><code>Directory.Exists</code> + <code>CreateDirectory</code>（你昨天修对的部分，保留）</li>
+    <li>按天分文件 <code>error + DateTime.Now.ToString("yyyyMMdd") + ".txt"</code></li>
+    <li>整体 try-catch 兜底，catch 里用 <code>Debug.WriteLine</code>（你昨天改对的部分，保留）</li>
+    <li><code>Encoding.UTF8</code> + 换行</li>
+  </ul>
+
+  <h3>1.3 Form1 也要搬</h3>
+  <p>新项目 Form1 里放昨天那 3 个按钮（空引用 / 数组越界 / 格式错误），catch 的分类逻辑照搬：</p>
+  <ul>
+    <li><code>catch (NullReferenceException)</code> → 缺陷类</li>
+    <li><code>catch (IndexOutOfRangeException)</code> → 缺陷类</li>
+    <li><code>catch (FormatException)</code> → 预期失败类，只提示不记日志</li>
+    <li>兜底 <code>catch (Exception)</code> → 缺陷类</li>
+  </ul>
+
+  <label class="chk"><input type="checkbox" data-id="d2-1"><span>新项目已建好，目录是 <code>Core</code> 文件夹 + <code>AppLogger.cs</code></span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-2"><span>单元 1 的写入逻辑已重写进 AppLogger（目录 <code>logs</code>、按天分文件、try-catch 兜底、Debug.WriteLine）</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-3"><span>Form1 的 3 个按钮 + catch 分类已重写过来</span></label>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="card">
+  <h2><span class="n">2</span>加日志级别（35 分钟）</h2>
+
+  <h3>2.1 先定接口（你自己写，我给签名）</h3>
+  <p>三个方法，命名保持一致：</p>
+  <pre><code>public static void LogDebug(string msg)
+public static void LogInfo(string msg)
+public static void LogError(string whereText, Exception ex)</code></pre>
+
+  <div class="callout co-purple">
+    <b>设计题（先自己想 2 分钟再往下看）：</b>为什么 <code>LogError</code> 多了 <code>whereText</code> 参数，而 <code>LogInfo</code> / <code>LogDebug</code> 没有？<br><br>
+    <b>参考答案：</b>因为<b>异常需要知道来源，流程日志不需要</b>。「开始检测」这句话本身就说明了是哪一步；「空引用」不告诉你来源，你根本不知道是相机、标定还是通讯出的问题。<br><br>
+    <b>要点：接口设计要按信息的实际需要来，不是为了统一而统一。</b>三个方法签名不一样不是设计缺陷，是对的。硬塞成 <code>Log(string where, string msg, Exception ex = null)</code> 反而让调用方每次都得填一个用不上的参数。
+  </div>
+
+  <h3>2.2 定义级别枚举</h3>
+  <p>新建 <code>LogLevel</code> 枚举，<b>数值顺序必须是这样</b>：</p>
+  <pre><code>public enum LogLevel { Debug = 0, Info = 1, Error = 2 }</code></pre>
+  <div class="callout co-teal">
+    <b>为什么 Debug 是 0？</b>因为枚举要能直接比较大小，「重要程度」是递增的：Debug 最不重要，Error 最重要。这样你就能用一行判断过滤：<br>
+    <code>if (level &lt; MinLevel) return;</code><br>
+    写成 <code>Error = 0, Debug = 2</code> 就得反着比，逻辑会绕。这个顺序在单元 2C 加锁、单元 3 错误码时还会用到。
+  </div>
+
+  <h3>2.3 加「最低级别开关」</h3>
+  <p>加一个静态字段，作为那个「可拧的旋钮」：</p>
+  <pre><code>public static LogLevel MinLevel = LogLevel.Debug;   // 默认全开</code></pre>
+  <p>它的作用：<b>级别低于 MinLevel 的日志，直接 return，不写文件。</b></p>
+  <table>
+    <tr><th>MinLevel =</th><th>DEBUG</th><th>INFO</th><th>ERROR</th><th>文件大小</th></tr>
+    <tr><td><code>Debug</code></td><td>✓ 写</td><td>✓ 写</td><td>✓ 写</td><td>最大</td></tr>
+    <tr><td><code>Info</code></td><td>✗ 丢弃</td><td>✓ 写</td><td>✓ 写</td><td>中等</td></tr>
+    <tr><td><code>Error</code></td><td>✗ 丢弃</td><td>✗ 丢弃</td><td>✓ 写</td><td>最小</td></tr>
+  </table>
+  <div class="callout co-amber">
+    <b>被丢弃 ≠ 没发生。</b>它发生了，只是「不值得占磁盘」。现场排查时把旋钮拧回 Debug 重跑一次就有了。<br><br>
+    <b>今天的方案有个明确缺点，你要记住：</b>改级别要<b>重新编译</b>。客户现场想临时关掉 DEBUG，做不到。这不是 bug，是<b>留给单元 5 的引子</b>——那时讲 Log4Net 的配置文件外置，你就有对比了。记到任务卡的「坑」里，面试时讲「我知道自己方案的局限、下一版怎么改」比讲「我用了 Log4Net」值钱得多。
+  </div>
+
+  <h3>2.4 三个入口共用一个私有写入方法</h3>
+  <div class="callout co-red">
+    <b>别犯这个错：</b>不要在 LogDebug / LogInfo / LogError 里各写一遍格式化逻辑。三份重复代码意味着<b>以后改格式要改三个地方，漏一个就日志格式不一致</b>。三个公开方法只做「判断级别 + 组织内容」，然后调用<b>同一个私有方法</b>去真正写文件。
+  </div>
+
+  <label class="chk"><input type="checkbox" data-id="d2-4"><span>LogLevel 枚举已建，数值顺序 Debug=0 / Info=1 / Error=2</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-5"><span>MinLevel 静态字段已加，低于它的级别直接 return</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-6"><span>LogDebug / LogInfo / LogError 三个入口已写，签名符合上面要求</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-7"><span>三个入口共用同一个私有写入方法（没有重复三遍格式化逻辑）</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-8"><span>LogError 带 whereText，LogInfo / LogDebug 不带（我理解为什么这么设计了）</span></label>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="card">
+  <h2><span class="n">3</span>统一记录格式（20 分钟）</h2>
+  <p>你昨天的格式是：</p>
+  <pre><code>[2026:10:24 21-10-50][button1]System.NullReferenceException: ...</code></pre>
+  <p>加了级别之后要变成：</p>
+  <pre><code>[2026-10-25 19:20:33.127][ERROR][button1]System.NullReferenceException: ...
+   在 w1_异常体系.Form1.button1_Click(...) 位置 ...\Form1.cs:行号 29</code></pre>
+  <table>
+    <tr><th>改动</th><th>为什么</th></tr>
+    <tr><td>加 <code>[ERROR]</code> 级别段</td><td>一眼分清这条是流程还是故障</td></tr>
+    <tr><td>时间加<b>毫秒</b> <code>.127</code></td><td><b>多线程下毫秒时间戳能看出是不是同一时刻写的</b>——这正是单元 2C 排锁问题的关键证据</td></tr>
+    <tr><td><code>yyyy:MM:dd</code> → <code>yyyy-MM-dd</code></td><td>分隔符统一用短横线，更规范</td></tr>
+    <tr><td>堆栈单独占行</td><td>你昨天已经做到了（<code>{ex}</code> 的 ToString 自带换行），保持</td></tr>
+  </table>
+  <div class="callout co-blue">
+    <b>时间为什么必须带毫秒？</b>单元 2C 你会开 3 个线程各写 50 条。如果丢行了，你需要知道「哪几条是同一瞬间写的」才能看出交错。秒级时间戳全一样，毫秒级才有区分度。<b>现在多写的这 3 个字符，是给未来的自己省 2 小时。</b>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="d2-9"><span>格式含 时间(带毫秒) + 级别 + 来源 + 异常类型 + 堆栈</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-10"><span>日期分隔符统一为短横线，时间部分用冒号</span></label>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="card">
+  <h2><span class="n">4</span>接上 Form1 + 加两个新按钮（25 分钟）</h2>
+
+  <h3>4.1 换掉旧调用</h3>
+  <p>3 处 <code>WriteError.WriteErrorlogs("buttonX", ex)</code> 改成 <code>AppLogger.LogError("buttonX", ex)</code>。</p>
+
+  <h3>4.2 新增「写 INFO」的按钮</h3>
+  <p>放一个按钮，点一下写一条流程日志。想一句贴近你项目的话，比如「用户点击了开始检测」「相机已打开」。</p>
+
+  <h3>4.3 新增「写 DEBUG」的按钮 + 演示开关</h3>
+  <p>再加一个按钮写 DEBUG 日志。然后<b>把 MinLevel 改成 <code>LogLevel.Info</code> 重新编译</b>，验证 DEBUG 那条不再落盘、INFO 和 ERROR 照写。</p>
+
+  <div class="callout co-purple">
+    <b>这个按钮的真正价值不是「多一个按钮」，是让你亲眼看到级别开关生效。</b>你在日志里对比「改之前」和「改之后」的文件内容——<b>差异肉眼可见</b>，这就是全部的证据。这比看十遍代码可靠。
+  </div>
+
+  <label class="chk"><input type="checkbox" data-id="d2-11"><span>3 处旧调用已换成 AppLogger.LogError</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-12"><span>新按钮：写一条 INFO 日志，已验证日志文件里能看到</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-13"><span>新按钮：写一条 DEBUG 日志；改 MinLevel=Info 后已验证 DEBUG 不再落盘</span></label>
+</div>
+
+<!-- ============ 5 ============ -->
+<div class="card">
+  <h2><span class="n">5</span>验收（10 分钟）</h2>
+  <p>跑一遍程序，逐条核对。<b>这 5 条全过，单元 2A+2B 才算完成。</b></p>
+  <table>
+    <tr><th>#</th><th>验收标准</th><th>怎么测</th><th>过了</th></tr>
+    <tr><td>1</td><td>点 button1/button2 → 日志出现 <code>[ERROR]</code> 行，堆栈完整带行号</td><td>看日志文件</td><td><label class="chk"><input type="checkbox" data-id="d2-14"><span>&nbsp;</span></label></td></tr>
+    <tr><td>2</td><td>点 button3（格式错误）→ 日志<b>不出现</b>任何新记录</td><td>对比文件行数没变</td><td><label class="chk"><input type="checkbox" data-id="d2-15"><span>&nbsp;</span></label></td></tr>
+    <tr><td>3</td><td>点 INFO 按钮 → 日志出现 <code>[INFO]</code> 行</td><td>看日志文件</td><td><label class="chk"><input type="checkbox" data-id="d2-16"><span>&nbsp;</span></label></td></tr>
+    <tr><td>4</td><td>MinLevel=Error 后，DEBUG 和 INFO 都不写，ERROR 照写</td><td>改代码重编译再跑</td><td><label class="chk"><input type="checkbox" data-id="d2-17"><span>&nbsp;</span></label></td></tr>
+    <tr><td>5</td><td><code>bin\Debug\logs\error20261025.txt</code> 存在（<b>日期是 10-25</b>）</td><td>看文件夹</td><td><label class="chk"><input type="checkbox" data-id="d2-18"><span>&nbsp;</span></label></td></tr>
+  </table>
+  <div class="callout co-teal">
+    <b>第 2 条是单元 1 的规则延续，不能破。</b>昨天你验证过「预期失败类不进错误日志」，今天加了级别之后这条规则必须依然成立。缺陷类和预期类的区分，是整个 W1 的核心收获。
+  </div>
+  <p class="hint" style="margin-top:12px;">验收时如果发现和预期不一样的地方，记在这里（没有就写「五条都过了」）：</p>
+  <div class="fillbox" contenteditable="true" data-k="accnote" data-ph="点此填写：哪条没通过、实际现象是什么"></div>
+</div>
+
+<!-- ============ 6 ============ -->
+<div class="card">
+  <h2><span class="n">6</span>补单元 1 的学习记录（30 分钟，今天必须做）</h2>
+  <p>打开 <code>E:\上位机工程模板\W1学习记录.md</code>，<b>单元 1 现在一个字没填</b>。代码跑通了但记录是空的，等于没做完——面试官看不到你踩过的坑，只看到「会写日志」。</p>
+
+  <h3>6.1 三个异常对照表</h3>
+  <p class="hint">表格里浅黄色的格子都可以点开直接输入。</p>
+  <table>
+    <tr><th>异常类型</th><th>触发代码</th><th>属于哪类</th><th>日志里记了什么</th></tr>
+    <tr><td><code>NullReferenceException</code></td><td><code>string str = null;</code> 之后取 <code>.Length</code></td><td>缺陷</td><td class="fill" contenteditable="true" data-k="td04" data-ph="点此填写"></td></tr>
+    <tr><td><code>IndexOutOfRangeException</code></td><td><code>new string[10]</code> 却访问 <code>str[11]</code></td><td>缺陷</td><td class="fill" contenteditable="true" data-k="td05" data-ph="点此填写"></td></tr>
+    <tr><td><code>FormatException</code></td><td><code>int.Parse("ewqr124qwr")</code></td><td><b>预期</b></td><td><b>什么都不记</b></td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--ink2)">注意第三行：预期失败类<b>不写日志</b>，只弹窗提示。这一点昨天你已用日志文件反证过了。</p>
+
+  <h3>6.2 三个坑（这才是面试素材）</h3>
+  <p>每个坑写满六项：现象 / 怀疑过什么 / 怎么定位的 / 根因 / 怎么修的 / 怎么防复发。</p>
+
+  <div class="callout co-amber">
+    <b>坑 3 请如实写。</b>「Console.WriteLine 在 WinForm 里没出口」这条是<b>评审时我指出来的，不是你自己排查出来的</b>。就写「当时没意识到，是评审时指出来的，我才知道 WinForm 没有控制台」。<br><br>
+    <b>面试官不在乎你怎么发现的，在乎的是你会不会骗人。</b>写「我没发现，是别人指出的」比编一个假的排查过程安全得多——前者是诚实，后者一旦被追问就崩。
+  </div>
+
+  <p class="hint">浅黄色格子点开就能填。建议每格写 1–2 句，不用长。</p>
+  <table>
+    <tr><th>坑</th><th>现象</th><th>根因</th><th>怎么修的</th><th>防复发</th></tr>
+    <tr><td>1</td><td>日志文件永远不生成</td><td>用 <code>File.Exists</code> 判断日志文件——判断对象错，文件本来就该被创建</td><td>改 <code>Directory.Exists</code> + <code>CreateDirectory</code></td><td class="fill" contenteditable="true" data-k="td06" data-ph="点此填写"></td></tr>
+    <tr><td>2</td><td>日志一写就抛 FormatException</td><td><code>"yyyy:MM:D"</code> 里的 <code>D</code> 是未定义格式符</td><td>改 <code>dd</code></td><td class="fill" contenteditable="true" data-k="td07" data-ph="点此填写"></td></tr>
+    <tr><td>3</td><td>不崩了，但日志写失败时完全没线索</td><td><code>Console.WriteLine</code> 在 WinForm 里没有可见出口</td><td>改 <code>Debug.WriteLine</code></td><td class="fill" contenteditable="true" data-k="td08" data-ph="点此填写"></td></tr>
+  </table>
+
+  <h3>6.3 概念填空（单元 1 顶部那四个空）</h3>
+  <p class="hint">下面四行都可以点开直接输入，输入内容自动保存在本机浏览器。</p>
+<div class="fillrow"><div class="lbl"><code>ex.Message</code> 给我的是什么</div><div class="box" contenteditable="true" data-k="c1" data-ph="点此填写"></div></div>
+<div class="fillrow"><div class="lbl"><code>ex.StackTrace</code> 给我的是什么</div><div class="box" contenteditable="true" data-k="c2" data-ph="点此填写"></div></div>
+<div class="fillrow"><div class="lbl">这两个的区别，一句大白话</div><div class="box" contenteditable="true" data-k="c3" data-ph="点此填写"></div></div>
+<div class="fillrow"><div class="lbl">为什么写日志要用 <code>ex.ToString()</code> 而不是手拼 Message + StackTrace</div><div class="box" contenteditable="true" data-k="c4" data-ph="点此填写"></div></div>
+  <div class="fillrow" style="margin-top:14px;"><div class="lbl">补充：今天新学到的一句话</div>
+  <div class="box" contenteditable="true" data-k="c5" data-ph="点此填写（可留空）"></div></div>
+  <div class="callout co-blue">
+    <b>第 4 题的答案（想不透再看）：</b><code>ToString()</code> 除了 Message + StackTrace，还包含<b>异常类型名</b>和 <b>InnerException</b>。手拼会丢掉这两样——类型名丢了，你在日志里看到「未将对象引用设置到对象的实例」，根本不知道是哪种异常。
+  </div>
+
+  <label class="chk"><input type="checkbox" data-id="d2-19"><span>单元 1 的三个异常对照表已填</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-20"><span>三个坑的六项已填（含坑 3 的如实说明）</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-21"><span>四个概念填空已填</span></label>
+  <label class="chk"><input type="checkbox" data-id="d2-22"><span>单元清单里「单元 1」已打勾，单元 2 等 2C 做完再打</span></label>
+</div>
+
+<!-- ============ 7 ============ -->
+<div class="card">
+  <h2><span class="n">7</span>今天不做（但你要知道为什么）</h2>
+  <table>
+    <tr><th>推迟的内容</th><th>为什么</th><th>什么时候</th></tr>
+    <tr><td><b>lock 线程安全</b> + 3 线程 × 50 条</td><td>多线程并发写的 bug <b>不跑看不见，跑一次可能还复现不出来</b>。周日晚档塞这个等于熬夜跟看不见的 bug 搏斗</td><td>下个完整大块时间（周六）</td></tr>
+    <tr><td>异常场景测试（文件被占用 / 目录不可写）</td><td>需要构造异常环境，耗时且今天状态不够好</td><td>单元 2C 一起做</td></tr>
+    <tr><td><code>app.config</code> 配置外置</td><td>机构没教过配置，读 XML 会分散注意力；而且<b>单元 5 讲 Log4Net 时一起学更有对照物</b></td><td>单元 5</td></tr>
+    <tr><td>全局异常兜底（Program.cs 三处挂载）</td><td>周末的活</td><td>单元 4</td></tr>
+    <tr><td>错误码表</td><td>今天先把日志的「骨架」搭好，错误码要挂在日志格式上才有意义</td><td>单元 3</td></tr>
+  </table>
+  <div class="callout co-teal">
+    <b>单元 2C 的正确做法（先记住，到时候我带你看）：</b>到时候<b>先故意不加锁</b>，开 3 个线程各写 50 条，<b>亲眼看到丢行</b>，再上锁。这样你才知道锁在防什么、少了锁会怎样。<b>直接给你 <code>lock</code> 代码然后说「加了锁就安全了」——那是背下来的，不是理解的。</b>
+  </div>
+</div>
+
+<!-- ============ 8 ============ -->
+<div class="card">
+  <h2><span class="n">8</span>今天新增的「坑」（记进单元 2）</h2>
+  <p>单元 2 的坑位模板已经在学习记录里备好了。今天如果踩了新坑，直接记；<b>没踩坑也要记一条设计上的已知缺陷</b>：</p>
+  <div class="callout co-amber">
+    <b>已知缺陷：</b>MinLevel 用静态字段硬编码，改级别要重新编译，客户现场无法临时调整。<br>
+    <b>根因：</b>还没学配置文件外置（机构未教，单元 5 补）。<br>
+    <b>下一版怎么改：</b>把 MinLevel 挪到 <code>app.config</code>，改完配置不重新编译就生效。<br>
+    <b>防复发：</b>做工业软件时，「需要现场调整的参数」一律不能硬编码——这条在 W2 讲配置、W4 讲 VM 方案路径时会反复用到。
+  </div>
+</div>
+
+<!-- ============ 9 ============ -->
+<div class="card">
+  <h2><span class="n">9</span>交付给我（结束前）</h2>
+  <ul>
+    <li><b>AppLogger.cs 完整代码</b></li>
+    <li><b>Form1.cs 完整代码</b></li>
+    <li><b>日志文件内容</b>（<code>bin\Debug\logs\error20261025.txt</code>，把内容贴给我）</li>
+    <li><b>单元 1 学习记录填完的那几段</b>（至少三个坑 + 三个异常对照表）</li>
+    <li><b>你卡住的地方</b>（哪怕只是「不太确定这样写对不对」）</li>
+  </ul>
+  <p class="hint" style="margin-top:14px;">卡住的地方可以直接写在这里，下次问我时把这段贴给我：</p>
+  <div class="fillbox" contenteditable="true" data-k="stuck" data-ph="点此填写：卡在哪一步、报什么错、我怀疑是什么原因（也可以写「没卡住」或「不确定这样写对不对」）"></div>
+  <div class="callout co-blue">
+    <b>我会按 5 条验收标准逐条给你打勾</b>，并指出剩下的问题。像昨天那样：先说修对了什么，再说待修什么，最后给下一步。<br><br>
+    <b>有一件事我想提前说：</b>今天你的代码量比昨天多，<b>出 bug 的概率也高</b>。写完先自己跑一遍验收表，跑不通先自己查一遍再来问——<b>你昨天三个坑全是「没跑过」造成的</b>，那个习惯今天继续用。
+  </div>
+</div>
+
+<footer>
+  W1 · Day 2 · 2026-10-25 · 机器视觉求职作战计划<br>
+  学习计划：<a href="https://www.workbuddy.cn/space/d/LWODMDoDRdgsPh4h8beltk" style="color:#185fa5">主文档</a> ·
+  单元 1 任务卡：<a href="https://www.workbuddy.cn/space/d/YjyDS3QPeM03hCjuGLKmxC" style="color:#185fa5">Day1</a>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY='mv_w1_d2_checkin_v1';
+  var FKEY='mv_w1_d2_fill_v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[type=checkbox][data-id]'));
+  var fills=[].slice.call(document.querySelectorAll('[contenteditable][data-k]'));
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+  function save(k,d){ try{ localStorage.setItem(k, JSON.stringify(d)); }catch(e){} }
+  var st=load(KEY), ft=load(FKEY);
+
+  function markFilled(el){
+    if(el.textContent.replace(/[\u200B\s]/g,'').length>0){ el.classList.add('filled'); }
+    else { el.classList.remove('filled'); }
+  }
+  function applyAll(){
+    boxes.forEach(function(b){ b.checked=!!st[b.dataset.id]; });
+    fills.forEach(function(el){ if(ft[el.dataset.k]) el.innerHTML=ft[el.dataset.k]; markFilled(el); });
+  }
+  applyAll();
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      st[b.dataset.id]=b.checked; save(KEY,st); upd();
+    });
+  });
+  fills.forEach(function(el){
+    el.addEventListener('input', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft); markFilled(el); upd();
+    });
+    el.addEventListener('blur', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft);
+    });
+    el.addEventListener('keydown', function(e){
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); el.blur(); }
+    });
+    el.addEventListener('paste', function(e){
+      e.preventDefault();
+      var t=(e.clipboardData||window.clipboardData).getData('text');
+      document.execCommand('insertText', false, t.replace(/\r?\n/g,' '));
+    });
+  });
+
+  function upd(){
+    var n=boxes.filter(function(b){return b.checked;}).length;
+    var t=boxes.length;
+    var fn=fills.filter(function(el){return el.textContent.replace(/[\u200B\s]/g,'').length>0;}).length;
+    document.getElementById('ptext').textContent=n+' / '+t;
+    document.getElementById('pbar').style.width=(t? n/t*100:0)+'%';
+    var f=document.getElementById('ftext');
+    if(f) f.textContent='已填写 '+fn+' / '+fills.length+' 处';
+  }
+  upd();
+
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('清空今天的勾选进度和所有填写内容？')) return;
+    boxes.forEach(function(b){ b.checked=false; });
+    fills.forEach(function(el){ el.innerHTML=''; el.classList.remove('filled'); });
+    st={}; ft={}; save(KEY,st); save(FKEY,ft); upd();
+  });
+
+  var ta=document.getElementById('bta');
+  var be=document.getElementById('bexp'), bi=document.getElementById('bimp');
+  if(be) be.addEventListener('click',function(){
+    ta.value='MVCHK2|'+KEY+'|'+JSON.stringify(st)+'|'+JSON.stringify(ft);
+    ta.select(); try{ document.execCommand('copy'); }catch(e){}
+    ta.scrollIntoView({block:'center'});
+  });
+  if(bi) bi.addEventListener('click',function(){
+    var t=(ta.value||'').trim(), parts=t.split('|');
+    if(parts.length<4||parts[0]!=='MVCHK2'){ alert('这段文本不像备份内容。备份文本长这样：MVCHK2|...|{勾选}|{填写}'); return; }
+    var a,b2; try{ a=JSON.parse(parts[2]); b2=JSON.parse(parts[3]); }catch(e){ alert('解析失败：'+e.message); return; }
+    st=a||{}; ft=b2||{}; save(KEY,st); save(FKEY,ft); applyAll(); upd();
+    alert('已恢复 '+Object.keys(st).length+' 项勾选、'+Object.keys(ft).length+' 处填写。');
+  });
+})();
+</script>
+</body>
+</html>

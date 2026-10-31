@@ -1,0 +1,129 @@
+【这是你 22:11 版的 AppLogger.cs 原样备份，不会参与编译】
+备份时间：2026-10-25 23:0x
+说明：我在给你骨架时直接覆盖了原文件，这里留一份原文，你的思路没丢。
+文件后缀请保持 .txt（改成 .cs 会在同一个命名空间里造成类重复，编译报错）。
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace w1_day2_日志级别及统一格式
+{
+    /// <summary>
+    /// 应用日志器
+    /// </summary>
+    public static class AppLogger
+    {
+        public enum LogLevel { Debug = 0, Info = 1, Error = 2 }
+        public static LogLevel MinLevel = LogLevel.Debug;
+        /// <summary>
+        /// 项目细节
+        /// </summary>
+        /// <param name="msg"></param>
+        public static void Logdebug(string msg)
+        {
+            try
+            {
+                string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+                if (Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                string file = Path.Combine(dir, $"debug{DateTime.Now.ToString("yyyy-MM-dd")}");
+                File.AppendAllText(file, $"[{DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}][DEBUG][{msg}被点击]");
+            }
+            catch (Exception ex2)
+            {
+                System.Diagnostics.Debug.WriteLine(ex2);
+            }
+        }
+        /// <summary>
+        /// 项目运行节点(整个项目干了什么)
+        /// </summary>
+        /// <param name="msg"></param>
+        public static void LogInfo(string msg)
+        {
+            try
+            {
+                string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+                if (Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                string file = Path.Combine(dir, $"Info{DateTime.Now.ToString("yyyy-MM-dd")}");
+                File.AppendAllText(file, $"[{DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}][INFO][{msg}被打开]");
+            }
+            catch (Exception ex2)
+            {
+                System.Diagnostics.Debug.WriteLine(ex2);
+            }
+        }
+        /// <summary>
+        /// 异常报错存放处
+        /// </summary>
+        /// <param name="whereText"></param>
+        /// <param name="ex"></param>
+        public static void LogError(string whereText,Exception ex)
+        {
+            try
+            {
+                string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+                if (Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                string path = Path.Combine(dir, $"error{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
+                File.AppendAllText(path, $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}][ERROR][{whereText}]{ex}\n", Encoding.UTF8);
+            }
+            catch(Exception ex2)
+            {
+                System.Diagnostics.Debug.WriteLine(ex2);
+            }
+        }
+    }
+}
+
+================ 以下是你 23:03 提出的「字符串版 Write」构想 ================
+
+public static void Write(string log,string msg,string whereText,Exception ex)
+{
+string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+if (!Directory.Exists(dir))
+{
+Directory.CreateDirectory(dir);
+}
+if (log == "error")
+{
+string path = Path.Combine(dir, $"error{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
+File.AppendAllText(path, $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}][ERROR][{whereText}]{ex}\n", Encoding.UTF8);
+}
+else if (log=="info")
+{
+string file = Path.Combine(dir, $"info{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
+File.AppendAllText(file, $"[{DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff")}][INFO][{msg}被打开]\n");
+}
+else if (log == "debug")
+{
+string file = Path.Combine(dir, $"debug{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
+File.AppendAllText(file, $"[{DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff")}][DEBUG][{msg}被点击]\n");
+}
+}
+
+【这个构想的好东西，改造后必须保留】
+1. 合并成一个 Write 方法 —— 级别作为参数传下去，枚举才有意义
+2. if (!Directory.Exists(dir)) 判断方向是对的 —— Day1 的错这次没重犯
+3. Error 分支的 \n 和 Encoding.UTF8 已经有了
+4. 时间戳带毫秒
+
+【已通过评审修正的点】
+- 三个分支内部还是三份复制 -> 再抽一层 WriteTo(prefix, tag, content)
+- 缺整体 try-catch -> 日志失败不能盖掉原始异常
+- 缺 MinLevel 过滤 -> 单元 2A 的核心，必须有
+- 缺 Encoding.UTF8（info/debug）-> 中文会乱码
+- 时间格式不统一（error 用冒号，info/debug 用短横线）-> 统一 yyyy-MM-dd HH:mm:ss.fff
+- 文件名格式不统一（debug 没扩展名、Info 首字母大写、日期带短横线）-> 统一 error20261025.txt
+- {msg}被打开 / {msg}被点击 -> 日志类不该知道 UI 语义，改成 [{msg}]，语义由调用方给
+- 缺 INFO / DEBUG 测试按钮 -> 验收第 3、4 条要靠它们

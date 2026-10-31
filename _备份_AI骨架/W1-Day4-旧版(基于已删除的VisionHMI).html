@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>W1 · 单元 4 · 全局异常兜底</title>
+<style>
+:root{--ink:#1f1f1e;--ink2:#5f5e5a;--ink3:#8a8984;--line:#e2dfd6;--line2:#d8d4c8;--bg:#f7f6f2;--card:#fff;--blue:#185fa5;--blue2:#e6f1fb;--red:#a32d2d;--red2:#fcebeb;--amber:#854f0b;--amber2:#faeeda;--green:#3b6d11;--green2:#eaf3de;--font-mono:Consolas,"Cascadia Mono",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;line-height:1.75}
+.wrap{max-width:940px;margin:0 auto;padding:26px 18px 80px}
+header{margin-bottom:18px}
+.kicker{font-size:12.5px;letter-spacing:.08em;color:var(--blue);font-weight:500;margin:0 0 6px}
+h1{font-size:24px;font:600 24px/1.3 "PingFang SC","Microsoft YaHei",-apple-system,sans-serif;margin:0 0 8px}
+.sub{color:var(--ink2);font-size:14px;margin:0}
+.meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.tag.b{background:var(--blue2);border-color:#b5d4f4;color:var(--blue)}
+.tag.a{background:var(--amber2);border-color:#fac775;color:var(--amber)}
+.tag.g{background:var(--green2);border-color:#c0dd97;color:var(--green)}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0 24px}
+.pmeta{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);margin-bottom:8px}
+.pbar{height:9px;background:#e4e9f1;border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2563eb,#0e7490);transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0}
+.card h2{font-size:17px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:9px}
+.card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--blue2);color:var(--blue);font-size:13px;font-weight:600;flex:none}
+.card h3{font-size:15px;font-weight:600;margin:18px 0 8px}
+p{margin:9px 0}
+code{font-family:var(--font-mono);font-size:12.8px;background:#f4f2ec;padding:1px 6px;border-radius:5px;color:#7a4a12}
+pre{background:#23231f;color:#e9e6dc;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--font-mono);font-size:12.6px;line-height:1.7;margin:10px 0}
+pre .k{color:#7ec8f0}
+pre .s{color:#a8d98a}
+pre .c{color:#8b8b82}
+pre .hl{color:#f0c36d}
+ul,ol{padding-left:22px;margin:9px 0}
+li{margin:5px 0}
+.callout{border-left:4px solid var(--blue);background:var(--blue2);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.callout.warn{border-color:#d19b2a;background:var(--amber2)}
+.callout.danger{border-color:#c0392b;background:var(--red2)}
+.callout.ok{border-color:#639922;background:var(--green2)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f2f0ea;font-weight:600}
+td.done{background:#f2f8f2}
+td.fill{background:#fffdf7}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line2);border-radius:10px;margin:8px 0;background:#fdfdfb;cursor:pointer}
+.chk:hover{border-color:#9dbde0;background:#fbfdff}
+.chk input{margin-top:3px;width:16px;height:16px;accent-color:#2563eb;flex:none}
+.chk .tx{font-size:14px}
+.chk .tx b{display:block}
+.chk .tx span{font-size:13px;color:var(--ink3)}
+.fillrow{margin:12px 0}
+.fillrow .lbl{font-size:12.5px;color:var(--ink3);margin-bottom:5px}
+.fillbox{min-height:64px;padding:10px 12px;font-size:14px;line-height:1.7;background:#fffdf7;border:1px dashed #d9c98f;border-radius:8px;color:var(--ink)}
+.fillbox:hover{border-color:#c9b464;background:#fffbe8}
+.fillbox:focus{outline:none;border-style:solid;border-color:var(--blue);background:#fff}
+.fillbox:empty::before{content:attr(data-ph);color:#b5b3a6}
+.fillbox.filled{background:#f4f9fd;border-color:#b5d4f4}
+.hint{font-size:13px;color:var(--ink3);margin:6px 0 10px}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+#bta{width:100%;margin-top:8px;padding:8px 10px;font-size:12px;line-height:1.6;border:1px solid var(--line2);border-radius:8px;background:#fffdf7;font-family:var(--font-mono);resize:vertical}
+#bta:focus{outline:none;border-color:var(--blue);background:#fff}
+.kbd{font-family:var(--font-mono);font-size:12.5px;background:#efece3;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+.err{background:#fcebeb;border:1px solid #f09595;border-radius:8px;padding:2px 8px;font-family:var(--font-mono);font-size:12.4px;color:#791f1f;display:inline-block;margin:2px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">W1 · 单元 4 · Day 4 · 2026-10-28 周三 · 周末场</p>
+  <h1>全局异常兜底：崩了也要留下证据</h1>
+  <p class="sub">前面三个单元你学会了「<b>主动</b>记录错误」。今天学的是「<b>被动</b>兜底」——<br>
+  那些你压根没预料到、没 try/catch、没 catch 住的崩溃，怎么才能不无声消失。</p>
+  <div class="meta">
+    <span class="tag b">今日投入 2–3h</span>
+    <span class="tag a">周末大块时间</span>
+    <span class="tag g">产出：GlobalException.Install() + 三处挂载 + 验证</span>
+    <span class="tag">承接：单元 3（错误码表）已完成</span>
+  </div>
+</header>
+
+<div class="progress">
+  <div class="pmeta"><span>今日任务完成度</span><span id="ptext">0 / 0</span></div>
+  <div class="pmeta" style="margin-top:2px;"><span style="font-size:12px;color:var(--ink3)">填写区</span><span id="ftext" style="font-size:12px;color:var(--ink3)">已填写 0 / 0 处</span></div>
+  <div class="pbar"><i id="pbar"></i></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <span style="font-size:12px;color:var(--ink3);">进度存在本机浏览器，刷新不丢（预览面板与双击打开不互通）</span>
+    <button class="btn" id="reset">重置</button>
+  </div>
+  <div style="margin-top:10px;border-top:1px dashed #d8d4c8;padding-top:9px;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-size:12.5px;color:var(--ink3);">进度备份（换浏览器 / 换电脑 / 预览面板不同步时用）</span>
+      <button class="btn" id="bexp" type="button">生成备份文本</button>
+      <button class="btn" id="bimp" type="button">从文本恢复</button>
+    </div>
+    <textarea id="bta" rows="3" spellcheck="false" placeholder="点「生成备份文本」会在这里生成一段文本，复制它存到任意 .txt 文件；换环境后粘回来再点「从文本恢复」即可。"></textarea>
+  </div>
+</div>
+
+<div class="callout ok">
+  <b>今天结束时，你要能回答这个问题：</b><br>
+  「你的程序崩溃了，客户只发来一句『你们的软件又闪退了』。<b>你怎么在崩的那一刻把证据留下来</b>？而且你能不能保证，<b>不管崩在哪个线程</b>，都能留下？」
+</div>
+
+<!-- ============ 0 ============ -->
+<div class="card">
+  <h2><span class="n">0</span>前置：一个必须先修的东西（重要发现）</h2>
+  <div class="callout danger">
+    <b>你 E 盘的 <code>VisionHMI</code> 主工程（885 行 Core 层）现在编译不过。</b><br>
+    我用 <code>dotnet build</code>（net48）实测了一遍，<b>4 个编译错误</b>。这份骨架<b>从来没被成功编译过</b>。
+  </div>
+  <h3>4 个错误清单（按修的先后排）</h3>
+  <table>
+    <thead><tr><th style="width:26%">文件:行</th><th style="width:26%">错误</th><th>为什么 / 怎么改</th></tr></thead>
+    <tbody>
+      <tr><td><code>Core/AppLogger.cs</code>:65<br><span class="err">CS0111</span></td><td>两个 <code>Error</code> 重载签名相同</td>
+        <td>你有两个 <code>Error(string, Exception)</code> —— 一个带默认值 <code>ex = null</code>，一个不带。<br>
+        <b>C# 看重载只看参数类型，不看有没有默认值</b>，所以这两个是同一个签名 → 编译器报「已定义了一个名为 Error 的具有相同参数类型的成员」。<br>
+        <b>改法：删掉带默认值那个</b>，保留 <code>public static void Error(string msg, Exception ex = null)</code> —— 它本来就能覆盖两个用法。</td></tr>
+      <tr><td><code>Core/GlobalException.cs</code>:39<br><span class="err">CS0117</span></td><td><code>ThreadPool.UnhandledException</code> <b>这个 API 不存在</b></td>
+        <td><b>这是个重要发现</b>：<code>System.Threading.ThreadPool</code> 根本没有 <code>UnhandledException</code> 事件。<br>
+        .NET Framework 4.8 里<b>只有三个</b>真正的未处理异常入口（见第 1 节表）。骨架把第三个写错了。<br>
+        <b>改法：这一行直接删掉</b>，换成第 1 节表里真正的第三个入口。</td></tr>
+      <tr><td><code>Core/AppConfig.cs</code>:128<br><span class="err">CS0122</span></td><td><code>new Result()</code> 访问不进去</td>
+        <td><code>Result</code> 的构造函数是 <code>private Result() { }</code>（私有），外部类无法 new。<br>
+        <b>改法（两选一）</b>：① 改成 <code>var r = Result.Fail("...")</code>；② 把构造函数改成 <code>internal</code> 或 <code>public</code>。<br>
+        <span style="font-size:13px;color:var(--ink3)">推荐 ① —— <b>不要为了图省事把私有构造函数放开</b>，那等于允许外部随便 new 一个空 Result。</span></td></tr>
+      <tr><td><code>Core/ResettableResource.cs</code>:67<br><span class="err">CS0122</span></td><td>同样 <code>new Result()</code></td><td>同上，一样的改法。</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <b>怎么自己找到这些错误（这一步你要学会，别只等我给）：</b><br>
+    ① 在 VS 里 <b>右键解决方案 → 生成解决方案</b>，错误列表会精确到行号；<br>
+    ② 错误类型分清：<code>CS0111</code>=签名重复、<code>CS0117</code>=<b>这个成员/API 不存在</b>、<code>CS0122</code>=访问权限不够。<br>
+    <b>CS0117 最值得警惕</b> —— 它说明你<b>写了一个你以为存在的 API</b>。这跟单元 1 你写的 <code>level &lt; LogLevel.Debug</code> 是同一类错误：<b>没编译过，所以不知道。</b>
+  </div>
+  <h3>还有一件事：主工程连工程文件都没有</h3>
+  <p><code>E:\上位机工程模板\VisionHMI\</code> 下面只有 <code>Core/</code>、<code>UI/</code>、<code>Program.cs</code>、<code>Properties/</code>，<b>没有 <code>.csproj</code></b>。</p>
+  <div class="callout">
+    <b>所以今天第一步不是写代码，是让它能编译。</b>做法（二选一，都很快）：<br>
+    <b>① 最快：用 VS 新建一个 WinForms 项目</b>，框架选 <b>.NET Framework 4.8</b>（跟你现有 4 个工程一致），<br>
+    项目名填 <code>VisionHMI</code>，<b>放在同一个文件夹</b>（<code>E:\上位机工程模板\VisionHMI\</code>），<br>
+    然后把 <code>Core</code>、<code>UI</code>、<code>Program.cs</code> 加进去（<b>添加现有项</b>）。<br>
+    <b>② 干净：新建一个空文件夹</b>，把 Core / UI / Program.cs 拷进去，再新建工程。<br>
+    <span style="font-size:13px;color:var(--ink3)">推荐 ① —— 位置不变，W1.slnx 里的路径也不用改。</span>
+  </div>
+  <div class="callout danger">
+    <b>今天为什么必须先做这件事？</b>因为<b>单元 4 的验收就是「全局兜底装上以后，崩了能留下证据」</b>。<br>
+    你需要<b>一个能跑起来的、有日志系统的 WinForm 程序</b>才能验证。
+    现在你的 <code>VisionHMI</code> 里已经有 <code>AppLogger</code>（四档日志 + 按天分文件 + 加锁）和
+    <code>GlobalException</code>（三处挂载的骨架）—— <b>这就是单元 4 最好的实验台</b>。
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s0_1"><span class="tx"><b>VisionHMI 有了 .csproj，能生成解决方案</b><span>框架必须选 .NET Framework 4.8</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s0_2"><span class="tx"><b>修掉 CS0111：AppLogger 里删掉重复的 Error 重载</b><span>保留带默认值那个</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s0_3"><span class="tx"><b>修掉 CS0117：删掉 ThreadPool.UnhandledException 那行</b><span>换成第 1 节表里的第三个入口</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s0_4"><span class="tx"><b>修掉两处 CS0122：new Result() 改成 Result.Fail(...)</b><span>不要放开 private 构造函数</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s0_5"><span class="tx"><b>重新生成，错误列表清零，程序能跑起来</b><span>这一步过了才算真正开始单元 4</span></span></label>
+  <div class="fillrow">
+    <div class="lbl">这 4 个错误里，哪个是你自己看错误列表就能查出来的？哪个是必须靠别人指点的？为什么？</div>
+    <div class="fillbox" contenteditable="true" data-k="q_pre" data-ph="点此填写：哪个错误你本来能自己发现？差在哪？"></div>
+  </div>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="card">
+  <h2><span class="n">1</span>三处挂载到底是哪三处（很多人挂错）</h2>
+  <p>先把这张表吃透。<b>你作业本里写的是「三处挂载」，但没说清是哪三处、分别管谁、能不能救程序。</b></p>
+  <table>
+    <thead><tr><th style="width:30%">入口</th><th style="width:32%">管哪类异常</th><th>进程能不能活</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>① <code>Application.ThreadException</code></b></td>
+        <td>只有 <b>UI 线程</b>（消息循环里）没被 catch 的异常</td>
+        <td><b style="color:var(--green)">能</b> —— 吞掉，程序继续跑</td>
+      </tr>
+      <tr>
+        <td><b>② <code>AppDomain.CurrentDomain.UnhandledException</code></b></td>
+        <td><b>所有线程</b>（后台线程、线程池、第三方回调）的未捕获异常</td>
+        <td><b style="color:var(--red)">不能</b> —— 事件跑完，进程立刻终止</td>
+      </tr>
+      <tr>
+        <td><b>③ <code>TaskScheduler.UnobservedTaskException</code></b></td>
+        <td><b>async/await</b> 里没被 <code>await</code> 的 Task 抛的异常</td>
+        <td><b style="color:var(--green)">能</b> —— 调 <code>SetObserved()</code> 就能保</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout danger">
+    <b>第 ② 处最容易被误解，也最常被面试问：它只能「留遗言」，救不了程序。</b><br>
+    你在 <code>AppDomain.UnhandledException</code> 处理器里写日志 —— 日志<b>确实写下来了</b>，
+    但<b>程序还是会死</b>。这是 .NET 的设计：后台线程崩溃，进程就该终止，不能让半个程序带着未初始化状态继续跑。<br>
+    <b>所以这一处的价值不是「让程序不崩」，是「崩之前把证据留下」。</b><br>
+    <span style="font-size:13px;color:var(--ink3)">而第 ① 处才是真正「让程序活着继续跑」的 —— 因为 UI 线程活着，界面还在响应。</span>
+  </div>
+  <h3>为什么 ② 不能省（新手最常见的错）</h3>
+  <p>只注册 ① 的话：</p>
+  <pre><span class="c">// 相机采集线程里没 try/catch → 异常直接逃出去</span>
+<span class="c">// → 不会触发 Application.ThreadException（那只管 UI 线程）</span>
+<span class="c">// → 进程直接死，日志里什么都没有</span>
+<b style="color:#f0c36d">← 这就是「程序半夜崩了，日志是空的」的原因</b></pre>
+  <div class="callout">
+    <b>记这个类比：</b>
+    ① 是「<b>前台出事故</b>」—— 前台有人，能拦住，程序继续营业。<br>
+    ② 是「<b>后台出事故</b>」—— 后台没人，只能记录事故报告，程序关门。<br>
+    ③ 是「<b>异步任务出事故</b>」—— 你连它什么时候出的事都不知道，所以要单独挂一个。
+  </div>
+  <h3>挂载位置：必须早于任何业务代码</h3>
+  <div class="callout warn">
+    <b>注册顺序错了，注册了也没用。</b>
+    <code>Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException)</code>
+    <b>必须在 <code>Application.Run(...)</code> 之前调用</b> —— 因为这个模式开关决定了 WinForms 消息循环怎么对待异常，
+    <b>消息循环一旦跑起来就定死了</b>。<br>
+    <span style="font-size:13px;color:var(--ink3)">你现在的 <code>Program.cs</code> 里 <code>GlobalException.Install()</code> 在 <code>Application.Run</code> 前面，<b>这个顺序是对的</b>，保持住。</span>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">用我自己的话说：为什么第 ② 处（AppDomain）明明救不了程序，也必须挂？</div>
+    <div class="fillbox" contenteditable="true" data-k="q_why2" data-ph="点此填写：提示——它的价值是「留证据」不是「救程序」。用你自己的话写一句"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s1_1"><span class="tx"><b>能说出三个入口分别管哪类异常</b><span>UI 线程 / 所有线程 / async Task</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s1_2"><span class="tx"><b>记住了 AppDomain 那处不能阻止进程终止</b><span>只能留遗言</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s1_3"><span class="tx"><b>知道 SetUnhandledExceptionMode 必须在 Application.Run 之前</b><span>顺序错了等于没注册</span></span></label>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="card">
+  <h2><span class="n">2</span>第 ① 处：UI 线程兜底（唯一能"救程序"的）</h2>
+  <p>先看 <code>VisionHMI</code> 里已有的写法，然后<b>你亲手敲一遍</b>（不要复制粘贴 —— 你得能背出来）。</p>
+  <pre><span class="c">// GlobalException.Install() 里</span>
+<span class="c">// ① UI 线程的未捕获异常 —— WinForms 最常见的那种</span>
+Application.ThreadException += (s, e) =&gt; Handle(e.Exception);
+
+<span class="c">// ② 强制所有异常都走上面的处理器，而不是直接崩</span>
+Application.SetUnhandledExceptionMode(
+    UnhandledExceptionMode.CatchException);</pre>
+  <div class="callout">
+    <b>为什么必须先调 <code>SetUnhandledExceptionMode</code>，光订阅事件不够？</b><br>
+    WinForms 默认的异常处理模式是 <code>Automatic</code> —— 调试时弹「JIT 调试器」对话框，发布时直接崩。<br>
+    <code>CatchException</code> 才是「把异常交给我的处理器，别弹窗别崩」。
+    <b>这是一个开关 + 一个处理器，两步缺一不可。</b>
+  </div>
+  <h3>Handle 里该做什么（顺序很重要）</h3>
+  <table>
+    <thead><tr><th style="width:16%">顺序</th><th style="width:30%">动作</th><th>为什么</th></tr></thead>
+    <tbody>
+      <tr><td><b>① 先写日志</b></td><td><code>AppLogger.Error(...)</code></td><td><b>最优先。</b>如果写日志失败或者后面弹窗卡住，日志已经是唯一的证据了。<b>先留证据，再做其他事。</b></td></tr>
+      <tr><td><b>② 再弹提示</b></td><td><code>MessageBox.Show(...)</code></td><td>给现场的人一句人话。但如果程序马上要死，这句可能来不及被看到 —— 所以它排在日志后面。</td></tr>
+      <tr><td><b>③ 提示框本身要包 try</b></td><td><code>try { MessageBox... } catch { }</code></td><td><b>这是最容易被忽略的一层。</b>如果界面线程已经出问题了，弹窗本身也可能抛异常 —— 那你的兜底代码自己炸了，等于什么都没做。</td></tr>
+    </tbody>
+  </table>
+  <div class="callout ok">
+    <b>你现有骨架里第 ③ 点已经做对了</b>（<code>GlobalException.Handle</code> 里弹窗包了 try/catch，还写了注释解释为什么）。<br>
+    <b>这一条也是单元 1 的结论：日志自己绝不能抛异常，否则会盖掉原始异常。</b>
+    你在单元 1 就学到了，今天用上了。
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s2_1"><span class="tx"><b>自己手敲了 ThreadException 订阅 + SetUnhandledExceptionMode</b><span>能背出来，不是复制</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_2"><span class="tx"><b>Handle 里的顺序是：先写日志 → 再弹提示</b><span>证据优先</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_3"><span class="tx"><b>MessageBox 本身包了 try/catch</b><span>兜底代码自己不能炸</span></span></label>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="card">
+  <h2><span class="n">3</span>第 ② 处：后台线程兜底（留遗言）</h2>
+  <p>这一处写起来最简单，但<b>最容易写出假安全感</b>。</p>
+  <pre><span class="c">// ② 其它线程（非 UI）的未捕获异常 —— 相机回调、通讯线程</span>
+AppDomain.CurrentDomain.UnhandledException += (s, e) =&gt;
+    Handle(e.ExceptionObject as Exception);</pre>
+  <div class="callout warn">
+    <b>注意 <code>e.ExceptionObject</code> 这个细节。</b>它的类型是 <code>object</code>，<b>不是 <code>Exception</code></b>。<br>
+    因为它有可能是从非托管代码（C++ DLL）穿过来的 COM 异常对象 —— 那玩意儿不是 .NET 的 Exception。<br>
+    所以必须写 <code>e.ExceptionObject as Exception</code>（可能得到 null），<b>不能直接强转</b>，否则会自己再炸一次。
+  </div>
+  <h3>这一处有个"加时赛"的实用技巧</h3>
+  <p>因为进程马上就要终止，<b>你的日志必须已经落盘</b>。而写文件是有耗时的。</p>
+  <pre><span class="c">// 进程正在终止，给日志一点落盘时间</span>
+AppDomain.CurrentDomain.UnhandledException += (s, e) =&gt;
+{
+    Handle(e.ExceptionObject <span class="k">as</span> Exception);
+    <span class="hl">Thread.Sleep(800);   // 等日志刷盘</span>
+};</pre>
+  <div class="callout">
+    <b>为什么这行有用：</b>你的日志是 <code>File.AppendAllText</code>（带 lock、写完立刻关文件），
+    <b>正常情况下已经落盘了</b>，不需要等。但如果你以后改成用 <code>StreamWriter</code> 保持文件打开（性能更好），
+    那这 800ms 就是「让缓冲区刷出去」的保险。<br>
+    <span style="font-size:13px;color:var(--ink3)"><b>记这个思路就行</b>：崩溃前的最后机会，时间很宝贵，能留多少证据留多少。</span>
+  </div>
+  <div class="callout danger">
+    <b>千万别在 ② 里做这些事：</b><br>
+    ❌ 弹 MessageBox（进程要死了，弹出来也是死的，而且可能卡住）<br>
+    ❌ 往数据库写东西（连接要时间，可能来不及）<br>
+    ❌ 试图 <code>Environment.Exit(0)</code>（多此一举，它本来就要终止）<br>
+    <b>② 这一处只做一件事：把证据写进日志。</b>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s3_1"><span class="tx"><b>AppDomain 挂载写好了，用了 as Exception</b><span>不是强转</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_2"><span class="tx"><b>明白了 ② 处不能弹窗，只写日志</b><span>进程马上就死了</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_3"><span class="tx"><b>给日志落盘加了缓冲时间</b><span>Thread.Sleep(800)</span></span></label>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="card">
+  <h2><span class="n">4</span>第 ③ 处：async/await 的坑（W2 单元 1 会天天遇到）</h2>
+  <p>这一处<b>你现在还用不上</b>（你还没学 async/await），但我先讲，因为<b>它是最容易漏的一处</b>。</p>
+  <pre><span class="c">// ③ async/await 里没被 await 的 Task 抛出的异常</span>
+TaskScheduler.UnobservedTaskException += (s, e) =&gt;
+{
+    Handle(e.Exception);
+    <span class="hl">e.SetObserved();   // 告诉运行时：我处理过了，别终止进程</span>
+};</pre>
+  <div class="callout danger">
+    <b>为什么必须有 <code>SetObserved()</code>？</b><br>
+    不调的话，运行时会在 <b>GC 回收那个 Task 的时候</b>（可能几分钟后！）触发异常升级策略，<b>把进程干掉</b>。<br>
+    <b>这就是「程序跑着跑着，莫名其妙自己没了」的经典原因</b> —— 而且日志里什么都没有，因为异常发生的时间和崩溃时间对不上。
+  </div>
+  <div class="callout warn">
+    <b>但更根本的解法不是挂这个事件，是别写出那种代码。</b><br>
+    <b>错误写法：</b><code>DoWorkAsync();</code> —— 不 await，异常沉到底，无声无息。<br>
+    <b>正确写法：</b><code>await DoWorkAsync();</code>，然后外层 try/catch。<br>
+    <span style="font-size:13px;color:var(--ink3)">第 ③ 处挂载是<b>兜底</b>，不是<b>解决方案</b>。W2 单元 1 会专门讲这个。</span>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">我打算在 W2 里怎么避免 async 异常「沉底」？先写一句设想</div>
+    <div class="fillbox" contenteditable="true" data-k="q_async" data-ph="点此填写：例如「所有 Task 都 await，BackgroundWorker 统一 catch」"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s4_1"><span class="tx"><b>挂上了 TaskScheduler.UnobservedTaskException + SetObserved()</b><span>虽然现在还没 async，但先挂上</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4_2"><span class="tx"><b>知道「不 await 的 Task」是万恶之源</b><span>W2 会重点讲</span></span></label>
+</div>
+
+<!-- ============ 5 ============ -->
+<div class="card">
+  <h2><span class="n">5</span>验证：崩了到底有没有留下证据</h2>
+  <p>验收标准：<b>任何地方崩了，日志里都有堆栈。</b>光装上不算，要<b>真的崩一次</b>。</p>
+  <h3>实验设计（3 个按钮，测 3 条路径）</h3>
+  <table>
+    <thead><tr><th style="width:22%">按钮</th><th style="width:32%">怎么触发</th><th>应该看到什么</th></tr></thead>
+    <tbody>
+      <tr><td><b>崩在 UI 线程</b></td><td>按钮事件里直接 <code>throw new Exception("测试UI崩溃")</code>，<b>不 catch</b></td>
+        <td>日志有堆栈 + 弹了提示框 + <b>程序还活着</b>，还能继续点别的按钮</td></tr>
+      <tr><td><b>崩在后台线程</b></td><td><code>Task.Run(() =&gt; { throw ...; })</code> 或 <code>new Thread(...)</code>，<b>不 catch</b></td>
+        <td>日志有堆栈 + <b>程序终止</b>（这是正常的、预期的）</td></tr>
+      <tr><td><b>崩在 async</b></td><td><code>SomeAsyncMethod();</code> 不 await，方法里 throw</td>
+        <td>日志有堆栈（可能<b>要等 GC 回收才触发</b> → 加个 <code>GC.Collect()</code> 加速）</td></tr>
+    </tbody>
+  </table>
+  <div class="callout danger">
+    <b>第 2 个实验会让你的程序直接关掉 —— 这是预期结果，不是出 bug 了。</b><br>
+    <b>但你要亲眼确认两件事</b>：① 崩之前，日志文件里确实写进去了堆栈（这才是单元 4 的意义）；<br>
+    ② 关掉之后再打开程序，日志内容还在（<b>说明它是追加写，不是覆盖写</b>）。<br>
+    <span style="font-size:13px;color:var(--ink3)">顺手验证第 ② 点很值钱 —— 你日志文件如果被覆盖，现场排查就彻底没戏了。</span>
+  </div>
+  <h3>怎么确认日志写进去了</h3>
+  <ol>
+    <li>日志文件在 <code>bin\Debug\logs\</code> 下，文件名是<b>按天</b>的：<code>2026-10-28.log</code>（<b>注意是按天一个文件，不是按级别分</b> —— 这是 <code>VisionHMI</code> 版的做法，跟你 <code>w1-day3</code> 那个按级别分的不同，<b>两个都对，别混</b>）</li>
+    <li>用记事本 / VS 打开，找 <code>未捕获异常</code> 这几个字</li>
+    <li>确认那一行下面<b>有 <code>└─ 堆栈:</code> 那一段</b>，并且能看到 <code>Form1.cs:行号</code></li>
+  </ol>
+  <div class="fillrow">
+    <div class="lbl">三个实验的实际结果（日志里的实际行 + 程序是死了还是活着）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_verify" data-ph="点此填写：UI 线程那条日志长什么样？后台线程那条？程序状态分别是什么？"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s5_1"><span class="tx"><b>3 个按钮都做好了</b><span>UI / 后台 / async 各一个</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_2"><span class="tx"><b>UI 线程崩溃后，程序还活着还能继续点</b><span>这是第 ① 处的价值</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_3"><span class="tx"><b>后台线程崩溃后，日志里有堆栈（程序死了是对的）</b><span>重点是日志写进去了</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_4"><span class="tx"><b>日志里有完整堆栈，能看到 Form1.cs 的行号</b><span>单元 4 的验收标准</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_5"><span class="tx"><b>确认日志是追加写，重开程序后旧记录还在</b><span>覆盖写的话现场排查就废了</span></span></label>
+</div>
+
+<!-- ============ 6 ============ -->
+<div class="card">
+  <h2><span class="n">6</span>单元 4 的三个坑（面试素材）</h2>
+  <table>
+    <thead><tr><th style="width:26%">坑</th><th style="width:36%">为什么错</th><th>该怎么做</th></tr></thead>
+    <tbody>
+      <tr><td><b>以为 AppDomain 能救程序</b></td><td>事件跑完进程照样终止，还以为是自己写错了去查业务逻辑</td><td>记住分工：① 能救，② 只能留遗言，③ 能救</td></tr>
+      <tr><td><b>注册顺序错</b></td><td><code>SetUnhandledExceptionMode</code> 在 <code>Application.Run</code> 之后调 → 模式已定死，注册了也不生效</td><td>全部注册放 <code>Program.cs</code> 最开头</td></tr>
+      <tr><td><b>兜底代码自己抛异常</b></td><td>日志写失败 / 弹窗失败 → 原始异常被盖掉 → <b>什么都没留下</b></td><td>日志和弹窗各自包 try，兜底里不做有风险的事</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>还有一个坑不在代码里，在观念里：以为全局兜底能代替 try/catch。</b><br>
+    <b>错。</b>全局兜底是<b>最后一道保险丝</b>，不是常规手段。<br>
+    原因很实在：① 走到全局兜底，说明程序状态已经不确定了（可能在半初始化、可能资源没释放）；<br>
+    ② 全局兜底<b>没法做业务处理</b> —— 相机超时你要重试、掉线你要停机，这些都得在 <code>catch</code> 里按错误码分支（单元 3 学的）。<br>
+    <b>所以：能预期的失败 → try/catch + 错误码；没预料到的意外 → 全局兜底留证据。</b>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">这个坑我想写进学习记录，因为我原来真的以为全局兜底能替代 try/catch：</div>
+    <div class="fillbox" contenteditable="true" data-k="q_pit" data-ph="点此填写：为什么全局兜底不能代替 try/catch？用你自己的话说"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s6_1"><span class="tx"><b>能说出三个坑</b><span>AppDomain / 注册顺序 / 兜底自己抛</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_2"><span class="tx"><b>想明白了「全局兜底 ≠ 替代 try/catch」</b><span>它是保险丝，不是常规手段</span></span></label>
+</div>
+
+<!-- ============ 7 ============ -->
+<div class="card">
+  <h2><span class="n">7</span>填学习记录：单元 4 那一节</h2>
+  <p>打开 <code>E:\上位机工程模板\W1学习记录.md</code>，找到「<b>单元 4：全局异常兜底</b>」这一节（大约在<b>第 175 行</b>），填四块：</p>
+  <table>
+    <thead><tr><th style="width:30%">要填的位置</th><th>填什么</th></tr></thead>
+    <tbody>
+      <tr><td>单元 4 · <b>日期</b></td><td>写今天日期（现在是 <code>____</code>）</td></tr>
+      <tr><td>单元 4 · <b>三处挂载表格</b>（3 行）</td>
+        <td>每行填：① 挂载位置（写具体 API 名）② 管的是哪类异常 ③ <b>我查到的资料出处</b>（这栏别空 —— 写 Microsoft Learn 的文档名或你实际查到的地方）</td></tr>
+      <tr><td>单元 4 · <b>我做了什么</b>（3 个勾选框）</td>
+        <td>在 <code>Program.cs</code> 装上全局异常处理 / 触发一个没 catch 的异常确认日志有堆栈 / 确认程序不闪退给友好提示</td></tr>
+      <tr><td>单元 4 · <b>为什么全局兜底不能代替 try/catch</b></td>
+        <td><b>用你自己的话</b>。可以参考第 6 节的两条理由，但要改成你的说法</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <b>表格第三栏「我查到的资料出处」别写成「百度」或空着。</b><br>
+    写「Microsoft Learn · Unhandled exceptions」或「微软官方文档 · TaskScheduler.UnobservedTaskException」<br>
+    —— <b>面试时这一栏就是你「会查官方文档」的证据</b>。查官方文档不丢人，<b>不查才丢人</b>。
+  </div>
+  <div class="callout ok">
+    <b>顺便把前面单元的遗留一起收了（W1 收口清单）：</b><br>
+    ① <b>单元 2 日期</b>还是 <code>____</code>；<br>
+    ② <b>单元 2 坑 1 根因写错了</b> —— 你写的是「多线程同时改变一个数据会导致误判」，
+    真实根因是<b>文件独占打开 → 抛 IOException → 被 catch 吞掉 → 静默丢行</b>；<br>
+    ③ <b>单元 2 坑 1 的「怎么定位的」</b>写的是「学习了 lock 锁」，那不是排查方法，
+    真实过程是<b>跑压测发现条数少于 150 → 去掉 catch 再跑 → 看到 IOException 出现 → 定位到文件独占打开</b>；<br>
+    ④ <b>单元 2 坑 2</b> 还全空；<br>
+    ⑤ <b>单元 1 第 71 行</b>「我是怎么解决的」写的是「怎么确认错误」，不是排查过程
+    （你真做出来的是：日志文件永远不生成 → 发现 <code>return</code> 后面的写入代码根本没执行 → 判断条件对象写错）；<br>
+    ⑥ <b>单元 1 第 73 行</b>的占位符没删；表格里「预期缺陷」那一列没删干净；<b>第 56 行</b>标签「字符串编码」应为「字符串转数字」；<br>
+    ⑦ <b>单元 3 日期</b>还是 <code>____</code>。
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s7_1"><span class="tx"><b>单元 4 的四块都填了</b><span>日期 / 三处挂载表 / 我做了什么 / 为什么不能替代 try-catch</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s7_2"><span class="tx"><b>三处挂载表的「资料出处」栏填了</b><span>写官方文档名，不写百度</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s7_3"><span class="tx"><b>单元 2 的遗留全部补完（日期/坑1根因/坑1定位/坑2）</b><span>坑 1 要改对</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s7_4"><span class="tx"><b>单元 1 的遗留修完（71/73 行、表格、56 行标签）</b><span>单元 1 也一起收口</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s7_5"><span class="tx"><b>单元 3 日期填了</b><span>____ → 实际日期</span></span></label>
+</div>
+
+<!-- ============ 8 ============ -->
+<div class="card">
+  <h2><span class="n">8</span>交付清单 + 今天不做的 3 件事</h2>
+  <table>
+    <thead><tr><th style="width:44%">今天不做</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td><b>看门狗 / 自恢复重启</b></td><td>那要写进程守护（另一个进程盯着主进程，挂了拉起来），属于 W5 项目一的范畴。<b>今天先把「留证据」做扎实。</b></td></tr>
+      <tr><td><b>把兜底做成配置文件开关</b></td><td>单元 5 对比 Log4Net 时再一起想。现在加就是多一个要维护的开关。</td></tr>
+      <tr><td><b>处理 async 异常的正确写法</b></td><td>你还没学 async/await，<b>现在讲等于背答案</b>。W2 单元 1 会正面解决（BackgroundWorker + ProgressBar）。</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>单元 4 的验收标准（来自 v4 计划）：</b><b>任何地方崩了日志里都有堆栈。</b><br>
+    对照一下你今天要做到：<b>3 个实验都跑过、3 个都有堆栈、UI 线程那个还活着。</b>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s8_1"><span class="tx"><b>VisionHMI 能编译了，4 个错误全修完</b><span>这是前提</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_2"><span class="tx"><b>三处挂载全部装好</b><span>① ② ③ 一个不少</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_3"><span class="tx"><b>3 个实验都跑过，日志里都有堆栈</b><span>单元 4 验收通过</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_4"><span class="tx"><b>学习记录单元 4 + 前面单元遗留全部填完</b><span>W1学习记录.md</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_5"><span class="tx"><b>我能不看笔记讲出「三处挂载 + 各自管谁 + 能不能救程序」</b><span>这是面试原题</span></span></label>
+  <div class="fillrow">
+    <div class="lbl">卡住的地方（哪里想不通，直接写，明天问我）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_block" data-ph="点此填写：哪一步卡住了？报错原文是什么？"></div>
+  </div>
+</div>
+
+</div>
+<script>
+(function(){
+  var KEY='mv_w1_d4_checkin_v1';
+  var FKEY='mv_w1_d4_fill_v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[type=checkbox][data-id]'));
+  var fills=[].slice.call(document.querySelectorAll('[contenteditable][data-k]'));
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+  function save(k,d){ try{ localStorage.setItem(k, JSON.stringify(d)); }catch(e){} }
+  var st=load(KEY), ft=load(FKEY);
+
+  function markFilled(el){
+    if(el.textContent.replace(/[\u200B\s]/g,'').length>0){ el.classList.add('filled'); }
+    else { el.classList.remove('filled'); }
+  }
+  function applyAll(){
+    boxes.forEach(function(b){ b.checked=!!st[b.dataset.id]; });
+    fills.forEach(function(el){ if(ft[el.dataset.k]) el.innerHTML=ft[el.dataset.k]; markFilled(el); });
+  }
+  applyAll();
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      st[b.dataset.id]=b.checked; save(KEY,st); upd();
+    });
+  });
+  fills.forEach(function(el){
+    el.addEventListener('input', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft); markFilled(el); upd();
+    });
+    el.addEventListener('blur', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft);
+    });
+    el.addEventListener('keydown', function(e){
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); el.blur(); }
+    });
+    el.addEventListener('paste', function(e){
+      e.preventDefault();
+      var t=(e.clipboardData||window.clipboardData).getData('text');
+      document.execCommand('insertText', false, t.replace(/\r?\n/g,' '));
+    });
+  });
+
+  function upd(){
+    var n=boxes.filter(function(b){return b.checked;}).length;
+    var t=boxes.length;
+    var fn=fills.filter(function(el){return el.textContent.replace(/[\u200B\s]/g,'').length>0;}).length;
+    document.getElementById('ptext').textContent=n+' / '+t;
+    document.getElementById('pbar').style.width=(t? n/t*100:0)+'%';
+    var f=document.getElementById('ftext');
+    if(f) f.textContent='已填写 '+fn+' / '+fills.length+' 处';
+  }
+  upd();
+
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('清空今天的勾选进度和所有填写内容？')) return;
+    boxes.forEach(function(b){ b.checked=false; });
+    fills.forEach(function(el){ el.innerHTML=''; el.classList.remove('filled'); });
+    st={}; ft={}; save(KEY,st); save(FKEY,ft); upd();
+  });
+
+  var ta=document.getElementById('bta');
+  var be=document.getElementById('bexp'), bi=document.getElementById('bimp');
+  if(be) be.addEventListener('click',function(){
+    ta.value='MVCHK2|'+KEY+'|'+JSON.stringify(st)+'|'+JSON.stringify(ft);
+    ta.select(); try{ document.execCommand('copy'); }catch(e){}
+    ta.scrollIntoView({block:'center'});
+  });
+  if(bi) bi.addEventListener('click',function(){
+    var t=(ta.value||'').trim(), parts=t.split('|');
+    if(parts.length<4||parts[0]!=='MVCHK2'){ alert('这段文本不像备份内容。备份文本长这样：MVCHK2|...|{勾选}|{填写}'); return; }
+    var a,b2; try{ a=JSON.parse(parts[2]); b2=JSON.parse(parts[3]); }catch(e){ alert('解析失败：'+e.message); return; }
+    st=a||{}; ft=b2||{}; save(KEY,st); save(FKEY,ft); applyAll(); upd();
+    alert('已恢复 '+Object.keys(st).length+' 项勾选、'+Object.keys(ft).length+' 处填写。');
+  });
+})();
+</script>
+</body>
+</html>

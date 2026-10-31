@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>W1 · 单元 2C · 线程安全与 lock</title>
+<style>
+:root{--ink:#1f1f1e;--ink2:#5f5e5a;--ink3:#8a8984;--line:#e2dfd6;--line2:#d8d4c8;--bg:#f7f6f2;--card:#fff;--blue:#185fa5;--blue2:#e6f1fb;--red:#a32d2d;--red2:#fcebeb;--amber:#854f0b;--amber2:#faeeda;--green:#3b6d11;--green2:#eaf3de;--font-mono:Consolas,"Cascadia Mono",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;line-height:1.75}
+.wrap{max-width:940px;margin:0 auto;padding:26px 18px 80px}
+header{margin-bottom:18px}
+.kicker{font-size:12.5px;letter-spacing:.08em;color:var(--blue);font-weight:500;margin:0 0 6px}
+h1{font-size:24px;font-weight:600;margin:0 0 8px}
+.sub{color:var(--ink2);font-size:14px;margin:0}
+.meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.tag.b{background:var(--blue2);border-color:#b5d4f4;color:var(--blue)}
+.tag.a{background:var(--amber2);border-color:#fac775;color:var(--amber)}
+.tag.g{background:var(--green2);border-color:#c0dd97;color:var(--green)}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0 24px}
+.pmeta{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);margin-bottom:8px}
+.pbar{height:9px;background:#e4e9f1;border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2563eb,#0e7490);transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0}
+.card h2{font-size:17px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:9px}
+.card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--blue2);color:var(--blue);font-size:13px;font-weight:600;flex:none}
+.card h3{font-size:15px;font-weight:600;margin:18px 0 8px}
+p{margin:9px 0}
+code{font-family:var(--font-mono);font-size:12.8px;background:#f4f2ec;padding:1px 6px;border-radius:5px;color:#7a4a12}
+pre{background:#23231f;color:#e9e6dc;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--font-mono);font-size:12.6px;line-height:1.7;margin:10px 0}
+pre .k{color:#7ec8f0}
+pre .s{color:#a8d98a}
+pre .c{color:#8b8b82}
+ul,ol{padding-left:22px;margin:9px 0}
+li{margin:5px 0}
+.callout{border-left:4px solid var(--blue);background:var(--blue2);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.callout.warn{border-color:#d19b2a;background:var(--amber2)}
+.callout.danger{border-color:#c0392b;background:var(--red2)}
+.callout.ok{border-color:#639922;background:var(--green2)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f2f0ea;font-weight:600}
+td.done{background:#f2f8f2}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line2);border-radius:10px;margin:8px 0;background:#fdfdfb;cursor:pointer}
+.chk:hover{border-color:#9dbde0;background:#fbfdff}
+.chk input{margin-top:3px;width:16px;height:16px;accent-color:#2563eb;flex:none}
+.chk .tx{font-size:14px}
+.chk .tx b{display:block}
+.chk .tx span{font-size:13px;color:var(--ink3)}
+.fillrow{margin:12px 0}
+.fillrow .lbl{font-size:12.5px;color:var(--ink3);margin-bottom:5px}
+.fillbox{min-height:64px;padding:10px 12px;font-size:14px;line-height:1.7;background:#fffdf7;border:1px dashed #d9c98f;border-radius:8px;color:var(--ink)}
+.fillbox:hover{border-color:#c9b464;background:#ffbe8}
+.fillbox:focus{outline:none;border-style:solid;border-color:var(--blue);background:#fff}
+.fillbox:empty::before{content:attr(data-ph);color:#b5b3a6}
+.fillbox.filled{background:#f4f9fd;border-color:#b5d4f4}
+.hint{font-size:13px;color:var(--ink3);margin:6px 0 10px}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+#bta{width:100%;margin-top:8px;padding:8px 10px;font-size:12px;line-height:1.6;border:1px solid var(--line2);border-radius:8px;background:#fffdf7;font-family:var(--font-mono);resize:vertical}
+#bta:focus{outline:none;border-color:var(--blue);background:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">W1 · 单元 2C · Day 2（续）· 2026-10-26 周一</p>
+  <h1>线程安全：让日志一条不少</h1>
+  <p class="sub">单元 2 的最后一块。<b>今天不学新 API，只学一个关键字：<code>lock</code>。</b><br>
+  做法很反直觉：<b>先故意不加锁，亲眼看到日志丢行，再上锁。</b>直接给代码说「加了锁就安全」，那是背下来的不是理解的。</p>
+  <div class="meta">
+    <span class="tag b">今日投入 1.5–2h</span>
+    <span class="tag a">晚档 21:30 后</span>
+    <span class="tag g">产出：AppLogger 加锁 + 3 线程压测</span>
+    <span class="tag">承接：单元 2A（级别）+ 2B（格式）已完成</span>
+  </div>
+</header>
+
+<div class="progress">
+  <div class="pmeta"><span>今日任务完成度</span><span id="ptext">0 / 20</span></div>
+  <div class="pmeta" style="margin-top:2px;"><span style="font-size:12px;color:var(--ink3)">填写区</span><span id="ftext" style="font-size:12px;color:var(--ink3)">已填写 0 / 0 处</span></div>
+  <div class="pbar"><i id="pbar"></i></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <span style="font-size:12px;color:var(--ink3);">进度存在本机浏览器，刷新不丢（预览面板与双击打开不互通）</span>
+    <button class="btn" id="reset">重置</button>
+  </div>
+  <div style="margin-top:10px;border-top:1px dashed #d8d4c8;padding-top:9px;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-size:12.5px;color:var(--ink3)">进度备份（换浏览器 / 换电脑 / 预览面板不同步时用）</span>
+      <button class="btn" id="bexp" type="button">生成备份文本</button>
+      <button class="btn" id="bimp" type="button">从文本恢复</button>
+    </div>
+    <textarea id="bta" rows="3" spellcheck="false" placeholder="点「生成备份文本」会在这里生成一段文本，复制它存到任意 .txt 文件；换环境后粘回来再点「从文本恢复」即可。"></textarea>
+  </div>
+</div>
+
+<div class="callout ok">
+  <b>今天结束时，你要能回答这个问题：</b><br>
+  「三个线程同时往一个文件里写日志，为什么会少行？加了 <code>lock</code> 之后为什么就不会了？<code>lock</code> 锁的到底是什么东西？」
+</div>
+
+<!-- ============ 0 ============ -->
+<div class="card">
+  <h2><span class="n">0</span>开课前：5 分钟想清楚「多线程写日志」到底会出什么事</h2>
+  <p>先别写代码。你现在的 <code>AppLogger.Write</code> 是这样工作的：</p>
+  <pre><span class="c">// 简化后</span>
+<span class="k">string</span> file = Path.Combine(dir, prefix + DateTime.Now.ToString(<span class="s">"yyyyMMdd"</span>) + <span class="s">".txt"</span>);
+File.AppendAllText(file, content, Encoding.UTF8);</pre>
+  <p><code>File.AppendAllText</code> 内部做了三件事：<b>打开文件 → 定位到末尾 → 写入 → 关闭</b>。</p>
+  <p>现在问自己一个问题：<b>如果三个线程在「第 1 步和第 3 步之间」同时进来，会发生什么？</b></p>
+  <div class="callout danger">
+    <b>关键事实：</b>文件打开时是<b>独占</b>的。第二个线程想在同一个文件上打开写，操作系统不会排队等它 —— 它直接抛 <code>IOException</code>（文件正被另一进程使用）。
+  </div>
+  <p>而你的 <code>Write</code> 里有一个 <code>catch</code>，它会把异常吞掉，只往 Debug 窗口写一行。</p>
+  <p><b>于是结果是：</b>程序不崩、日志文件正常生成，但<b>你以为是 150 条，文件里可能只有 50 条</b>，而且你完全不知道少了哪些。</p>
+  <div class="fillrow">
+    <div class="lbl">用你自己的话说一遍：多线程写日志为什么会丢行？（不用抄上面那段）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_why" data-ph="点此填写：为什么会丢行？丢的是哪一部分？"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s0_1"><span class="tx"><b>我想清楚了再往下</b><span>能用自己的话讲出「独占打开 + 异常被吞 = 静默丢行」这条链</span></span></label>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="card">
+  <h2><span class="n">1</span>前置：把 MinLevel 改回 Debug，否则实验白跑</h2>
+  <div class="callout warn">
+    <b>这一步不做，实验一定失败。</b>你昨天为了验证级别开关，把 <code>AppLogger.MinLevel</code> 改成了 <code>LogLevel.Error</code>。
+    现在 <code>LogInfo()</code> 会被过滤掉，<b>一条都写不进文件</b> —— 你会看到「150 条一条都没有」，然后误以为复现了丢行，其实是级别过滤。
+  </div>
+  <p>改这一行：</p>
+  <pre><span class="c">// AppLogger.cs 第 27 行左右</span>
+<span class="k">public static</span> LogLevel MinLevel = LogLevel.Debug;   <span class="c">// ← 改回 Debug</span></pre>
+  <label class="chk"><input type="checkbox" data-id="s1_1"><span class="tx"><b>已改回 LogLevel.Debug 并重新编译</b><span>改完确认一下：点一下 button4（写 INFO），info 文件里应该多一行</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s1_2"><span class="tx"><b>确认 INFO 能写进去了</b><span>这是实验有效的前提，别跳过</span></span></label>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="card">
+  <h2><span class="n">2</span>第一次跑：故意不加锁，做一次 3 线程 × 50 条压测</h2>
+  <p>在 <code>Form1</code> 里加一个按钮（或者直接在 <code>Form1_Load</code> 里跑），做这件事：</p>
+  <ul>
+    <li>开 <b>3 个线程</b>（用 <code>Task.Run</code>，机构教过）</li>
+    <li>每个线程循环 <b>50 次</b>，调 <code>AppLogger.LogInfo(...)</code></li>
+    <li>每条消息里带上<b>线程编号 + 序号</b>，比如 <code>T1-007</code> —— 这样你能看出<b>哪一条丢了</b>，而不只是「少了几条」</li>
+    <li>跑完后<b>数一下 info 文件里有多少行</b>（VS 里用 Ctrl+F 搜 <code>T</code> 数，或者直接看行号）</li>
+  </ul>
+  <h3>同时做两件事</h3>
+  <ol>
+    <li><b>打开 VS 的「输出」窗口</b>（<code>Ctrl+Alt+O</code>），盯着有没有红色的 <code>IOException</code></li>
+    <li>记下实际行数</li>
+  </ol>
+  <div class="fillrow">
+    <div class="lbl">实验结果（实测，不是猜的）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_run1" data-ph="点此填写：期望 150 条，实际写了多少条？输出窗口里有没有 IOException？"></div>
+  </div>
+  <div class="callout warn">
+    <b>很可能一次都不复现。</b><code>File.AppendAllText</code> 持锁的时间只有几条指令，150 次撞上的概率不高。<br>
+    如果没复现，可以加大压力：<b>5 个线程 × 200 条</b>，或者在每次写之前加一点 <code>Thread.Sleep(1)</code> 把窗口拉长。<br>
+    <b>但请记住下面这句话，它比复现本身重要得多 ↓</b>
+  </div>
+  <div class="callout danger">
+    <b>「没复现」不等于「没问题」。</b><br>
+    真实项目里的现象是：<b>跑一天没事，跑三天丢几行，而且你不知道丢在哪。</b>现场排查这种偶发丢行的成本极高。<br>
+    <b>所以：即使这次没复现，也必须加锁。</b>这就是工程知识 —— 有些 bug 你复现不出来，但你知道它的成因，所以照样要防。<br>
+    <span style="font-size:13px;color:var(--ink3)">（面试时这句话的分量比「我复现出来了」更高）</span>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s2_1"><span class="tx"><b>写了 3 线程 × 50 条的压测代码</b><span>消息里带线程编号和序号</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_2"><span class="tx"><b>跑过并数了实际行数</b><span>不管有没有复现，都要把真实数字记下来</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_3"><span class="tx"><b>打开了输出窗口看有没有 IOException</b><span>能看到异常的原始信息，是排错的关键一步</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s2_4"><span class="tx"><b>如果没复现，加大压力重试过</b><span>5 线程 × 200 条，或加 Thread.Sleep</span></span></label>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="card">
+  <h2><span class="n">3</span>加 lock：让写入排队</h2>
+  <p>现在给 <code>AppLogger</code> 加一把锁。加在类里，<b>锁对象必须是一个固定的、唯一的对象</b>：</p>
+  <pre><span class="k">public static class</span> AppLogger
+{
+    <span class="c">// 锁对象：整个类共用这一个</span>
+    <span class="k">private static readonly</span> object _logLock = <span class="k">new</span> object();
+
+    <span class="k">private static void</span> Write(LogLevel level, <span class="k">string</span> msg, <span class="k">string</span> whereText, Exception ex)
+    {
+        <span class="k">try</span>
+        {
+            <span class="k">if</span> (level &lt; MinLevel) <span class="k">return</span>;
+
+            <span class="c">// 关键：把「打开 → 写入 → 关闭」整段包住</span>
+            <span class="k">lock</span> (_logLock)
+            {
+                <span class="k">string</span> dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, <span class="s">"logs"</span>);
+                <span class="k">if</span> (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                <span class="k">string</span> file = Path.Combine(dir, prefix + DateTime.Now.ToString(<span class="s">"yyyyMMdd"</span>) + <span class="s">".txt"</span>);
+                <span class="c">/* 拼 content 的代码放这里 */</span>
+                File.AppendAllText(file, content, Encoding.UTF8);
+            }
+        }
+        <span class="k">catch</span> (Exception ex2) { System.Diagnostics.Debug.WriteLine(ex2); }
+    }
+}</pre>
+  <div class="callout">
+    <b>lock 锁的到底是什么？</b>不是「锁住文件」，也不是「锁住这个方法」—— 它锁的<b>就是你传进去的那个对象</b>（这里是 <code>_logLock</code>）。<br>
+    规则很简单：<b>所有要互斥的代码，必须 lock 同一个对象</b>。你 lock <code>_logLock</code>，我也 lock <code>_logLock</code> → 我们俩排队。<br>
+    你 lock 一个新对象，我 lock 另一个 → 我们俩同时进去，<b>等于没锁</b>。
+  </div>
+  <p><b>再跑一遍完全一样的压测</b>（同线程数、同条数、同消息格式），然后数行数。</p>
+  <div class="fillrow">
+    <div class="lbl">加锁后的实测结果</div>
+    <div class="fillbox" contenteditable="true" data-k="q_run2" data-ph="点此填写：加锁后写了多少条？和 150 一致吗？"></div>
+  </div>
+  <div class="callout ok">
+    <b>验收标准：加锁后行数必须正好等于 150，一条不少。</b><br>
+    如果加锁后还是少，<b>说明你 lock 的对象不是同一个</b>，或者 lock 的范围没包住整个「打开→写入」过程。
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s3_1"><span class="tx"><b>加了 _logLock 并把整段写入包进 lock</b><span>lock 范围要覆盖「打开 → 定位 → 写入 → 关闭」全过程</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_2"><span class="tx"><b>重跑压测，行数正好 150</b><span>这是单元 2C 的核心验收</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s3_3"><span class="tx"><b>能说出 lock 锁的是什么</b><span>锁的是那个对象本身，不是文件、不是方法</span></span></label>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="card">
+  <h2><span class="n">4</span>lock 的四个坑（面试高频，必须能答）</h2>
+  <table>
+    <thead><tr><th style="width:26%">坑</th><th style="width:36%">为什么错</th><th>该怎么做</th></tr></thead>
+    <tbody>
+      <tr><td><code>lock(this)</code></td><td>把锁对象暴露给外部，别人 lock 你的窗体，你的线程永远等不到 → 死锁</td><td>永远锁一个<b>私有的</b>对象</td></tr>
+      <tr><td>锁字符串常量</td><td><code>"log"</code> 在字符串常量池里是<b>全程序共享</b>的，可能锁到别人也在用的对象</td><td>锁 <code>new object()</code> 出来的私有实例</td></tr>
+      <tr><td>锁对象不是 static</td><td>每次 <code>new</code> 一个新对象 → 锁的是不同东西 → <b>等于没锁</b></td><td><code>private static readonly object</code></td></tr>
+      <tr><td>lock 里做慢操作</td><td>里面弹 MessageBox、发网络请求 → 持锁时间长，其他线程全在等</td><td>lock 里只放<b>必须互斥的那几行</b></td></tr>
+    </tbody>
+  </table>
+  <p>还有一条常被问的：<b><code>lock</code> 只能锁同一个进程内的线程</b>。如果是两个程序（两个 exe）同时写一个文件，<code>lock</code> 管不了 —— 那要用 <code>FileShare</code> 或系统级 <code>Mutex</code>。</p>
+  <label class="chk"><input type="checkbox" data-id="s4_1"><span class="tx"><b>能解释为什么不能 lock(this)</b><span>说清「暴露锁对象 → 死锁」这条链</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4_2"><span class="tx"><b>知道锁对象必须 static readonly</b><span>每次 new 等于没锁</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4_3"><span class="tx"><b>知道 lock 管不了跨进程</b><span>两个 exe 写同一个文件，lock 无效</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s4_4"><span class="tx"><b>知道 lock 里不要放慢操作</b><span>持有时间越长，并发越差</span></span></label>
+</div>
+
+<!-- ============ 5 ============ -->
+<div class="card">
+  <h2><span class="n">5</span>2D：异常场景测试（单元 2 最后一块）</h2>
+  <p>日志系统必须在「环境出问题」时也不把程序带崩。今天测两个场景：</p>
+  <h3>场景 A · 日志目录被删掉</h3>
+  <p>手动删掉 <code>bin\Debug\logs</code> 文件夹 → 运行程序 → 目录应该<b>自动重建</b>，日志正常写入。</p>
+  <h3>场景 B · 日志文件被别的程序独占</h3>
+  <p>用记事本打开 <code>info2026xxxx.txt</code>（<b>不要关闭记事本</b>）→ 运行程序 → 写入会失败，但<b>程序不能崩</b>，也不能弹窗刷屏。</p>
+  <div class="callout warn">
+    <b>这两个场景你其实在 Day 1 就验证过了</b>（删目录能重建、日志写入失败不崩程序）。今天再跑一次是因为<b>代码变了</b> —— 加了 lock 之后，异常路径也要重新确认一遍。<br>
+    <span style="font-size:13px;color:var(--ink3)">改了代码就要重新验证，这是习惯，不是多此一举。</span>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s5_1"><span class="tx"><b>场景 A：删掉 logs 目录，程序自动重建</b><span>验证 Directory.Exists 那行还是对的</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_2"><span class="tx"><b>场景 B：文件被记事本占用，程序不崩</b><span>看输出窗口有异常但界面正常</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s5_3"><span class="tx"><b>确认失败时不会一直弹窗</b><span>catch 兜住了，日志系统不能成为崩溃源</span></span></label>
+</div>
+
+<!-- ============ 6 ============ -->
+<div class="card">
+  <h2><span class="n">6</span>收尾：单元 2 的学习记录，现在一起填完</h2>
+  <p>打开 <code>E:\上位机工程模板\W1学习记录.md</code>，把<b>单元 2</b> 那一节补完（你之前说等 2C 做完一起写，现在正好）。</p>
+  <table>
+    <thead><tr><th style="width:34%">要填的位置</th><th>填什么</th></tr></thead>
+    <tbody>
+      <tr><td>单元 2 · 我做了什么</td><td>前两项已勾，把<b>加锁、3 线程验证、异常场景测试</b>三项勾上</td></tr>
+      <tr><td>单元 2 · 日志级别规则表</td><td>三行各写一个<b>你自己项目里的例子</b>（不要抄任务卡上的）</td></tr>
+      <tr><td>单元 2 · 坑 1</td><td>枚举不懂 → 写了三份重复代码 → 字符串方案会<b>静默失败</b></td></tr>
+      <tr><td>单元 2 · 坑 2</td><td>今天是 <code>lock</code> 的坑；也可以写 <code>Directory.Exists</code> 那个坑<b>踩了两次</b>才记住</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>坑 2 强烈建议写「同一个坑踩两次」这件事。</b><br>
+    Day 1 你把 <code>Directory.Exists</code> 判断写反了一次（以为「存在了才创建」），Day 2 写对了。<br>
+    <b>同一个坑犯两次才记住，才叫「防复发」。</b>面试时讲这个，比讲任何 API 都有说服力。
+  </div>
+  <div class="fillrow">
+    <div class="lbl">坑 2 我想写的核心一句（一句话就够）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_k2" data-ph="点此填写：关于 lock 或 Directory.Exists，你想记住的一句话"></div>
+  </div>
+  <label class="chk"><input type="checkbox" data-id="s6_1"><span class="tx"><b>单元 2 的三行清单全勾上了</b><span>按天分文件 / 级别 / 加锁 / 3 线程验证 / 异常场景</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_2"><span class="tx"><b>日志级别规则表填了自己的例子</b><span>DEBUG / INFO / ERROR 各一行，来自你的项目</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s6_3"><span class="tx"><b>坑 1 和坑 2 写完了</b><span>这是面试素材，比代码值钱</span></span></label>
+</div>
+
+<!-- ============ 7 ============ -->
+<div class="card">
+  <h2><span class="n">7</span>今天不做的 4 件事，以及为什么</h2>
+  <table>
+    <thead><tr><th style="width:40%">不做</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td><b>队列 + 专用写日志线程</b></td><td><code>lock</code> 会把写入串行化，日志量大时就是瓶颈。工业解法是「业务线程往队列塞、专用线程慢慢写」。<b>但这正好是机构 Log4Net 教程里的《支持并发的异步日志组件.md》</b> —— 单元 5 讲 Log4Net 时一起学，那时你才有对照。今天先别碰。</td></tr>
+      <tr><td><b>把 MinLevel 做成配置文件</b></td><td>现在改级别要重新编译，客户现场做不到。这是已知缺点，<b>留着当单元 5 的引子</b>。</td></tr>
+      <tr><td><b>用 lock 保护整个 Form1</b></td><td>你可能会想「那我干脆把整个窗体锁起来」——<b>绝对不要</b>。那会让界面卡死。lock 只用来保护<b>必须互斥的那几行</b>。</td></tr>
+      <tr><td><b>单元 3 错误码表</b></td><td>单元 2 没做完不做单元 3。今天把 2C 收干净。</td></tr>
+    </tbody>
+  </table>
+  <label class="chk"><input type="checkbox" data-id="s7_1"><span class="tx"><b>知道了 lock 的代价和它的替代方案</b><span>队列 + 专用线程，单元 5 再学</span></span></label>
+</div>
+
+<!-- ============ 8 ============ -->
+<div class="card">
+  <h2><span class="n">8</span>交付清单</h2>
+  <label class="chk"><input type="checkbox" data-id="s8_1"><span class="tx"><b>AppLogger.cs 加了 _logLock 并生效</b><span>加锁后压测行数 = 150</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_2"><span class="tx"><b>Form1 里有 3 线程 × 50 条的压测代码</b><span>带线程编号和序号</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_3"><span class="tx"><b>加锁前后的两次实测数字都记下来了</b><span>没复现也要写「没复现」</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_4"><span class="tx"><b>异常场景测试过了</b><span>删目录 / 文件被占用</span></span></label>
+  <label class="chk"><input type="checkbox" data-id="s8_5"><span class="tx"><b>单元 2 的学习记录补完了</b><span>W1学习记录.md · 单元 2 那一节</span></span></label>
+  <div class="fillrow">
+    <div class="lbl">卡住的地方（哪里想不通，直接写，明天问我）</div>
+    <div class="fillbox" contenteditable="true" data-k="q_block" data-ph="点此填写：哪一步卡住了？报错原文是什么？"></div>
+  </div>
+</div>
+
+</div>
+<script>
+(function(){
+  var KEY='mv_w1_d2c_checkin_v1';
+  var FKEY='mv_w1_d2c_fill_v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[type=checkbox][data-id]'));
+  var fills=[].slice.call(document.querySelectorAll('[contenteditable][data-k]'));
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+  function save(k,d){ try{ localStorage.setItem(k, JSON.stringify(d)); }catch(e){} }
+  var st=load(KEY), ft=load(FKEY);
+
+  function markFilled(el){
+    if(el.textContent.replace(/[\u200B\s]/g,'').length>0){ el.classList.add('filled'); }
+    else { el.classList.remove('filled'); }
+  }
+  function applyAll(){
+    boxes.forEach(function(b){ b.checked=!!st[b.dataset.id]; });
+    fills.forEach(function(el){ if(ft[el.dataset.k]) el.innerHTML=ft[el.dataset.k]; markFilled(el); });
+  }
+  applyAll();
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      st[b.dataset.id]=b.checked; save(KEY,st); upd();
+    });
+  });
+  fills.forEach(function(el){
+    el.addEventListener('input', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft); markFilled(el); upd();
+    });
+    el.addEventListener('blur', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft);
+    });
+    el.addEventListener('keydown', function(e){
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); el.blur(); }
+    });
+    el.addEventListener('paste', function(e){
+      e.preventDefault();
+      var t=(e.clipboardData||window.clipboardData).getData('text');
+      document.execCommand('insertText', false, t.replace(/\r?\n/g,' '));
+    });
+  });
+
+  function upd(){
+    var n=boxes.filter(function(b){return b.checked;}).length;
+    var t=boxes.length;
+    var fn=fills.filter(function(el){return el.textContent.replace(/[\u200B\s]/g,'').length>0;}).length;
+    document.getElementById('ptext').textContent=n+' / '+t;
+    document.getElementById('pbar').style.width=(t? n/t*100:0)+'%';
+    var f=document.getElementById('ftext');
+    if(f) f.textContent='已填写 '+fn+' / '+fills.length+' 处';
+  }
+  upd();
+
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('清空今天的勾选进度和所有填写内容？')) return;
+    boxes.forEach(function(b){ b.checked=false; });
+    fills.forEach(function(el){ el.innerHTML=''; el.classList.remove('filled'); });
+    st={}; ft={}; save(KEY,st); save(FKEY,ft); upd();
+  });
+
+  var ta=document.getElementById('bta');
+  var be=document.getElementById('bexp'), bi=document.getElementById('bimp');
+  if(be) be.addEventListener('click',function(){
+    ta.value='MVCHK2|'+KEY+'|'+JSON.stringify(st)+'|'+JSON.stringify(ft);
+    ta.select(); try{ document.execCommand('copy'); }catch(e){}
+    ta.scrollIntoView({block:'center'});
+  });
+  if(bi) bi.addEventListener('click',function(){
+    var t=(ta.value||'').trim(), parts=t.split('|');
+    if(parts.length<4||parts[0]!=='MVCHK2'){ alert('这段文本不像备份内容。备份文本长这样：MVCHK2|...|{勾选}|{填写}'); return; }
+    var a,b2; try{ a=JSON.parse(parts[2]); b2=JSON.parse(parts[3]); }catch(e){ alert('解析失败：'+e.message); return; }
+    st=a||{}; ft=b2||{}; save(KEY,st); save(FKEY,ft); applyAll(); upd();
+    alert('已恢复 '+Object.keys(st).length+' 项勾选、'+Object.keys(ft).length+' 处填写。');
+  });
+})();
+</script>
+</body>
+</html>
