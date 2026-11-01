@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>W2 · 单元 1 · Day 1 · 2026-11-02 周一</title>
+<style>
+:root{--ink:#1f1f1e;--ink2:#5f5e5a;--ink3:#8a8984;--line:#e2dfd6;--line2:#d8d4c8;--bg:#f7f6f2;--card:#fff;--blue:#185fa5;--blue2:#e6f1fb;--red:#a32d2d;--red2:#fcebeb;--amber:#854f0b;--amber2:#faeeda;--green:#3b6d11;--green2:#eaf3de;--purple:#534ab7;--purple2:#eeedfe;--font-mono:Consolas,"Cascadia Mono",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;line-height:1.75}
+.wrap{max-width:940px;margin:0 auto;padding:26px 18px 80px}
+header{margin-bottom:18px}
+.kicker{font-size:12.5px;letter-spacing:.08em;color:var(--blue);font-weight:500;margin:0 0 6px}
+h1{font-size:24px;font:600 24px/1.3 "PingFang SC","Microsoft YaHei",-apple-system,sans-serif;margin:0 0 8px}
+.sub{color:var(--ink2);font-size:14px;margin:0}
+.meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.tag.b{background:var(--blue2);border-color:#b5d4f4;color:var(--blue)}
+.tag.a{background:var(--amber2);border-color:#fac775;color:var(--amber)}
+.tag.g{background:var(--green2);border-color:#c0dd97;color:var(--green)}
+.tag.p{background:var(--purple2);border-color:#cecbf6;color:var(--purple)}
+.tag.r{background:var(--red2);border-color:#f09595;color:var(--red)}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0 24px}
+.pmeta{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);margin-bottom:8px}
+.pbar{height:9px;background:#e4e9f1;border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2563eb,#0e7490);transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0}
+.card h2{font-size:17px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:9px}
+.card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--blue2);color:var(--blue);font-size:13px;font-weight:600;flex:none}
+.card h2 .n.p{background:var(--purple2);color:var(--purple)}
+.card h2 .n.r{background:var(--red2);color:var(--red)}
+.card h2 .n.g{background:var(--green2);color:var(--green)}
+.card h2 .n.a{background:var(--amber2);color:var(--amber)}
+.card h3{font-size:15px;font-weight:600;margin:18px 0 8px}
+p{margin:9px 0}
+code{font-family:var(--font-mono);font-size:12.8px;background:#f4f2ec;padding:1px 6px;border-radius:5px;color:#7a4a12}
+pre{background:#23231f;color:#e9e6dc;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--font-mono);font-size:12.6px;line-height:1.7;margin:10px 0}
+pre .k{color:#7ec8f0}
+pre .s{color:#a8d98a}
+pre .c{color:#8b8b82}
+pre .hl{color:#f0c36d}
+ul,ol{padding-left:22px;margin:9px 0}
+li{margin:5px 0}
+.callout{border-left:4px solid var(--blue);background:var(--blue2);padding:12px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px}
+.callout.warn{border-color:#d19b2a;background:var(--amber2)}
+.callout.danger{border-color:#c0392b;background:var(--red2)}
+.callout.ok{border-color:#639922;background:var(--green2)}
+.callout.purple{border-color:var(--purple);background:var(--purple2)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f2f0ea;font-weight:600}
+td.done{background:#f2f8f2}
+td.fill{background:#fffdf7}
+td.no{background:#fdf0f0}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line2);border-radius:10px;margin:8px 0;background:#fdfdfb;cursor:pointer}
+.chk:hover{border-color:#9dbde0;background:#fbfdff}
+.chk input{margin-top:3px;width:16px;height:16px;accent-color:#2563eb;flex:none}
+.chk .tx{font-size:14px}
+.chk .tx b{display:block}
+.chk .tx span{font-size:13px;color:var(--ink3)}
+.fillrow{margin:12px 0}
+.fillrow .lbl{font-size:12.5px;color:var(--ink3);margin-bottom:5px}
+.fillbox{min-height:64px;padding:10px 12px;font-size:14px;line-height:1.7;background:#fffdf7;border:1px dashed #d9c98f;border-radius:8px;color:var(--ink)}
+.fillbox:hover{border-color:#c9b464;background:#fffbe8}
+.fillbox:focus{outline:none;border-style:solid;border-color:var(--blue);background:#fff}
+.fillbox:empty::before{content:attr(data-ph);color:#b5b3a6}
+.fillbox.filled{background:#f4f9fd;border-color:#b5d4f4}
+.hint{font-size:13px;color:var(--ink3);margin:6px 0 10px}
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.kbd{font-family:var(--font-mono);font-size:12.5px;background:#efece3;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+.err{background:#fcebeb;border:1px solid #f09595;border-radius:8px;padding:2px 8px;font-family:var(--font-mono);font-size:12.4px;color:#791f1f;display:inline-block;margin:2px 0}
+.verdict{font-family:var(--font-mono);font-size:12.5px;background:#f2f8f2;border:1px solid #c0dd97;border-radius:6px;padding:1px 7px;color:#27500a;white-space:nowrap}
+.verdict.bad{background:#fdf0f0;border-color:#f09595;color:#791f1f}
+.verdict.warn{background:var(--amber2);border-color:#fac775;color:var(--amber)}
+.src{font-size:12.5px;color:var(--ink3);margin:6px 0 0;padding-left:2px}
+.src a{color:var(--blue);text-decoration:none}
+.src a:hover{text-decoration:underline}
+.steps{counter-reset:s;list-style:none;padding-left:0}
+.steps>li{counter-increment:s;position:relative;padding-left:38px;margin:14px 0}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:1px;width:24px;height:24px;border-radius:7px;background:var(--blue2);color:var(--blue);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.qa{border:1px solid var(--line2);border-radius:11px;padding:12px 14px;margin:10px 0;background:#fdfdfb}
+.qa .q{font-weight:600;font-size:14px;margin-bottom:5px}
+.qa .a{font-size:13.5px;color:var(--ink2)}
+footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">W2 · 单元 1 · DAY 1</p>
+  <h1>异步与进度条：让界面不再卡死</h1>
+  <p class="sub">W2 的目标：<b>把「会写代码」变成「会写能交付的代码」</b>。这个单元解决你目前最大的短板 —— <b>界面卡顿</b>。今天学的每一个 API，面试官都会问。</p>
+  <div class="meta">
+    <span class="tag b">2026-11-02 周一</span>
+    <span class="tag a">建议 2~3 小时</span>
+    <span class="tag p">W2 开局单元</span>
+    <span class="tag g">产出：能跑的异步进度条 Demo</span>
+  </div>
+</header>
+
+<div class="progress">
+  <div class="pmeta">
+    <span>单元 1 进度</span>
+    <span id="ptext">0 / 0</span>
+  </div>
+  <div class="pbar"><i id="pbar"></i></div>
+  <div class="pmeta" style="margin:8px 0 0">
+    <span id="ftext" style="font-size:12.5px;color:var(--ink3)">已填写 0 / 0 处</span>
+    <span><button class="btn" id="reset" type="button">清空今天的勾选</button></span>
+  </div>
+</div>
+
+<div class="callout danger">
+  <b>⚠️ 先说一件会改变你写法的事：v4 计划里的「BackgroundWorker」我不打算教。</b><br>
+  微软官方文档在「如何使用控件处理跨线程操作」这一页明确写着：<b>「BackgroundWorker 组件不再是 Windows 窗体应用程序中异步方案的推荐方法」</b>，并直接建议改用 <code>async</code>/<code>await</code> + <code>Task.Run</code>。<br>
+  Stack Overflow 上被赞最多的同类回答也是同一句话：<i>"Don't use a BackgroundWorker to begin with. That class is obsolete and was fully replaced by async/await, Task.Run and IProgress almost 10 years ago."</i><br>
+  <span class="hint">原因很实在：BackgroundWorker 只会「把活挪到另一个线程」，不会处理文件 IO、网络这些真正会卡的操作，也没法优雅地组合多个异步任务。你要投的是 2027 年的深圳集成商岗位，面试官自己写代码都用 async/await。</span>
+</div>
+
+<div class="callout purple">
+  <b>📌 W2 的整体地图（先看全局，再动手）</b>
+  <table style="margin:8px 0 0">
+    <thead><tr><th style="width:14%">单元</th><th style="width:38%">内容</th><th>验收</th></tr></thead>
+    <tbody>
+      <tr><td><b>1</b>（今天）</td><td>Task + IProgress 异步耗时操作 + 进度条 + 可取消</td><td>操作期间界面不卡、能取消</td></tr>
+      <tr><td>2</td><td>BindingList&lt;T&gt; / DataTable 绑定，刷新不闪烁</td><td>1000 行刷新不跳</td></tr>
+      <tr><td>3</td><td>PictureBox 双缓冲 / SetStyle 抗闪烁</td><td>拖动窗口无闪烁</td></tr>
+      <tr><td>4</td><td>四线程模型：UI / 采集 / 日志 / 通讯，各司其职</td><td>UI 永不因采集阻塞</td></tr>
+      <tr><td>5</td><td>BlockingCollection 队列 + 帧回调只入队不处理</td><td>回调里不做重活</td></tr>
+      <tr><td>6</td><td>FormClosing 释放顺序 + 重连后重发参数</td><td>反复开关 20 次无句柄泄漏</td></tr>
+    </tbody>
+  </table>
+  <span class="hint">今天这个单元是后面 5 个单元的地基。单元 4 的「采集线程」和单元 5 的「帧回调队列」，都要靠今天学的 <code>Task</code> + <code>IProgress</code> 搭出来。</span>
+</div>
+
+<!-- ==================== 1 ==================== -->
+<div class="card">
+  <h2><span class="n">1</span>先搞清楚：界面为什么会卡</h2>
+  <p>WinForms 的界面是<b>单线程</b>的。所有控件的绘制、点击响应，都在 UI 线程（也叫主线程）上排队执行。</p>
+  <p>所以只要你在 UI 线程上干一件耗时的事 —— 比如读 5000 个文件、连一次 PLC、等相机一帧图像 —— 界面就<b>冻住</b>：按钮点不动，进度条不动，用户以为程序死了。</p>
+  <pre><span class="c">// ❌ 错误示范：耗时操作写在按钮事件里</span>
+<span class="k">private void</span> button1_Click(object sender, EventArgs e)
+{
+    <span class="k">var</span> data = Read5000Files();   <span class="c">// 5 秒</span>
+    listBox1.Items.Add(data);        <span class="c">// 用户在这 5 秒里什么都干不了</span>
+    progressBar1.Value = 100;         <span class="c">// 一次性跳到 100，中间没有过程</span>
+}</pre>
+  <p>解法的思路只有一句话：<b>耗时活挪到别的线程去干，界面线程只负责"接收结果并刷新"。</b></p>
+  <p>但「挪到别的线程」之后立刻冒出新问题：</p>
+  <ul>
+    <li>后台线程想改界面上的进度条 → <b>跨线程访问控件，直接抛异常</b></li>
+    <li>任务中途用户想中止 → <b>没有取消机制，只能干等</b></li>
+    <li>后台线程里出错了 → <b>异常被"吞掉"，界面毫无反应</b></li>
+  </ul>
+  <p>今天这一个单元，就是把上面三个问题<b>一次解决干净</b>。所以你会同时学到 <code>Task</code>、<code>IProgress</code>、<code>CancellationToken</code> —— 它们是一套东西，不是三个孤立的 API。</p>
+</div>
+
+<!-- ==================== 2 ==================== -->
+<div class="card">
+  <h2><span class="n">2</span>官方 API：我查到的结论（附出处）</h2>
+
+  <h3>2.1 <code>IProgress&lt;T&gt;</code> —— 进度回报的官方标准做法</h3>
+  <p>微软官方文档对 <code>Progress&lt;T&gt;</code> 的描述里有一句关键的话：</p>
+  <div class="callout ok" style="margin:8px 0">
+    「Any handler provided to the constructor or event handlers registered with the ProgressChanged event are invoked through a <b>SynchronizationContext instance captured when the instance is constructed</b>. If there is no current SynchronizationContext at the time of construction, the callbacks will be invoked on the ThreadPool.」
+    <div class="src">—— 微软官方文档 <code>Progress&lt;T&gt;</code> 类Remarks 章节（learn.microsoft.com/en-us/dotnet/api/system.progress-1）</div>
+  </div>
+  <p>翻译成人话，就三句：</p>
+  <ol>
+    <li><code>Progress&lt;T&gt;</code> 在<b>创建的时候</b>把当前的线程上下文（UI 上下文）存下来</li>
+    <li>之后不管你在哪个线程调 <code>Report()</code>，回调都会<b>自动切回</b>创建它时的那个线程</li>
+    <li>如果在<b>没有</b> UI 上下文的地方创建（比如线程池里 new），回调就退回到线程池跑 —— 这时候在里面改控件会炸</li>
+  </ol>
+  <p class="hint">这意味着：<b>你不需要手写 <code>Invoke</code>，进度回调自己会回 UI 线程。</b>但代价是 <code>Progress&lt;T&gt;</code> 必须在 UI 线程上创建。</p>
+
+  <div class="callout warn">
+    <b>⚠️ 一个实测踩到的语言细节：<code>Report</code> 调不到。</b><br>
+    我第一次写的时候直接 <code>new Progress&lt;int&gt;(...).Report(i)</code>，编译器直接报错：<br>
+    <span class="err">error CS1061: “Progress&lt;int&gt;”未包含“Report”的定义</span><br>
+    原因：<code>Progress&lt;T&gt;</code> 对 <code>IProgress&lt;T&gt;</code> 是<b>显式接口实现</b>（explicit interface implementation）。<code>Report</code> 这个方法名对外不可见，<b>必须先转成接口类型才能调</b>：<br>
+    <pre><span class="k">IProgress</span>&lt;<span class="k">int</span>&gt; progress = <span class="k">new</span> Progress&lt;<span class="k">int</span>&gt;(v =&gt; { ... });   <span class="c">// ✅ 声明成接口</span>
+progress.Report(i);                          <span class="c">// ✅ 这样才调得到</span>
+
+<span class="k">var</span> progress = <span class="k">new</span> Progress&lt;<span class="k">int</span>&gt;(v =&gt; { ... });
+progress.Report(i);                          <span class="c">// ❌ CS1061 编译不过</span></pre>
+    <div class="src">—— 我在 net48 下实际编译报错，修正后编译通过。官方文档 <code>Progress&lt;T&gt;</code> 页的 Explicit Interface Implementations 一栏也列着 <code>IProgress&lt;T&gt;.Report(T)</code>。</div>
+  </div>
+
+  <h3>2.2 <code>Task.Run</code> —— 把 CPU 密集活挪出 UI 线程</h3>
+  <p>微软官方文档的措辞是：</p>
+  <div class="callout ok" style="margin:8px 0">
+    「For modern asynchronous programming, use <b>async</b> methods and <b>await</b>. If you need to explicitly offload processor-intensive work, use <code>Task.Run</code> to create and start the task, and you can then await that task as you would any other asynchronous operation.」
+    <div class="src">—— 微软官方文档「如何使用控件处理跨线程操作」(learn.microsoft.com/zh-cn/dotnet/desktop/winforms/controls/how-to-make-thread-safe-calls-to-windows-forms-controls?view=netframeworkdesktop-4.8)</div>
+  </div>
+
+  <h3>2.3 <code>async void</code> —— 它的危险来自哪里</h3>
+  <p>你 W1 的 Day4 已经做过 <code>await</code> + <code>try/catch</code>，那时候我说过「<code>await</code> 之后异常能在调用处捕获」。这句话对 <code>async Task</code> 成立，但对 <code>async void</code> <b>不成立</b>。</p>
+  <p>微软官方开发者博客把机制讲得很清楚：</p>
+  <div class="callout ok" style="margin:8px 0">
+    「The unhandled exception of the async void method is marshaled to a current synchronization context... In Windows Forms an unhandled exception in the event handler triggers <b>Application.ThreadException</b> event.」
+    <div class="src">—— 微软官方开发者博客《One user scenario to rule them all》(devblogs.microsoft.com/premier-developer/one-user-scenario-to-rule-them-all)</div>
+  </div>
+  <p>连起来读，逻辑就通了：</p>
+  <ul>
+    <li><code>async Task</code> 的异常被存进返回的 Task → <b>你 await 它，异常就在你的 try/catch 里</b></li>
+    <li><code>async void</code> 没有 Task 可以存 → 异常直接丢给同步上下文 → <b>WinForms 里就触发 <code>Application.ThreadException</code></b></li>
+    <li>好消息：你在 Day4 已经把 <code>Application.ThreadException</code> 接好了，所以<b>不会闪退</b>，但你会在日志里看到一条你没预期的异常</li>
+    <li>坏消息：如果这个 <code>async void</code> 是在<b>线程池</b>上调用的（没有同步上下文），异常会变成<b>进程级未捕获异常</b>，程序直接终止</li>
+  </ul>
+  <div class="callout danger">
+    <b>所以规则就一条：<code>async void</code> 只能写在事件处理器里，而且内部必须自己 try/catch。</b><br>
+    其他所有地方一律 <code>async Task</code>。
+  </div>
+
+  <h3>2.4 <code>CancellationToken</code> —— 让用户能中止</h3>
+  <p>取消不是「杀掉线程」，而是<b>协作式</b>的：你在循环里主动检查一个标志位，看到就自己停下来、抛出 <code>OperationCanceledException</code>。</p>
+  <p>这也意味着：<b>取消信号必须传进到真正干活的那个方法里面</b>，靠外层按钮去杀是杀不掉的。</p>
+</div>
+
+<!-- ==================== 3 ==================== -->
+<div class="card">
+  <h2><span class="n">3</span>我实测了：6 组数据，每条都有硬结论</h2>
+  <p>上面的结论我不打算让你"信我"。我在 <b>net48</b> 下写了一个模拟 WinForms 消息泵的程序（用 <code>SynchronizationContext</code> 模拟 UI 线程泵），实跑出来的结果如下：</p>
+
+  <table>
+    <thead><tr><th style="width:30%">测什么</th><th style="width:34%">实测数据</th><th>结论</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>1. <code>Progress&lt;T&gt;</code> 回调会回 UI 线程吗</td>
+        <td>UI 线程 ID = <b>1</b>；回调所在线程集合 = <b>[1]</b>（5 次回调全在 UI 线程）</td>
+        <td><span class="verdict">✅ 是</span> 不用手写 Invoke</td>
+      </tr>
+      <tr>
+        <td>1b. <code>.Wait()</code> 会影响进度刷新吗</td>
+        <td>用 <code>await</code> → 收到 <b>3/3</b> 次回调<br>用 <code>.Wait()</code> → 收到 <b>0/3</b> 次回调</td>
+        <td><span class="verdict bad">⚠️ 会</span> 见下方说明</td>
+      </tr>
+      <tr>
+        <td>2. <code>Task.Run</code> 真的换线程了吗</td>
+        <td>工作线程 ID = <b>3</b>，UI 线程 ID = <b>1</b></td>
+        <td><span class="verdict">✅ 是</span> UI 不会被占住</td>
+      </tr>
+      <tr>
+        <td>3a. <code>async void</code> 内部 try/catch 能抓到吗</td>
+        <td>抓到：<code>boom-void</code></td>
+        <td><span class="verdict">✅ 能</span></td>
+      </tr>
+      <tr>
+        <td>3b. <code>async Task</code> 在 await 处能抓到吗</td>
+        <td>抓到：<code>boom-task</code></td>
+        <td><span class="verdict">✅ 能</span></td>
+      </tr>
+      <tr>
+        <td>3c. <code>async void</code> 不 try/catch 会怎样</td>
+        <td>异常被抛到 SynchronizationContext，模拟的 UI 泵打印：<code>[UI泵捕获] InvalidOperationException</code></td>
+        <td><span class="verdict warn">⚠️ 走 ThreadException</span> 真实 WinForms 就是 Day4 接的那个</td>
+      </tr>
+      <tr>
+        <td>4. 取消会抛什么</td>
+        <td><code>OperationCanceledException</code>，已处理 <b>10</b> 轮后停下</td>
+        <td><span class="verdict">✅ 是</span> 这是取消的正常信号，要单独 catch</td>
+      </tr>
+      <tr>
+        <td>5. 没有 UI 上下文时 <code>Progress&lt;T&gt;</code> 去哪</td>
+        <td>回调线程 ID = <b>4</b>（不是 UI 线程 1）→ 退到线程池</td>
+        <td><span class="verdict warn">⚠️ 必须 UI 线程上 new</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout danger">
+    <b>🔴 1b 这条数据是今天最重要的发现。</b><br>
+    <code>.Wait()</code> 和 <code>await</code> 的区别，不是"风格问题"，是<b>功能性的</b>：<br>
+    <code>.Wait()</code> 会<b>同步阻塞 UI 线程</b> → 消息泵停转 → <code>Progress&lt;T&gt;</code> 的回调排在队列里没人处理 → <b>进度条永远停在 0</b>。<br>
+    <code>await</code> 会<b>把 UI 线程还回去</b> → 消息泵继续转 → 回调被处理 → 进度条平滑刷新。<br>
+    <span class="hint">换句话说：<b>你写的异步代码界面卡不卡，不取决于你有没有用 async/await，而取决于你有没有在 UI 线程上用 .Wait()。</b> 这是面试官问「界面卡顿怎么解决」时，能答出深度的那一层。</span>
+  </div>
+
+  <div class="callout warn">
+    <b>⚠️ 我自己也踩了两次坑，一并写给你（省你时间）</b><br>
+    <b>坑 1：</b>我第一版测试程序里用了 <code>Task.Run(...).Wait()</code>，结果 5 次进度回调<b>一次都没收到</b>，我还一度以为 <code>Progress&lt;T&gt;</code> 不工作 —— 其实是我自己的测试写法错了。<br>
+    <b>坑 2：</b>我第二版把整个测试用 <code>.GetResult()</code> 包起来，程序直接<b>死锁</b>（UI 泵被自己堵住，await 的续体永远发不回来）。<br>
+    <span class="hint">这两个坑你自己写的时候大概率也会遇到，所以我把它写进卡片了 —— 你只需要记住结论：<b>UI 线程上永远不要同步等一个还没完成的任务</b>。</span>
+  </div>
+</div>
+
+<!-- ==================== 4 ==================== -->
+<div class="card">
+  <h2><span class="n">4</span>动手：四步写出你的第一个异步进度条</h2>
+  <p class="hint">工程目录已建好：<code>E:\上位机工程模板\VisionHMI\W2\w2-day1-异步与进度条\</code>。<br>
+  建议在 Visual Studio 里新建 <b>Windows 窗体应用（.NET Framework）</b>，目标框架 <b>.NET Framework 4.8</b>，项目名 <code>w2-day1-异步与进度条</code>，放到上面那个目录里。</p>
+
+  <h3>4.0 先做这一步：把 W1 的日志能力搬过来</h3>
+  <p>卡片的验收标准第 3 条要求「日志里有完整堆栈」，所以这个工程<b>需要 W1 的日志类</b>。别重写，直接搬：</p>
+  <ul>
+    <li>从 <code>W1\w1-day6-w1总结\</code> 复制这 4 个文件到 W2 工程目录：<code>AppLogger.cs</code>、<code>ErrorCodes.cs</code>、<code>BizException.cs</code>、<code>NLog.config</code></li>
+    <li>复制 <code>packages.config</code>，然后用 NuGet 把 <code>NLog 5.4.0</code> 装回同一个版本（版本号必须一致，否则 <code>HintPath</code> 对不上会编译报错）</li>
+    <li>在 <code>.csproj</code> 里把这几个文件加进编译项（Visual Studio 里右键 → 添加 → 现有项）</li>
+  </ul>
+  <div class="callout ok" style="margin:8px 0">
+    <b>📌 这一步本身就是面试素材</b><br>
+    W1 你写了一个能自愈配置的日志系统，W2 直接复用 —— 这就是<b>「可交付代码」的含义</b>：不是每个新项目重写一遍，而是把上一个项目的成果搬过来。面试时可以说「我做了个日志模块，后续项目直接复用」。
+  </div>
+
+  <h3>4.1 界面先摆好（这一步不用写代码）</h3>
+  <p>从工具箱拖这几个控件到窗体上，名字按下面改：</p>
+  <table>
+    <thead><tr><th style="width:26%">控件</th><th style="width:26%">Name</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>Button</td><td><code>btnStart</code></td><td>开始</td></tr>
+      <tr><td>Button</td><td><code>btnCancel</code></td><td>取消（初始 <code>Enabled = false</code>）</td></tr>
+      <tr><td>ProgressBar</td><td><code>progressBar1</code></td><td><code>Maximum = 100</code></td></tr>
+      <tr><td>Label</td><td><code>lblStatus</code></td><td>显示当前状态文字</td></tr>
+      <tr><td>TextBox</td><td><code>txtLog</code></td><td><code>Multiline = true</code>，显示实时日志</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 第一步：把"干活"和"刷界面"分开</h3>
+  <p>先想清楚<b>职责划分</b>，这是整个单元的核心思路：</p>
+  <ul>
+    <li><b>干活的方法</b>：不认识任何控件，只管算、只管回报进度</li>
+    <li><b>界面刷新</b>：交给 <code>Progress&lt;T&gt;</code> 的回调去做</li>
+  </ul>
+  <p>先把干活的方法写出来（<b>注意它没有 <code>Control</code> 参数，也不碰任何控件</b>）：</p>
+  <pre><span class="c">// 干活的方法：只依赖 IProgress，不认识任何控件</span>
+<span class="k">private</span> <span class="k">async</span> Task DoWorkAsync(IProgress&lt;<span class="k">int</span>&gt; progress, CancellationToken token)
+{
+    <span class="k">const int</span> total = 100;
+    <span class="k">for</span> (<span class="k">int</span> i = 1; i &lt;= total; i++)
+    {
+        <span class="c">// ① 干活（假装在算，每轮 50 毫秒）</span>
+        <span class="k">await</span> Task.Delay(50, token);
+
+        <span class="c">// ② 检查取消 —— 必须主动检查，否则取消不了</span>
+        token.ThrowIfCancellationRequested();
+
+        <span class="c">// ③ 回报进度（调用方在哪个线程都行）</span>
+        progress?.Report(i);
+    }
+}</pre>
+  <p class="hint">为什么 <code>progress</code> 用 <code>?.</code> 判空？因为 TAP 规范要求带 <code>IProgress</code> 参数的方法<b>必须允许传 null</b>（微软官方文档「以任务为基础的非同步模式 (TAP)」明确写了这条）。</p>
+
+  <h3>4.3 第二步：按钮事件里调用它</h3>
+  <pre><span class="c">// 字段：取消令牌源</span>
+<span class="k">private</span> CancellationTokenSource _cts;
+
+<span class="k">private async void</span> btnStart_Click(object sender, EventArgs e)
+{
+    <span class="k">try</span>
+    {
+        <span class="c">// ① 每次开始都新建一个 CTS（不能复用！复用过期的会直接抛异常）</span>
+        _cts = <span class="k">new</span> CancellationTokenSource();
+
+        <span class="c">// ② Progress&lt;T&gt; 必须在 UI 线程上创建 —— 这一行就在 UI 线程，OK</span>
+        <span class="c">//    注意：声明成 IProgress&lt;int&gt;，不能写 var</span>
+        IProgress&lt;<span class="k">int</span>&gt; progress = <span class="k">new</span> Progress&lt;<span class="k">int</span>&gt;(pct =&gt;
+        {
+            <span class="c">// ③ 这个回调自动跑在 UI 线程，可以直接改控件</span>
+            progressBar1.Value = pct;
+            lblStatus.Text = <span class="s">"处理中 "</span> + pct + <span class="s">"%"</span>;
+        });
+
+        btnCancel.Enabled = <span class="k">true</span>;
+        lblStatus.Text = <span class="s">"开始处理..."</span>;
+
+        <span class="c">// ④ await，不要用 .Wait()</span>
+        <span class="k">await</span> DoWorkAsync(progress, _cts.Token);
+
+        lblStatus.Text = <span class="s">"处理完成"</span>;
+    }
+    <span class="k">catch</span> (OperationCanceledException)
+    {
+        <span class="c">// ⑤ 取消是正常流程，不是错误 —— 单独 catch，别弹错误框</span>
+        lblStatus.Text = <span class="s">"已取消"</span>;
+    }
+    <span class="k">catch</span> (Exception ex)
+    {
+        <span class="c">// ⑥ 其他异常才是真错误</span>
+        <span class="c">//    这里接上你 Day1~Day5 写的 AppLogger</span>
+        lblStatus.Text = <span class="s">"出错了"</span>;
+        AppLogger.LogError(ErrorCodes.Unknown, <span class="s">"异步任务异常"</span>, ex);
+    }
+    <span class="k">finally</span>
+    {
+        btnCancel.Enabled = <span class="k">false</span>;
+        <span class="k">if</span> (_cts != <span class="k">null</span>) { _cts.Dispose(); _cts = <span class="k">null</span>; }
+    }
+}</pre>
+
+  <h3>4.4 第三步：取消按钮</h3>
+  <pre><span class="k">private void</span> btnCancel_Click(object sender, EventArgs e)
+{
+    <span class="c">// Cancel() 只是"发信号"，不是"杀线程"</span>
+    <span class="c">// 真正停下来，靠 DoWorkAsync 里的 ThrowIfCancellationRequested()</span>
+    _cts?.Cancel();
+}</pre>
+
+  <h3>4.5 第四步：故意搞一次异常，验证它能被抓住</h3>
+  <p>把 <code>DoWorkAsync</code> 里的 <code>await Task.Delay(50, token);</code> 改成 <code>await Task.Delay(50);</code>（去掉 token），然后临时加一行 <code>throw new InvalidOperationException("模拟算法出错");</code>，点开始。</p>
+  <p>你应该看到：<b>界面不崩</b>，<code>lblStatus</code> 显示"出错了"，<b>日志里有完整堆栈</b>。</p>
+  <p class="hint">这一条是今天真正要验收的重点。<b>W1 学的那一整套异常体系，在这里派上用场了。</b>如果你只是抄了代码而没接上 <code>AppLogger</code>，这一条就白学。</p>
+</div>
+
+<!-- ==================== 5 ==================== -->
+<div class="card">
+  <h2><span class="n g">5</span>验收标准（做完自己跑一遍再打勾）</h2>
+  <p class="hint">下面每一条都必须<b>你自己动手跑</b>并看到现象，才能打勾。面试官问的是「你测过吗」，不是「AI 测过吗」。</p>
+
+  <label class="chk"><input type="checkbox" data-id="a1"><div class="tx"><b>界面不卡</b><span>点「开始」后，界面能继续拖动、能点「取消」，进度条<b>平滑</b>往上走（不是直接跳到 100）</span></div></label>
+  <label class="chk"><input type="checkbox" data-id="a2"><div class="tx"><b>能取消</b><span>点「取消」后，任务在 1 秒内停下，状态显示「已取消」，<b>不弹任何错误框</b></span></div></label>
+  <label class="chk"><input type="checkbox" data-id="a3"><div class="tx"><b>异常能接住</b><span>故意抛异常 → 界面不崩 → 状态显示「出错了」→ <b>日志里有完整堆栈</b></span></div></label>
+  <label class="chk"><input type="checkbox" data-id="a4"><div class="tx"><b>用 await 不用 Wait</b><span>你的代码里<b>没有任何</b> <code>.Wait()</code>、<code>.Result</code>、<code>.GetAwaiter().GetResult()</code></span></div></label>
+  <label class="chk"><input type="checkbox" data-id="a5"><div class="tx"><b>Progress 声明成接口</b><span>写的是 <code>IProgress&lt;int&gt;</code> 而不是 <code>var</code>（否则编译不过）</span></div></label>
+  <label class="chk"><input type="checkbox" data-id="a6"><div class="tx"><b>干活的方法不认识控件</b><span><code>DoWorkAsync</code> 的参数里没有 <code>Control</code>、方法体里没有 <code>progressBar1</code> / <code>lblStatus</code> 这类控件引用</span></div></label>
+  <label class="chk"><input type="checkbox" data-id="a7"><div class="tx"><b>能口头讲清跨线程规则</b><span>不用看代码，你能说出：为什么 <code>Progress&lt;T&gt;</code> 必须 UI 线程创建？为什么不用 <code>Invoke</code>？</span></div></label>
+
+  <div class="callout ok" style="margin-top:14px">
+    <b>✅ 一条对照实验（强烈建议做，能直接看出 .Wait() 的问题）</b><br>
+    在 4.3 的基础上，<b>故意</b>把 <code>await DoWorkAsync(...)</code> 改成 <code>Task.Run(() =&gt; DoWorkAsync(progress, _cts.Token)).Wait()</code>，跑一次看现象：<b>进度条卡在 0 不动，直到任务结束才直接跳到 100。</b><br>
+    看完立刻改回来。这一次"卡住"的体感，比我讲十句都管用 —— 而且这就是你以后在面试里能讲活的例子。
+  </div>
+</div>
+
+<!-- ==================== 6 ==================== -->
+<div class="card">
+  <h2><span class="n p">6</span>面试题对照（单元 1 学到这程度算够）</h2>
+
+  <div class="qa">
+    <div class="q">Q：「你的程序界面卡顿，你是怎么解决的？」</div>
+    <div class="a">答到这三条就够：① 耗时操作（文件 IO、网络、相机取流、算法计算）用 <code>Task.Run</code> 挪到线程池，不占 UI 线程；② 进度回报用 <code>IProgress&lt;T&gt;</code>，它在创建时捕获 UI 的 <code>SynchronizationContext</code>，回调自动切回 UI 线程，不用手写 <code>Invoke</code>；③ 取消用 <code>CancellationToken</code> 协作式取消，<code>OperationCanceledException</code> 单独 catch，不当错误处理。</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q：「为什么不用 <code>BackgroundWorker</code>？」</div>
+    <div class="a"><b>这题现在成了你的加分项</b>，因为大部分候选人只会说「因为教程都这么写」。你的答案：微软官方文档已明确标注 <code>BackgroundWorker</code> 不再是 WinForms 异步方案的推荐方法，它只解决"把处理器负载挪到另一个线程"，不处理文件 IO、网络这类真正会卡的操作，也没法组合多个异步任务。现代写法是 <code>async</code>/<code>await</code> + <code>Task.Run</code> + <code>IProgress&lt;T&gt;</code>。</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q：「<code>Invoke</code> 和 <code>BeginInvoke</code> 区别？」</div>
+    <div class="a"><code>Invoke</code> <b>同步等待</b>，UI 线程执行完才返回；<code>BeginInvoke</code> <b>异步投递</b>，立刻返回。UI 更新常用 <code>BeginInvoke</code>（不阻塞）。</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q：「怎么知道要不要 <code>Invoke</code>？」</div>
+    <div class="a">检查 <code>InvokeRequired</code> 属性（<code>true</code> 就说明当前不是 UI 线程）。标准写法：<code>if (InvokeRequired) { BeginInvoke(...); return; }</code>。但用 <code>IProgress&lt;T&gt;</code> 就不需要这层判断了。</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q：「<code>async void</code> 和 <code>async Task</code> 有什么区别？什么时候会出事？」</div>
+    <div class="a"><code>async Task</code> 的异常存进 Task，await 时在调用处抛出，能被 try/catch 抓到；<code>async void</code> 没有 Task 兜底，异常直接抛给同步上下文，在 WinForms 里触发 <code>Application.ThreadException</code>；如果 <code>async void</code> 是在线程池上调用的（无同步上下文），异常会变成进程级未捕获异常，程序直接终止。<b>所以：<code>async void</code> 只用在事件处理器里，且内部必须自己 try/catch。</b></div>
+  </div>
+</div>
+
+<!-- ==================== 7 ==================== -->
+<div class="card">
+  <h2><span class="n a">7</span>今天的坑（自己填，我给的是清单不是答案）</h2>
+  <p class="hint">这几个坑我大部分在实测里踩过了。你撞上的时候，<b>把现象和原因写在这里</b>，以后面试就是素材。</p>
+
+  <div class="fillrow">
+    <div class="lbl">坑 1：<code>Progress&lt;T&gt;</code> 的 <code>Report</code> 调不到（CS1061）—— 我踩了，你怎么解决的？</div>
+    <div class="fillbox" contenteditable="true" data-k="k1" data-ph="写下来：报错原文 + 你怎么改的 + 为什么"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">坑 2：进度条卡在 0 不动 —— 你怎么定位到是 <code>.Wait()</code> 的问题？</div>
+    <div class="fillbox" contenteditable="true" data-k="k2" data-ph="写下来：你当时看到什么现象、怎么排除其他可能"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">坑 3：<code>async void</code> 里不 try/catch，异常去哪了？你在 Day4 的日志里看到过吗？</div>
+    <div class="fillbox" contenteditable="true" data-k="k3" data-ph="写下来：它会触发哪个处理器、你在哪个文件看到的"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">坑 4：<code>CancellationTokenSource</code> 能不能重复用？为什么？</div>
+    <div class="fillbox" contenteditable="true" data-k="k4" data-ph="写下来：你试了几次、报什么错、怎么修"></div>
+  </div>
+  <div class="fillrow">
+    <div class="lbl">坑 5：<code>DoWorkAsync</code> 里的 <code>token.ThrowIfCancellationRequested()</code> 去掉会怎样？你验证过吗？</div>
+    <div class="fillbox" contenteditable="true" data-k="k5" data-ph="写下来：你实际试了没有、什么现象"></div>
+  </div>
+
+  <div class="fillrow">
+    <div class="lbl">今天的收获（用你自己的话，别抄上面的）</div>
+    <div class="fillbox" contenteditable="true" data-k="sum" data-ph="今天真正搞懂了什么、哪块还是模糊的"></div>
+  </div>
+</div>
+
+<!-- ==================== 8 ==================== -->
+<div class="card">
+  <h2><span class="n r">8</span>顺手修你自己的 bug（v4 里挂了很久的那个）</h2>
+  <p>v4 计划第 4 节记着你的 Modbus 项目 <code>E:\C#\C#-Modbus-Tcp\Form1.cs</code> 有个必崩的 bug。我刚才确认了，<b>它还在</b>：</p>
+  <pre><span class="c">// 第 19 行</span>
+<span class="k">ModbusMaster</span> master = <span class="k">null</span>;
+<span class="c">...</span>
+<span class="c">// 第 36 行</span>
+master = ModbusIpMaster.CreateIp(client);
+<span class="c">...</span>
+<span class="c">// 第 43~44 行  ← 问题在这</span>
+master = <span class="k">null</span>;        <span class="c">// ← 先置空了</span>
+master.Dispose();      <span class="c">// ← 再调用 → NullReferenceException</span></pre>
+  <p><b>为什么必然崩：</b>第 43 行把引用置成了 <code>null</code>，第 44 行再拿这个 <code>null</code> 去调 <code>Dispose()</code>，100% 抛 <code>NullReferenceException</code>。</p>
+  <div class="callout warn">
+    <b>📌 正确的释放顺序（单元 6 会正式讲，这里先看一眼）</b><br>
+    <b>顺序是反的：先 <code>Dispose()</code>，后置 <code>null</code>。</b>而且 <code>Dispose()</code> 之前要先判空 —— 因为 <code>CreateIp</code> 可能本身就失败了。<br>
+    <span class="hint">为什么是「反向顺序」？因为依赖关系是反向的：被依赖的对象要先死，依赖它的才能死。<code>master</code> 依赖 <code>client</code>，所以 <code>master</code> 要先 <code>Dispose</code>，然后才是 <code>client</code>。<b>这个原则你在单元 6 会完整用到（相机句柄、TCP 客户端、日志队列）。</b></span>
+  </div>
+  <p class="hint">这个改不改由你决定。但我建议今天顺手改掉 —— 它是你自己的代码，改了对简历有用（面试可以说"我 review 并修复了自己项目里的资源释放顺序 bug"）。</p>
+
+  <label class="chk" style="margin-top:10px"><input type="checkbox" data-id="fix"><div class="tx"><b>顺手修掉 Modbus 项目的这个 bug</b><span>改成先 Dispose 后置 null，并加判空；改完跑一次确认不崩</span></div></label>
+</div>
+
+<footer>
+  W2 · 单元 1 · Day 1 · 2026-11-02 · 实测环境：.NET Framework 4.8（运行时 4.0.30319.42000） · 官方文档已核对（Microsoft Learn + Microsoft DevBlogs + Stack Overflow）· 有争议的地方以你的实测为准
+</footer>
+
+</div>
+<script>
+(function(){
+  var KEY='mv_w2_d1_checkin_v1';
+  var FKEY='mv_w2_d1_fill_v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[type=checkbox][data-id]'));
+  var fills=[].slice.call(document.querySelectorAll('[contenteditable][data-k]'));
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){ return {}; } }
+  function save(k,d){ try{ localStorage.setItem(k, JSON.stringify(d)); }catch(e){} }
+  var st=load(KEY), ft=load(FKEY);
+
+  function markFilled(el){
+    if(el.textContent.replace(/[\u200B\s]/g,'').length>0){ el.classList.add('filled'); }
+    else { el.classList.remove('filled'); }
+  }
+  function applyAll(){
+    boxes.forEach(function(b){ b.checked=!!st[b.dataset.id]; });
+    fills.forEach(function(el){ if(ft[el.dataset.k]) el.innerHTML=ft[el.dataset.k]; markFilled(el); });
+  }
+  applyAll();
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      st[b.dataset.id]=b.checked; save(KEY,st); upd();
+    });
+  });
+  fills.forEach(function(el){
+    el.addEventListener('input', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft); markFilled(el); upd();
+    });
+    el.addEventListener('blur', function(){
+      ft[el.dataset.k]=el.innerHTML; save(FKEY,ft);
+    });
+    el.addEventListener('keydown', function(e){
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); el.blur(); }
+    });
+    el.addEventListener('paste', function(e){
+      e.preventDefault();
+      var t=(e.clipboardData||window.clipboardData).getData('text');
+      document.execCommand('insertText', false, t.replace(/\r?\n/g,' '));
+    });
+  });
+
+  function upd(){
+    var n=boxes.filter(function(b){return b.checked;}).length;
+    var t=boxes.length;
+    var fn=fills.filter(function(el){return el.textContent.replace(/[\u200B\s]/g,'').length>0;}).length;
+    document.getElementById('ptext').textContent=n+' / '+t;
+    document.getElementById('pbar').style.width=(t? n/t*100:0)+'%';
+    var f=document.getElementById('ftext');
+    if(f) f.textContent='已填写 '+fn+' / '+fills.length+' 处';
+  }
+  upd();
+
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('清空今天的勾选进度和所有填写内容？')) return;
+    boxes.forEach(function(b){ b.checked=false; });
+    fills.forEach(function(el){ el.innerHTML=''; el.classList.remove('filled'); });
+    st={}; ft={}; save(KEY,st); save(FKEY,ft); upd();
+  });
+})();
+</script>
+</body>
+</html>
