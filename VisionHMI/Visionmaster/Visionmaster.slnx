@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Core/">
+    <File Path="w1-day2-日志级别及统一格式/AppLogger.cs" />
+  </Folder>
+  <Folder Name="/W1/">
+    <Project Path="w1-day2-日志级别及统一格式/w1-day2-日志级别及统一格式.csproj" Id="622fd6e9-ea00-4bbe-9540-d716b3505929" />
+    <Project Path="w1-day2-线程安全/w1-day2-线程安全.csproj" Id="71f72575-acfb-4298-9e6c-c0888cdbf167" />
+    <Project Path="w1-day3-错误码表/w1-day3-错误码表.csproj" Id="082aa7e2-1190-4064-873d-8f451ee04590" />
+    <Project Path="w1-day4-全局异常兜底/w1-day4-全局异常兜底.csproj" Id="6c2a74d5-79e6-4877-94f5-a7d78830d896" />
+    <Project Path="w1-day5-日志库选型+NLog 实战/w1-day5-日志库选型+NLog 实战.csproj" Id="36628f36-3035-43f6-a58d-fa50e6b19cf9" />
+    <Project Path="w1-day6-w1总结/w1-day6-w1总结.csproj" Id="0bf38b87-f388-4b47-af2e-6561a94d0437" />
+    <Project Path="w1-异常体系/w1-day1-异常体系.csproj" Id="8937b262-021f-4be4-996f-913db025c7f9" />
+  </Folder>
+  <Folder Name="/W2/">
+    <Project Path="W2-day1-异步与进度条/W2-day1-异步与进度条.csproj" Id="dce4a602-ec7a-4197-815b-636ee94e0165" />
+  </Folder>
+</Solution>
